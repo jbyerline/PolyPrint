@@ -1,0 +1,33 @@
+{
+  "extends": "react-app",
+  "plugins": ["prettier", "import"],
+  "rules": {
+    "no-unused-vars": ["warn", { "ignoreRestSiblings": false }],
+    "no-useless-rename": "error",
+    "object-shorthand": "error",
+    "prettier/prettier": "error",
+    "react-hooks/exhaustive-deps": "off", // this rule should be re-enabled and issues fixed at some point
+    "import/no-unresolved": "error",
+    "import/no-duplicates": "error",
+    "react/jsx-key": "error",
+    "react/jsx-curly-brace-presence": ["error", "never"],
+    "react/self-closing-comp": "error",
+    "import/no-cycle": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always"
+      }
+    ],
+    "import/newline-after-import": "error",
+    "react/forbid-component-props": ["error", { "forbid": ["style"] }]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  },
+  "overrides": []
+}
