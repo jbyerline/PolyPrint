@@ -11,6 +11,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { Alert, Collapse } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
+import ConnectionsStore from "../Store/ConnectionsStore";
 
 function Copyright(props) {
   return (
@@ -31,21 +36,51 @@ function Copyright(props) {
 
 export default function SignIn() {
   const history = useHistory();
+  const connection = new ConnectionsStore();
 
-  const handleSubmit = (event) => {
+  const [alertIsOpen, setAlertIsOpen] = React.useState(false);
+
+  async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
-    history.push("/");
-  };
+    try {
+      const response = await connection.login(
+        data.get("user"),
+        data.get("password"),
+        true
+      );
+      localStorage.setItem("name", response.name);
+      localStorage.setItem("session", response.session);
+      history.push("/");
+    } catch (e) {
+      console.log("Login unsuccessful \n", e);
+      setAlertIsOpen(true);
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
+      <Collapse in={alertIsOpen}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setAlertIsOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          Login Failed
+        </Alert>
+      </Collapse>
       <CssBaseline />
       <Box
         sx={{
@@ -66,10 +101,10 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="user"
+            label="Username"
+            name="user"
+            autoComplete="user"
             autoFocus
           />
           <TextField

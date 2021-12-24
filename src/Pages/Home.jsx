@@ -3,7 +3,8 @@ import { makeStyles } from "@mui/styles";
 import { useEffect } from "react";
 
 import PrinterCard from "../Cards/PrinterCard";
-import OctoPrintDataStore from "../Store/OctoPrintDataStore";
+import InfoDatastore from "../Store/InfoDataStore";
+import ConnectionsStore from "../Store/ConnectionsStore";
 
 const useStyles = makeStyles((theme) => ({
   cards: {
@@ -16,10 +17,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const octoPrintDataStore = new OctoPrintDataStore();
+  const infoDatastore = new InfoDatastore();
+  const connectionStore = new ConnectionsStore();
 
   useEffect(() => {
-    octoPrintDataStore.fetchData();
+    infoDatastore.fetchGeneralInfo();
+    //connectionStore.login("jbyerline", "Rusty77", true);
   }, []);
 
   return (

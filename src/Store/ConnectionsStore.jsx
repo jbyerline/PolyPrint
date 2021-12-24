@@ -2,12 +2,12 @@ import { makeAutoObservable } from "mobx";
 import React from "react";
 import ky from "ky";
 
-class OffersChecklistDatastore {
+class ConnectionDatastore {
   constructor() {
     makeAutoObservable(this);
   }
 
-  versionPath = "/version";
+  loginPath = "/login";
   basePath = "/api";
   baseURL = "https://mk3s.byerline.me";
   apiUrl = this.baseURL + this.basePath;
@@ -18,10 +18,9 @@ class OffersChecklistDatastore {
     return this.baseURL + this.basePath + path;
   }
 
-  offersStats = {};
-  offersData = [];
+  isLoggedIn = false;
 
-  fetchData() {
+  async login(user, pass, remember) {
     const defaultQueryParams = {};
 
     const api = ky.extend({
@@ -34,21 +33,21 @@ class OffersChecklistDatastore {
       },
     });
 
-    api
-      .get(this.makeApiUrl(this.versionPath), {
+    return api
+      .post(this.makeApiUrl(this.loginPath), {
         defaultQueryParams,
+        json: { user, pass, remember },
       })
-      .json()
-      .then((data) => {
-        if (data) {
-          console.log(data);
-          // this.offersStats = data.offer_checklist_stats;
-          // this.offersData = data.offer_checklist_data;
-        }
-      })
-      .catch((err) =>
-        console.log("Error retrieving Offers Checklist data", err)
-      );
+      .json();
+    // .then((data) => {
+    //   this.isLoggedIn = true;
+    //   return data;
+    // })
+    // .catch((err) => {
+    //   console.log("Error Logging in", err);
+    //   this.isLoggedIn = false;
+    //   return false;
+    // });
   }
 }
-export default OffersChecklistDatastore;
+export default ConnectionDatastore;

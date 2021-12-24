@@ -32,11 +32,20 @@ function Header() {
       <CssBaseline />
       <Toolbar className={classes.header}>
         <Typography variant="h4">OctoPod</Typography>
-        <Link to="/login" className={classes.link}>
+        <Link
+          to="/login"
+          onClick={() => localStorage.clear()}
+          className={classes.link}
+        >
           Logout
         </Link>
       </Toolbar>
     </AppBar>
   );
 }
+
+function logout() {
+  localStorage.clear();
+}
+
 export default Header;

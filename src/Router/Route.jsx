@@ -1,10 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 import Header from "../Header/Header";
 import SignIn from "../Pages/SignIn";
 import SignUp from "../Pages/SignUp";
 import Home from "../Pages/Home";
+
+let isLoggedIn = false;
 
 export default function RoutingRoots() {
   return (
@@ -12,15 +19,18 @@ export default function RoutingRoots() {
       <Router>
         <div>
           <Switch>
-            <Route path="/">
-              <HomePage />
-            </Route>
             <Route path="/login">
-              <Login />
+              <SignIn />
             </Route>
             <Route path="/new-account">
               <CreateAccount />
             </Route>
+            <Route
+              path="/"
+              render={() =>
+                VerifyIsLoggedIn() ? <HomePage /> : <Redirect to="/login" />
+              }
+            />
           </Switch>
         </div>
       </Router>
@@ -53,4 +63,13 @@ function CreateAccount() {
       <SignUp />
     </div>
   );
+}
+
+function VerifyIsLoggedIn() {
+  if (localStorage.getItem("name") && localStorage.getItem("session")) {
+    isLoggedIn = true;
+  } else {
+    isLoggedIn = false;
+  }
+  return isLoggedIn;
 }
