@@ -78,6 +78,7 @@ export default function PrinterCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
+          <Typography paragraph>Server Version:</Typography>
           <Typography paragraph>Last Print Information:</Typography>
           <Typography paragraph>File Name:</Typography>
           <Typography paragraph>Time Elapsed:</Typography>

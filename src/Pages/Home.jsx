@@ -1,7 +1,9 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
+import { useEffect } from "react";
 
 import PrinterCard from "../Cards/PrinterCard";
+import OctoPrintDataStore from "../Store/OctoPrintDataStore";
 
 const useStyles = makeStyles((theme) => ({
   cards: {
@@ -14,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
+  const octoPrintDataStore = new OctoPrintDataStore();
+
+  useEffect(() => {
+    octoPrintDataStore.fetchData();
+  }, []);
 
   return (
     <div className={classes.cards}>
