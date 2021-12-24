@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Header/Header";
 import SignIn from "../Pages/SignIn";
 import SignUp from "../Pages/SignUp";
+import Home from "../Pages/Home";
 
 export default function RoutingRoots() {
   return (
@@ -11,20 +12,14 @@ export default function RoutingRoots() {
       <Router>
         <div>
           <Switch>
-            <Route path="/about">
-              <About />
+            <Route path="/">
+              <HomePage />
             </Route>
             <Route path="/login">
-              <SignIn />
+              <Login />
             </Route>
-            <Route path="/create-account">
-              <SignUp />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/">
-              <Home />
+            <Route path="/new-account">
+              <CreateAccount />
             </Route>
           </Switch>
         </div>
@@ -33,19 +28,29 @@ export default function RoutingRoots() {
   );
 }
 
-function Home() {
+function HomePage() {
   return (
     <div>
       <Header />
-      <h2>Hello</h2>
+      <Home />
     </div>
   );
 }
 
-function About() {
-  return <h2>About</h2>;
+function Login() {
+  return (
+    <div>
+      <Header />
+      <SignIn />
+    </div>
+  );
 }
 
-function Users() {
-  return <h2>Users</h2>;
+function CreateAccount() {
+  return (
+    <div>
+      <Header />
+      <SignUp />
+    </div>
+  );
 }
