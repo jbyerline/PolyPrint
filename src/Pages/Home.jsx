@@ -1,6 +1,7 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { useEffect } from "react";
+import { Button } from "@mui/material";
 
 import PrinterCard from "../Cards/PrinterCard";
 import InfoDatastore from "../Store/InfoDataStore";
@@ -18,17 +19,24 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const classes = useStyles();
   const infoDatastore = new InfoDatastore();
-  const connectionStore = new ConnectionsStore();
 
-  useEffect(() => {
-    infoDatastore.fetchGeneralInfo();
-    console.log(JSON.stringify(infoDatastore.versionInfo));
+  const [refresh, setRefresh] = React.useState(false);
+
+  useEffect(async () => {
+    await infoDatastore.fetchGeneralInfo();
+    console.log(JSON.stringify(infoDatastore.generalInfo));
   }, []);
+
+  const handleDataRefresh = () => {
+    console.log(infoDatastore.generalInfo.profiles._default.name);
+    setRefresh(!refresh);
+  };
 
   return (
     <div className={classes.cards}>
+      <Button onClick={handleDataRefresh}>Click me to refresh</Button>
       <PrinterCard
-        printerName=""
+        printerName={infoDatastore.generalInfo.profiles["_default"].name}
         status="Offline"
         printerThemeColor="blue"
         octoPrintLink="https://mk3s.byerline.me"

@@ -44,7 +44,7 @@ export default function PrinterCard(props) {
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: printerThemeColor }} aria-label={printerName}>
-            {printerName.charAt(0)}
+            {printerName ? printerName.charAt(0) : ""}
           </Avatar>
         }
         action={

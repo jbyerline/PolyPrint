@@ -18,8 +18,6 @@ class ConnectionDatastore {
     return this.baseURL + this.basePath + path;
   }
 
-  isLoggedIn = false;
-
   async login(user, pass, remember) {
     const defaultQueryParams = {};
 
@@ -39,15 +37,6 @@ class ConnectionDatastore {
         json: { user, pass, remember },
       })
       .json();
-    // .then((data) => {
-    //   this.isLoggedIn = true;
-    //   return data;
-    // })
-    // .catch((err) => {
-    //   console.log("Error Logging in", err);
-    //   this.isLoggedIn = false;
-    //   return false;
-    // });
   }
 }
 export default ConnectionDatastore;
