@@ -22,13 +22,13 @@ export default function Home() {
 
   useEffect(() => {
     infoDatastore.fetchGeneralInfo();
-    //connectionStore.login("jbyerline", "Rusty77", true);
+    console.log(JSON.stringify(infoDatastore.versionInfo));
   }, []);
 
   return (
     <div className={classes.cards}>
       <PrinterCard
-        printerName="Prusa"
+        printerName=""
         status="Offline"
         printerThemeColor="blue"
         octoPrintLink="https://mk3s.byerline.me"

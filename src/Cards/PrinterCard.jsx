@@ -27,6 +27,8 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function PrinterCard(props) {
+  const { status, printerName, printerThemeColor, octoPrintLink } = props;
+
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -34,18 +36,15 @@ export default function PrinterCard(props) {
   };
 
   const handleOctoPrintClick = () => {
-    window.open(props.octoPrintLink, "_blank");
+    window.open(octoPrintLink, "_blank");
   };
 
   return (
     <Card sx={{ maxWidth: 400 }}>
       <CardHeader
         avatar={
-          <Avatar
-            sx={{ bgcolor: props.printerThemeColor }}
-            aria-label={props.printerName}
-          >
-            {props.printerName.charAt(0)}
+          <Avatar sx={{ bgcolor: printerThemeColor }} aria-label={printerName}>
+            {printerName.charAt(0)}
           </Avatar>
         }
         action={
@@ -53,8 +52,8 @@ export default function PrinterCard(props) {
             <MoreVertIcon />
           </IconButton>
         }
-        title={props.printerName}
-        subheader={props.status}
+        title={printerName}
+        subheader={status}
       />
       <CardMedia component="img" image="/printer.png" alt="Printer" />
       <CardContent>
@@ -78,12 +77,12 @@ export default function PrinterCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Server Version:</Typography>
-          <Typography paragraph>Last Print Information:</Typography>
-          <Typography paragraph>File Name:</Typography>
-          <Typography paragraph>Time Elapsed:</Typography>
-          <Typography paragraph>Status:</Typography>
-          <Typography paragraph>Link to Download File:</Typography>
+          <Typography align="left">Server Version:</Typography>
+          <Typography align="left">Last Print Information:</Typography>
+          <Typography align="left">File Name:</Typography>
+          <Typography align="left">Time Elapsed:</Typography>
+          <Typography align="left">Status:</Typography>
+          <Typography align="left">Link to Download File:</Typography>
         </CardContent>
       </Collapse>
     </Card>

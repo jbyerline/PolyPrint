@@ -19,12 +19,9 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "1px solid pink",
     },
   },
-  appBar: {
-    bgcolor: "green",
-  },
 }));
 
-function Header() {
+function HeaderLoggedIn() {
   const classes = useStyles();
 
   return (
@@ -44,8 +41,4 @@ function Header() {
   );
 }
 
-function logout() {
-  localStorage.clear();
-}
-
-export default Header;
+export default HeaderLoggedIn;

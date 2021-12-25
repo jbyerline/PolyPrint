@@ -12,29 +12,20 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Alert, Collapse } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import ConnectionsStore from "../Store/ConnectionsStore";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <a target="_blank" href="https://byerline.me/" rel="noreferrer">
-        Jacob Byerline
-      </a>{" "}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
+const useStyles = makeStyles((theme) => ({
+  grid: {
+    textAlign: "center",
+  },
+}));
 
 export default function SignIn() {
+  const classes = useStyles();
   const history = useHistory();
   const connection = new ConnectionsStore();
 
@@ -129,21 +120,15 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="/forgot-password" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
+          <Grid container justifyContent="center" alignItems="center">
             <Grid item>
-              <Link to="/create-account" variant="body2">
-                Don't have an account? Sign Up
+              <Link to="/help" variant="body2">
+                Need Help? Check out our FAQ
               </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }

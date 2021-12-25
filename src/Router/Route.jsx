@@ -6,10 +6,13 @@ import {
   Switch,
 } from "react-router-dom";
 
-import Header from "../Header/Header";
+import HeaderLoggedIn from "../Header/HeaderLoggedIn";
 import SignIn from "../Pages/SignIn";
 import SignUp from "../Pages/SignUp";
 import Home from "../Pages/Home";
+import HeaderLoggedOut from "../Header/HeaderLoggedOut";
+import Footer from "../Footer/Footer";
+import Help from "../Pages/Help";
 
 let isLoggedIn = false;
 
@@ -20,10 +23,10 @@ export default function RoutingRoots() {
         <div>
           <Switch>
             <Route path="/login">
-              <SignIn />
+              <Login />
             </Route>
-            <Route path="/new-account">
-              <CreateAccount />
+            <Route path="/help">
+              <HelpPage />
             </Route>
             <Route
               path="/"
@@ -41,8 +44,9 @@ export default function RoutingRoots() {
 function HomePage() {
   return (
     <div>
-      <Header />
+      <HeaderLoggedIn />
       <Home />
+      <Footer sx={{ mt: 8, mb: 4 }} />
     </div>
   );
 }
@@ -50,17 +54,19 @@ function HomePage() {
 function Login() {
   return (
     <div>
-      <Header />
+      <HeaderLoggedOut />
       <SignIn />
+      <Footer sx={{ mt: 8, mb: 4 }} />
     </div>
   );
 }
 
-function CreateAccount() {
+function HelpPage() {
   return (
     <div>
-      <Header />
-      <SignUp />
+      <HeaderLoggedOut />
+      <Help />
+      <Footer sx={{ mt: 8, mb: 4 }} />
     </div>
   );
 }
