@@ -15,6 +15,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
 
+import { ReactComponent as OctopusIcon } from "/public/octopus.svg";
+
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -40,7 +42,7 @@ export default function PrinterCard(props) {
   };
 
   return (
-    <Card sx={{ maxWidth: 400 }}>
+    <Card sx={{ width: 400 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: printerThemeColor }} aria-label={printerName}>
@@ -55,7 +57,11 @@ export default function PrinterCard(props) {
         title={printerName}
         subheader={status}
       />
-      <CardMedia component="img" image="/printer.png" alt="Printer" />
+      <CardMedia
+        component="img"
+        image={octoPrintLink + "/webcam/?action=stream"}
+        alt="Printer"
+      />
       <CardContent>
         <Button onClick={handleOctoPrintClick}>Local OctoPrint </Button>
       </CardContent>
@@ -65,6 +71,9 @@ export default function PrinterCard(props) {
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <SvgIcon component={OctopusIcon} />
         </IconButton>
         <ExpandMore
           expand={expanded}

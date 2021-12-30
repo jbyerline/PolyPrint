@@ -21,7 +21,7 @@ class InfoDatastore {
     return this.baseURL + this.basePath + path;
   }
 
-  async fetchGeneralInfo() {
+  fetchGeneralInfo() {
     const defaultQueryParams = {};
 
     const api = ky.extend({
@@ -34,34 +34,47 @@ class InfoDatastore {
       },
     });
 
-    return Promise.all([
-      api.get(this.makeApiUrl(this.versionPath), {
+    // Promise.all([
+    //   api.get(this.makeApiUrl(this.versionPath), {
+    //     defaultQueryParams,
+    //   }),
+    //   api.get(this.makeApiUrl(this.profilePath), {
+    //     defaultQueryParams,
+    //   }),
+    //   api.get(this.makeApiUrl(this.serverPath), {
+    //     defaultQueryParams,
+    //   }),
+    // ])
+    //   .then((responses) => {
+    //     // Get a JSON object from each of the responses
+    //     return Promise.all(
+    //       responses.map(function (response) {
+    //         return response.json();
+    //       })
+    //     );
+    //   })
+    //   .then((data) => {
+    //     // Flatten data and assign to class variable
+    //     console.log(Object.assign(...data));
+    //     this.generalInfo = Object.assign(...data);
+    //     //return Object.assign(...data);
+    //   })
+    //   .catch((error) => {
+    //     // if there's an error, log it
+    //     console.log(error);
+    //   });
+
+    api
+      .get(this.makeApiUrl(this.profilePath), {
         defaultQueryParams,
-      }),
-      api.get(this.makeApiUrl(this.profilePath), {
-        defaultQueryParams,
-      }),
-      api.get(this.makeApiUrl(this.serverPath), {
-        defaultQueryParams,
-      }),
-    ])
-      .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
       })
+      .json()
       .then((data) => {
-        // Flatten data and assign to class variable
-        this.generalInfo = Object.assign(...data);
-        return Object.assign(...data);
+        if (data) {
+          this.generalInfo = data;
+        }
       })
-      .catch((error) => {
-        // if there's an error, log it
-        console.log(error);
-      });
+      .catch((err) => console.log("Error retrieving data", err));
   }
 }
 export default InfoDatastore;

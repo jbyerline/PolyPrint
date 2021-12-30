@@ -1,11 +1,13 @@
 import * as React from "react";
+import { observer } from "mobx-react";
 import { makeStyles } from "@mui/styles";
 import { useEffect } from "react";
 import { Button } from "@mui/material";
 
 import PrinterCard from "../Cards/PrinterCard";
 import InfoDatastore from "../Store/InfoDataStore";
-import ConnectionsStore from "../Store/ConnectionsStore";
+
+const infoDatastore = new InfoDatastore();
 
 const useStyles = makeStyles((theme) => ({
   cards: {
@@ -16,48 +18,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home() {
+const Home = observer(() => {
   const classes = useStyles();
-  const infoDatastore = new InfoDatastore();
-
   const [refresh, setRefresh] = React.useState(false);
+  const [generalInfo, setGeneralInfo] = React.useState(false);
 
-  useEffect(async () => {
-    await infoDatastore.fetchGeneralInfo();
+  useEffect(() => {
+    infoDatastore.fetchGeneralInfo();
     console.log(JSON.stringify(infoDatastore.generalInfo));
   }, []);
 
-  const handleDataRefresh = () => {
-    console.log(infoDatastore.generalInfo.profiles._default.name);
-    setRefresh(!refresh);
-  };
-
   return (
     <div className={classes.cards}>
-      <Button onClick={handleDataRefresh}>Click me to refresh</Button>
       <PrinterCard
-        printerName={infoDatastore.generalInfo.profiles["_default"].name}
+        printerName="Orusa"
         status="Offline"
-        printerThemeColor="blue"
+        printerThemeColor="orange"
         octoPrintLink="https://mk3s.byerline.me"
         type="RepRap"
       />
       <PrinterCard
-        printerName="Ender 3"
+        printerName="Yender 3"
         status="Online"
-        printerThemeColor="pink"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="Prusa"
-        status="Offline"
         printerThemeColor="yellow"
+        octoPrintLink="https://yender3.byerline.me"
         type="RepRap"
       />
       <PrinterCard
-        printerName="Ender 3"
+        printerName="CR-10"
+        status="Offline"
+        printerThemeColor="red"
+        octoPrintLink="https://cr10.byerline.me"
+        type="RepRap"
+      />
+      <PrinterCard
+        printerName="Daniel's Ender 3"
         status="Online"
-        printerThemeColor="orange"
+        printerThemeColor="black"
+        octoPrintLink="http://ender3.danielburns.me:8080/"
         type="RepRap"
       />
       <PrinterCard
@@ -86,4 +84,5 @@ export default function Home() {
       />
     </div>
   );
-}
+});
+export default Home;
