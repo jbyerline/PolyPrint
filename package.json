@@ -7,6 +7,10 @@
     "@babel/core": "^7.9.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-brands-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.16",
     "@mui/core": "^5.0.0-alpha.54",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.5",
@@ -30,10 +34,12 @@
     "prettier": "^2.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
     "react-iframe": "^1.8.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.2"
+    "web-vitals": "^2.1.2",
+    "x-frame-bypass": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start --no-cache",

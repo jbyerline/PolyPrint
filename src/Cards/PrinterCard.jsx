@@ -14,8 +14,10 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faOctopusDeploy } from "@fortawesome/free-brands-svg-icons";
 
-import { ReactComponent as OctopusIcon } from "/public/octopus.svg";
+import OctoprintDialog from "../Dialog/OctoprintDialog";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -32,6 +34,7 @@ export default function PrinterCard(props) {
   const { status, printerName, printerThemeColor, octoPrintLink } = props;
 
   const [expanded, setExpanded] = React.useState(false);
+  const [open, isOpen] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -39,6 +42,13 @@ export default function PrinterCard(props) {
 
   const handleOctoPrintClick = () => {
     window.open(octoPrintLink, "_blank");
+  };
+
+  const handleOctoIconClick = () => {
+    isOpen(true);
+  };
+  const handleCloseDialog = () => {
+    isOpen(false);
   };
 
   return (
@@ -57,11 +67,11 @@ export default function PrinterCard(props) {
         title={printerName}
         subheader={status}
       />
-      <CardMedia
-        component="img"
-        image={octoPrintLink + "/webcam/?action=stream"}
-        alt="Printer"
-      />
+      {/*<CardMedia*/}
+      {/*  component="img"*/}
+      {/*  image={octoPrintLink + "/webcam/?action=stream"}*/}
+      {/*  alt="Printer"*/}
+      {/*/>*/}
       <CardContent>
         <Button onClick={handleOctoPrintClick}>Local OctoPrint </Button>
       </CardContent>
@@ -72,8 +82,8 @@ export default function PrinterCard(props) {
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-        <IconButton aria-label="share">
-          <SvgIcon component={OctopusIcon} />
+        <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
+          <FontAwesomeIcon icon={faOctopusDeploy} />
         </IconButton>
         <ExpandMore
           expand={expanded}
@@ -94,6 +104,12 @@ export default function PrinterCard(props) {
           <Typography align="left">Link to Download File:</Typography>
         </CardContent>
       </Collapse>
+      <OctoprintDialog
+        isOpen={open}
+        printerName={props.printerName}
+        octoprintUrl={props.octoPrintLink}
+        closeDialog={handleCloseDialog}
+      />
     </Card>
   );
 }
