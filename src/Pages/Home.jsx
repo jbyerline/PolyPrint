@@ -1,15 +1,9 @@
 import * as React from "react";
-import { observer } from "mobx-react";
 import { makeStyles } from "@mui/styles";
-import { useEffect } from "react";
-import { Button } from "@mui/material";
 
 import PrinterCard from "../Cards/PrinterCard";
-import InfoDatastore from "../Store/InfoDataStore";
 
-const infoDatastore = new InfoDatastore();
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   cards: {
     display: "flex",
     gap: "10px",
@@ -18,71 +12,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = observer(() => {
+const Home = () => {
   const classes = useStyles();
-  const [refresh, setRefresh] = React.useState(false);
-  const [generalInfo, setGeneralInfo] = React.useState(false);
-
-  useEffect(() => {
-    infoDatastore.fetchGeneralInfo();
-    console.log(JSON.stringify(infoDatastore.generalInfo));
-  }, []);
-
   return (
     <div className={classes.cards}>
       <PrinterCard
-        printerName="Orusa"
-        status="Offline"
+        octoPrintLink="https://orusa.byerline.me"
+        printerApiKey="F709DCD954D1417B95B9D57014D05357"
         printerThemeColor="orange"
-        octoPrintLink="https://mk3s.byerline.me"
         type="RepRap"
       />
       <PrinterCard
-        printerName="Yender 3"
-        status="Online"
-        printerThemeColor="yellow"
-        octoPrintLink="https://yender3.byerline.me"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="CR-10"
-        status="Offline"
-        printerThemeColor="red"
-        octoPrintLink="https://cr10.byerline.me"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="Daniel's Ender 3"
-        status="Online"
-        printerThemeColor="black"
-        octoPrintLink="http://ender3.danielburns.me:8080/"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="Prusa"
-        status="Offline"
+        octoPrintLink="https://grusa.byerline.me"
+        printerApiKey="4704A7C866C1436EBF08B6514CBAF149"
         printerThemeColor="green"
         type="RepRap"
       />
       <PrinterCard
-        printerName="Ender 3"
-        status="Online"
+        octoPrintLink="https://yender3.byerline.me"
+        printerApiKey="10322EDE4D434B1CA2F5679B378285A8"
+        printerThemeColor="yellow"
+        type="RepRap"
+      />
+      <PrinterCard
+        octoPrintLink="https://cr10.byerline.me"
+        printerApiKey="B29E741ADF45415E9FD0372488BE3B6E"
+        printerThemeColor="red"
+        type="RepRap"
+      />
+      <PrinterCard
+        octoPrintLink="http://ender3.danielburns.me:8080/"
+        printerApiKey="3863CCB8919C4D84957897157D964699"
         printerThemeColor="black"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="Prusa"
-        status="Offline"
-        printerThemeColor="gray"
-        type="RepRap"
-      />
-      <PrinterCard
-        printerName="Ender 3"
-        status="Online"
-        printerThemeColor="gold"
         type="RepRap"
       />
     </div>
   );
-});
+};
 export default Home;

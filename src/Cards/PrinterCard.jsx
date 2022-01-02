@@ -16,8 +16,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faOctopusDeploy } from "@fortawesome/free-brands-svg-icons";
+import { observer } from "mobx-react";
+import { useEffect, useState } from "react";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
+import OctoprintDataStore from "../Store/OctoprintDataStore";
+
+const octoprintDataStore = new OctoprintDataStore();
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -30,11 +35,29 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function PrinterCard(props) {
-  const { status, printerName, printerThemeColor, octoPrintLink } = props;
-
+const PrinterCard = observer((props) => {
+  const { status, printerThemeColor, octoPrintLink } = props;
   const [expanded, setExpanded] = React.useState(false);
   const [open, isOpen] = React.useState(false);
+  const [generalData, setGeneralData] = useState();
+
+  const printerName = generalData ? generalData.profiles._default.name : "nada";
+
+  useEffect(() => {
+    // need to make this call from outside the datastore, to trigger a re-render
+    octoprintDataStore
+      .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
+      .then((data) => {
+        // Flatten data
+        console.log(Object.assign(...data));
+        setGeneralData(Object.assign(...data));
+      })
+      .then((data) => {
+        console.log(data);
+        //setGeneralData(data);
+      })
+      .catch((err) => console.log("Error retrieving general offer info", err));
+  }, []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -67,11 +90,11 @@ export default function PrinterCard(props) {
         title={printerName}
         subheader={status}
       />
-      {/*<CardMedia*/}
-      {/*  component="img"*/}
-      {/*  image={octoPrintLink + "/webcam/?action=stream"}*/}
-      {/*  alt="Printer"*/}
-      {/*/>*/}
+      <CardMedia
+        component="img"
+        image={octoPrintLink + "/webcam/?action=stream"}
+        alt="Printer"
+      />
       <CardContent>
         <Button onClick={handleOctoPrintClick}>Local OctoPrint </Button>
       </CardContent>
@@ -106,10 +129,11 @@ export default function PrinterCard(props) {
       </Collapse>
       <OctoprintDialog
         isOpen={open}
-        printerName={props.printerName}
+        printerName={printerName}
         octoprintUrl={props.octoPrintLink}
         closeDialog={handleCloseDialog}
       />
     </Card>
   );
-}
+});
+export default PrinterCard;

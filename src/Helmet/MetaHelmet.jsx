@@ -7,7 +7,7 @@ class MetaHelmet extends Component {
       <div className="application">
         <Helmet>
           <html lang="en" />
-          <title>Hello from React Helmet</title>
+          <title>Octopod</title>
           <script type="module" src="https://unpkg.com/x-frame-bypass" />
         </Helmet>
         ...
