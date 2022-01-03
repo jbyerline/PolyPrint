@@ -31,7 +31,13 @@ const Home = () => {
       <PrinterCard
         octoPrintLink="https://yender3.byerline.me"
         printerApiKey="10322EDE4D434B1CA2F5679B378285A8"
-        printerThemeColor="yellow"
+        printerThemeColor="gold"
+        type="RepRap"
+      />
+      <PrinterCard
+        octoPrintLink="https://bender3.byerline.me"
+        printerApiKey="48F431A116694F7FAB1740C114A2B6DD"
+        printerThemeColor="blue"
         type="RepRap"
       />
       <PrinterCard

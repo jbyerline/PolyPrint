@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
+import IframeDialog from "../Dialog/IframeDialog";
 
 const octoprintDataStore = new OctoprintDataStore();
 
@@ -36,15 +37,36 @@ const ExpandMore = styled((props) => {
 }));
 
 const PrinterCard = observer((props) => {
-  const { status, printerThemeColor, octoPrintLink } = props;
+  const { octoPrintLink } = props;
   const [expanded, setExpanded] = React.useState(false);
-  const [open, isOpen] = React.useState(false);
+  const [octoPrintDialogOpen, isOctoPrintDialogOpen] = React.useState(false);
+  const [iFrameDialogOpen, isIframeDialogOpen] = React.useState(false);
+  const [generalDataRefresh, setGeneralDataRefresh] = React.useState(false);
   const [generalData, setGeneralData] = useState();
+  const [printerState, setPrinterState] = useState();
 
-  const printerName = generalData ? generalData.profiles._default.name : "nada";
+  const printerName = generalData
+    ? generalData.profiles._default.name
+    : "Unknown";
+  const printerThemeColor = generalData
+    ? generalData.appearance.color
+    : "black";
+  const printerStatus = printerState ? printerState[0].state.text : "Unknown";
+  const printerVersion = generalData ? generalData.text : "Unknown";
+  const bedTempActual = printerState
+    ? printerState[0].temperature.bed.actual
+    : "Unknown";
+  const bedTempTarget = printerState
+    ? printerState[0].temperature.bed.target
+    : "Unknown";
+  const nozzleTempActual = printerState
+    ? printerState[0].temperature.tool0.actual
+    : "Unknown";
+  const nozzleTempTarget = printerState
+    ? printerState[0].temperature.tool0.target
+    : "Unknown";
 
   useEffect(() => {
-    // need to make this call from outside the datastore, to trigger a re-render
     octoprintDataStore
       .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
       .then((data) => {
@@ -52,11 +74,22 @@ const PrinterCard = observer((props) => {
         console.log(Object.assign(...data));
         setGeneralData(Object.assign(...data));
       })
-      .then((data) => {
-        console.log(data);
-        //setGeneralData(data);
-      })
       .catch((err) => console.log("Error retrieving general offer info", err));
+  }, [generalDataRefresh]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      octoprintDataStore
+        .fetchPrinterStatus(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          console.log(data);
+          setPrinterState(data);
+        })
+        .catch((err) =>
+          console.log("Error retrieving general offer info", err)
+        );
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleExpandClick = () => {
@@ -64,14 +97,26 @@ const PrinterCard = observer((props) => {
   };
 
   const handleOctoPrintClick = () => {
-    window.open(octoPrintLink, "_blank");
+    window.octoPrintDialogOpen(octoPrintLink, "_blank");
   };
 
   const handleOctoIconClick = () => {
-    isOpen(true);
+    if (generalData.server.allowFraming === false) {
+      console.log("Cannot octoPrintDialogOpen iFrame");
+      isIframeDialogOpen(true);
+    } else {
+      isOctoPrintDialogOpen(true);
+    }
   };
-  const handleCloseDialog = () => {
-    isOpen(false);
+  const handleCloseOctoPrintDialog = () => {
+    isOctoPrintDialogOpen(false);
+  };
+  const handleCloseIframeDialog = () => {
+    isIframeDialogOpen(false);
+  };
+
+  const triggerGeneralDataRefresh = () => {
+    setGeneralDataRefresh(!generalDataRefresh);
   };
 
   return (
@@ -88,7 +133,7 @@ const PrinterCard = observer((props) => {
           </IconButton>
         }
         title={printerName}
-        subheader={status}
+        subheader={printerStatus}
       />
       <CardMedia
         component="img"
@@ -119,19 +164,36 @@ const PrinterCard = observer((props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography align="left">Server Version:</Typography>
+          <Typography align="left">Server Version: {printerVersion}</Typography>
+          <Typography align="left">
+            Hot End Actual Temp: {nozzleTempActual}
+          </Typography>
+          <Typography align="left">
+            Hot End Target Temp: {nozzleTempTarget}
+          </Typography>
+          <Typography align="left">Bed Actual Temp: {bedTempActual}</Typography>
+          <Typography align="left">Bed Target Temp: {bedTempTarget}</Typography>
           <Typography align="left">Last Print Information:</Typography>
           <Typography align="left">File Name:</Typography>
           <Typography align="left">Time Elapsed:</Typography>
-          <Typography align="left">Status:</Typography>
+          <Typography align="left">Status: {printerStatus}</Typography>
           <Typography align="left">Link to Download File:</Typography>
         </CardContent>
       </Collapse>
       <OctoprintDialog
-        isOpen={open}
+        isOpen={octoPrintDialogOpen}
         printerName={printerName}
         octoprintUrl={props.octoPrintLink}
-        closeDialog={handleCloseDialog}
+        closeDialog={handleCloseOctoPrintDialog}
+      />
+      <IframeDialog
+        isOpen={iFrameDialogOpen}
+        printerName={printerName}
+        octoprintUrl={props.octoPrintLink}
+        datastore={octoprintDataStore}
+        apiKey={props.printerApiKey}
+        closeDialog={handleCloseIframeDialog}
+        triggerRefresh={triggerGeneralDataRefresh}
       />
     </Card>
   );
