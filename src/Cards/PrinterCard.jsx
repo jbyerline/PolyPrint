@@ -10,7 +10,8 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import ShareIcon from "@mui/icons-material/Share";
+import UsbIcon from "@mui/icons-material/Usb";
+import UsbOffIcon from "@mui/icons-material/UsbOff";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
@@ -20,10 +21,13 @@ import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
+import { Tooltip } from "@mui/material";
+import Ticker from "react-ticker";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
 import IframeDialog from "../Dialog/IframeDialog";
+import TickerByLength from "../Ticker/TickerByLength";
 
 const octoprintDataStore = new OctoprintDataStore();
 
@@ -167,22 +171,31 @@ const PrinterCard = observer((props) => {
         <Button onClick={handleOctoPrintClick}>Local OctoPrint </Button>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <PushPinIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
-          <FontAwesomeIcon icon={faOctopusDeploy} />
-        </IconButton>
+        <Tooltip title="Pin to Front">
+          <IconButton aria-label="add to favorites">
+            <PushPinIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Connect">
+          <IconButton aria-label="connect">
+            <UsbIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="OctoPrint">
+          <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
+            <FontAwesomeIcon icon={faOctopusDeploy} />
+          </IconButton>
+        </Tooltip>
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="details"
         >
-          <ExpandMoreIcon />
+          <Tooltip title="Show Details">
+            <ExpandMoreIcon />
+          </Tooltip>
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -217,11 +230,12 @@ const PrinterCard = observer((props) => {
                     {bedTempTarget}
                   </Typography>
                   <Typography align="right">-</Typography>
-                  <Typography align="right">
-                    {currentFileName
-                      ? currentFileName.substr(0, 20).concat("...")
-                      : "Unknown"}
-                  </Typography>
+                  <TickerByLength
+                    text={currentFileName ? currentFileName : "Unknown"}
+                    maxLen={23}
+                    speed={3}
+                    mode="await"
+                  />
                   <Typography align="right">{elapsedTime}</Typography>
                   <Typography align="right">Link</Typography>
                 </Grid>

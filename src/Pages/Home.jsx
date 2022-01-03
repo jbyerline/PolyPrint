@@ -28,30 +28,30 @@ const Home = () => {
         printerThemeColor="green"
         type="RepRap"
       />
-      <PrinterCard
-        octoPrintLink="https://yender3.byerline.me"
-        printerApiKey="10322EDE4D434B1CA2F5679B378285A8"
-        printerThemeColor="gold"
-        type="RepRap"
-      />
-      <PrinterCard
-        octoPrintLink="https://bender3.byerline.me"
-        printerApiKey="48F431A116694F7FAB1740C114A2B6DD"
-        printerThemeColor="blue"
-        type="RepRap"
-      />
-      <PrinterCard
-        octoPrintLink="https://cr10.byerline.me"
-        printerApiKey="B29E741ADF45415E9FD0372488BE3B6E"
-        printerThemeColor="red"
-        type="RepRap"
-      />
-      <PrinterCard
-        octoPrintLink="http://ender3.danielburns.me:8080/"
-        printerApiKey="3863CCB8919C4D84957897157D964699"
-        printerThemeColor="black"
-        type="RepRap"
-      />
+      {/*<PrinterCard*/}
+      {/*  octoPrintLink="https://yender3.byerline.me"*/}
+      {/*  printerApiKey="10322EDE4D434B1CA2F5679B378285A8"*/}
+      {/*  printerThemeColor="gold"*/}
+      {/*  type="RepRap"*/}
+      {/*/>*/}
+      {/*<PrinterCard*/}
+      {/*  octoPrintLink="https://bender3.byerline.me"*/}
+      {/*  printerApiKey="48F431A116694F7FAB1740C114A2B6DD"*/}
+      {/*  printerThemeColor="blue"*/}
+      {/*  type="RepRap"*/}
+      {/*/>*/}
+      {/*<PrinterCard*/}
+      {/*  octoPrintLink="https://cr10.byerline.me"*/}
+      {/*  printerApiKey="B29E741ADF45415E9FD0372488BE3B6E"*/}
+      {/*  printerThemeColor="red"*/}
+      {/*  type="RepRap"*/}
+      {/*/>*/}
+      {/*<PrinterCard*/}
+      {/*  octoPrintLink="http://ender3.danielburns.me:8080/"*/}
+      {/*  printerApiKey="3863CCB8919C4D84957897157D964699"*/}
+      {/*  printerThemeColor="black"*/}
+      {/*  type="RepRap"*/}
+      {/*/>*/}
     </div>
   );
 };
