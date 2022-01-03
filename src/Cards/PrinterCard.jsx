@@ -18,6 +18,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faOctopusDeploy } from "@fortawesome/free-brands-svg-icons";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
@@ -44,6 +46,7 @@ const PrinterCard = observer((props) => {
   const [generalDataRefresh, setGeneralDataRefresh] = React.useState(false);
   const [generalData, setGeneralData] = useState();
   const [printerState, setPrinterState] = useState();
+  const [jobState, setJobState] = useState();
 
   const printerName = generalData
     ? generalData.profiles._default.name
@@ -65,6 +68,17 @@ const PrinterCard = observer((props) => {
   const nozzleTempTarget = printerState
     ? printerState[0].temperature.tool0.target
     : "Unknown";
+  const currentFileName = jobState ? jobState[0].job.file.display : "Unknown";
+
+  let elapsedTime;
+  if (jobState) {
+    console.log(jobState[0].progress.printTime);
+    let date = new Date(null);
+    date.setSeconds(jobState[0].progress.printTime);
+    elapsedTime = date.toISOString().substr(11, 8);
+  } else {
+    elapsedTime = "Unknown";
+  }
 
   useEffect(() => {
     octoprintDataStore
@@ -78,19 +92,28 @@ const PrinterCard = observer((props) => {
   }, [generalDataRefresh]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      octoprintDataStore
-        .fetchPrinterStatus(props.octoPrintLink, props.printerApiKey)
-        .then((data) => {
-          console.log(data);
-          setPrinterState(data);
-        })
-        .catch((err) =>
-          console.log("Error retrieving general offer info", err)
-        );
-    }, 10000);
+    fetchReoccurringData();
+    const interval = setInterval(() => fetchReoccurringData(), 10000);
     return () => clearInterval(interval);
   }, []);
+
+  const fetchReoccurringData = () => {
+    octoprintDataStore
+      .fetchPrinterStatus(props.octoPrintLink, props.printerApiKey)
+      .then((data) => {
+        console.log(data);
+        setPrinterState(data);
+      })
+      .catch((err) => console.log("Error retrieving printer status info", err));
+
+    octoprintDataStore
+      .fetchJobStatus(props.octoPrintLink, props.printerApiKey)
+      .then((data) => {
+        console.log(data);
+        setJobState(data);
+      })
+      .catch((err) => console.log("Error retrieving job info", err));
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -164,20 +187,47 @@ const PrinterCard = observer((props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography align="left">Server Version: {printerVersion}</Typography>
-          <Typography align="left">
-            Hot End Actual Temp: {nozzleTempActual}
-          </Typography>
-          <Typography align="left">
-            Hot End Target Temp: {nozzleTempTarget}
-          </Typography>
-          <Typography align="left">Bed Actual Temp: {bedTempActual}</Typography>
-          <Typography align="left">Bed Target Temp: {bedTempTarget}</Typography>
-          <Typography align="left">Last Print Information:</Typography>
-          <Typography align="left">File Name:</Typography>
-          <Typography align="left">Time Elapsed:</Typography>
-          <Typography align="left">Status: {printerStatus}</Typography>
-          <Typography align="left">Link to Download File:</Typography>
+          <Container>
+            <Grid container spacing={3}>
+              <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+              >
+                <Grid item xs={6}>
+                  <Typography align="left">Server Version:</Typography>
+                  <Typography align="left">Hot End Actual Temp:</Typography>
+                  <Typography align="left">Hot End Target Temp:</Typography>
+                  <Typography align="left">Bed Actual Temp:</Typography>
+                  <Typography align="left" gutterBottom>
+                    Bed Target Temp:
+                  </Typography>
+                  <Typography align="left">Print Information:</Typography>
+                  <Typography align="left">File Name:</Typography>
+                  <Typography align="left">Time Elapsed:</Typography>
+                  <Typography align="left">Link to Download File:</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography align="right">{printerVersion}</Typography>
+                  <Typography align="right">{nozzleTempActual}</Typography>
+                  <Typography align="right">{nozzleTempTarget}</Typography>
+                  <Typography align="right">{bedTempActual}</Typography>
+                  <Typography align="right" gutterBottom>
+                    {bedTempTarget}
+                  </Typography>
+                  <Typography align="right">-</Typography>
+                  <Typography align="right">
+                    {currentFileName
+                      ? currentFileName.substr(0, 20).concat("...")
+                      : "Unknown"}
+                  </Typography>
+                  <Typography align="right">{elapsedTime}</Typography>
+                  <Typography align="right">Link</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Container>
         </CardContent>
       </Collapse>
       <OctoprintDialog
