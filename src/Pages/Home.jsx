@@ -19,6 +19,8 @@ const Home = () => {
       <PrinterCard
         octoPrintLink="https://orusa.byerline.me"
         printerApiKey="F709DCD954D1417B95B9D57014D05357"
+        printerThemeColor="orange"
+        type="RepRap"
       />
       <PrinterCard
         octoPrintLink="https://grusa.byerline.me"
