@@ -12,6 +12,7 @@ class OctoprintDataStore {
   settingsPath = "/settings";
   printerStatePath = "/printer";
   jobPath = "/job";
+  connectionPath = "/connection";
   restartPath = "/system/commands/core/restart";
   basePath = "/api";
 
@@ -143,5 +144,53 @@ class OctoprintDataStore {
         console.log(error);
       });
   }
+
+  fetchConnectionInfo(link, apiKey) {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    return Promise.all([api.get(this.makeApiUrl(link, this.connectionPath))])
+      .then((responses) => {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
+  }
+
+  modifyPrinterConnection = (link, apiKey, connection) => {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    api
+      .post(this.makeApiUrl(link, this.connectionPath), {
+        json: { command: connection },
+      })
+      .json()
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log("Error connecting to printer", err));
+  };
 }
 export default OctoprintDataStore;

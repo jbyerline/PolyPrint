@@ -29,7 +29,6 @@ export default function OctoprintDialog(props) {
             width: "100%",
             height: "100vh",
           }}
-          //is="x-frame-bypass"
           src={props.octoprintUrl}
           width="100%"
           height="100vh"

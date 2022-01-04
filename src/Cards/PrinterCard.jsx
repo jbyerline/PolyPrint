@@ -28,6 +28,7 @@ import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
 import IframeDialog from "../Dialog/IframeDialog";
 import TickerByLength from "../Ticker/TickerByLength";
+import ConnectIcon from "../Icons/ConnectIcon";
 
 const octoprintDataStore = new OctoprintDataStore();
 
@@ -176,11 +177,11 @@ const PrinterCard = observer((props) => {
             <PushPinIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Connect">
-          <IconButton aria-label="connect">
-            <UsbIcon />
-          </IconButton>
-        </Tooltip>
+        <ConnectIcon
+          dataStore={octoprintDataStore}
+          octoPrintLink={props.octoPrintLink}
+          apiKey={props.printerApiKey}
+        />
         <Tooltip title="OctoPrint">
           <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
             <FontAwesomeIcon icon={faOctopusDeploy} />
