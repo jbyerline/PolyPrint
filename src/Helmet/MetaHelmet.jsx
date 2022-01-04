@@ -8,9 +8,8 @@ class MetaHelmet extends Component {
         <Helmet>
           <html lang="en" />
           <title>Octopod</title>
-          <script type="module" src="https://unpkg.com/x-frame-bypass" />
+          {/*<script type="module" src="https://unpkg.com/x-frame-bypass" />*/}
         </Helmet>
-        ...
       </div>
     );
   }

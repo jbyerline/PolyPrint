@@ -9,7 +9,7 @@ class ConnectionDatastore {
 
   loginPath = "/login";
   basePath = "/api";
-  baseURL = "https://mk3s.byerline.me";
+  baseURL = "https://orusa.byerline.me";
   apiUrl = this.baseURL + this.basePath;
 
   apiKey = "F709DCD954D1417B95B9D57014D05357";

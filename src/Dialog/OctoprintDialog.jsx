@@ -5,6 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { makeStyles } from "@mui/styles";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import CloseIcon from "@mui/icons-material/Close";
 
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
@@ -22,18 +25,25 @@ export default function OctoprintDialog(props) {
       maxWidth="xl"
       open={props.isOpen}
     >
-      <DialogTitle>{props.printerName}</DialogTitle>
+      <DialogTitle>
+        <Box display="flex" alignItems="center">
+          <Box flexGrow={1}>{props.printerName}</Box>
+          <Box>
+            <IconButton onClick={props.closeDialog}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <iframe
           style={{
             width: "100%",
-            height: "100vh",
+            height: "80vh",
           }}
-          id="test"
-          is="x-frame-bypass"
           src={props.octoprintUrl}
           width="100%"
-          height="100vh"
+          height="80vh"
           frameBorder="0"
           allowFullScreen
         />

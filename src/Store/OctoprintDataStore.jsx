@@ -10,13 +10,17 @@ class OctoprintDataStore {
   serverPath = "/server";
   profilePath = "/printerprofiles";
   settingsPath = "/settings";
+  printerStatePath = "/printer";
+  jobPath = "/job";
+  connectionPath = "/connection";
+  restartPath = "/system/commands/core/restart";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
     return url + this.basePath + path;
   }
 
-  fetchProfileInfo = (link, apiKey) => {
+  updateIFramePolicy = (link, apiKey) => {
     const api = ky.extend({
       hooks: {
         beforeRequest: [
@@ -27,17 +31,32 @@ class OctoprintDataStore {
       },
     });
 
-    return api
-      .get(this.makeApiUrl(link, this.profilePath))
+    api
+      .post(this.makeApiUrl(link, this.settingsPath), {
+        json: { server: { allowFraming: true } },
+      })
       .json()
-      .catch((err) =>
-        console.log("Error retrieving Offers Checklist data", err)
-      );
+      .catch((err) => console.log("Error updating iFrame Policy", err));
+  };
+
+  restartOctoprint = (link, apiKey) => {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    api
+      .post(this.makeApiUrl(link, this.restartPath))
+      .json()
+      .catch((err) => console.log("Error restarting Octoprint", err));
   };
 
   fetchGeneralInfo(link, apiKey) {
-    const defaultQueryParams = {};
-
     const api = ky.extend({
       hooks: {
         beforeRequest: [
@@ -49,18 +68,10 @@ class OctoprintDataStore {
     });
 
     return Promise.all([
-      api.get(this.makeApiUrl(link, this.versionPath), {
-        defaultQueryParams,
-      }),
-      api.get(this.makeApiUrl(link, this.profilePath), {
-        defaultQueryParams,
-      }),
-      api.get(this.makeApiUrl(link, this.serverPath), {
-        defaultQueryParams,
-      }),
-      api.get(this.makeApiUrl(link, this.settingsPath), {
-        defaultQueryParams,
-      }),
+      api.get(this.makeApiUrl(link, this.versionPath)),
+      api.get(this.makeApiUrl(link, this.profilePath)),
+      api.get(this.makeApiUrl(link, this.serverPath)),
+      api.get(this.makeApiUrl(link, this.settingsPath)),
     ])
       .then((responses) => {
         // Get a JSON object from each of the responses
@@ -75,5 +86,102 @@ class OctoprintDataStore {
         console.log(error);
       });
   }
+
+  fetchPrinterStatus(link, apiKey) {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    return Promise.all([api.get(this.makeApiUrl(link, this.printerStatePath))])
+      .then((responses) => {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
+  }
+
+  fetchJobStatus(link, apiKey) {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    return Promise.all([api.get(this.makeApiUrl(link, this.jobPath))])
+      .then((responses) => {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
+  }
+
+  fetchConnectionInfo(link, apiKey) {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    return Promise.all([api.get(this.makeApiUrl(link, this.connectionPath))])
+      .then((responses) => {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
+  }
+
+  modifyPrinterConnection = (link, apiKey, connection) => {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    api
+      .post(this.makeApiUrl(link, this.connectionPath), {
+        json: { command: connection },
+      })
+      .json()
+      .catch((err) => console.log("Error connecting to printer", err));
+  };
 }
 export default OctoprintDataStore;

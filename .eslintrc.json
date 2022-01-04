@@ -19,8 +19,7 @@
         "newlines-between": "always"
       }
     ],
-    "import/newline-after-import": "error",
-    "react/forbid-component-props": ["error", { "forbid": ["style"] }]
+    "import/newline-after-import": "error"
   },
   "settings": {
     "import/resolver": {
