@@ -20,10 +20,10 @@ const Home = () => {
         octoPrintLink="https://orusa.byerline.me"
         printerApiKey="F709DCD954D1417B95B9D57014D05357"
       />
-      <PrinterCard
-        octoPrintLink="https://grusa.byerline.me"
-        printerApiKey="4704A7C866C1436EBF08B6514CBAF149"
-      />
+      {/*<PrinterCard*/}
+      {/*  octoPrintLink="https://grusa.byerline.me"*/}
+      {/*  printerApiKey="4704A7C866C1436EBF08B6514CBAF149"*/}
+      {/*/>*/}
       <PrinterCard
         octoPrintLink="https://yender3.byerline.me"
         printerApiKey="10322EDE4D434B1CA2F5679B378285A8"

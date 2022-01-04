@@ -10,7 +10,6 @@ class MetaHelmet extends Component {
           <title>Octopod</title>
           {/*<script type="module" src="https://unpkg.com/x-frame-bypass" />*/}
         </Helmet>
-        ...
       </div>
     );
   }

@@ -13,14 +13,12 @@ export default function ConnectIcon(props) {
     props.dataStore
       .fetchConnectionInfo(props.octoPrintLink, props.apiKey)
       .then((data) => {
-        console.log(data);
         setConnectionInfo(data);
       })
       .catch((err) => console.log("Error retrieving connection info", err));
   }, [dataRefresh]);
 
   const handleConnect = () => {
-    console.log("Connecting...");
     props.dataStore.modifyPrinterConnection(
       props.octoPrintLink,
       props.apiKey,
@@ -30,7 +28,6 @@ export default function ConnectIcon(props) {
     triggerConnectionRefresh(!dataRefresh);
   };
   const handleDisconnect = () => {
-    console.log("Disconnecting...");
     props.dataStore.modifyPrinterConnection(
       props.octoPrintLink,
       props.apiKey,

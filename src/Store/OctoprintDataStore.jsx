@@ -36,9 +36,6 @@ class OctoprintDataStore {
         json: { server: { allowFraming: true } },
       })
       .json()
-      .then((data) => {
-        console.log(data);
-      })
       .catch((err) => console.log("Error updating iFrame Policy", err));
   };
 
@@ -56,9 +53,6 @@ class OctoprintDataStore {
     api
       .post(this.makeApiUrl(link, this.restartPath))
       .json()
-      .then((data) => {
-        console.log(data);
-      })
       .catch((err) => console.log("Error restarting Octoprint", err));
   };
 
@@ -187,9 +181,6 @@ class OctoprintDataStore {
         json: { command: connection },
       })
       .json()
-      .then((data) => {
-        console.log(data);
-      })
       .catch((err) => console.log("Error connecting to printer", err));
   };
 }
