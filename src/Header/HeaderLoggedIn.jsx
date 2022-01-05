@@ -27,6 +27,12 @@ const useStyles = makeStyles(() => ({
       borderBottom: "1px solid pink",
     },
   },
+  image: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "8px",
+    marginRight: "10px",
+  },
 }));
 
 function HeaderLoggedIn() {
@@ -36,9 +42,21 @@ function HeaderLoggedIn() {
     <AppBar position="static" sx={{ bgcolor: theme.palette.primary.main }}>
       <CssBaseline />
       <Toolbar className={classes.header}>
-        <div>
-          <Typography variant="h4">PolyPrint</Typography>
-          <Typography variant="h8">for OctoPrint</Typography>
+        <div className={classes.header}>
+          <div className={classes.image}>
+            <img
+              src="/Logo_White_100x100.png"
+              alt="logo"
+              width="50"
+              height="50"
+            />
+          </div>
+          <div>
+            <div>
+              <Typography variant="h4">PolyPrint</Typography>
+              <Typography variant="h8">for OctoPrint</Typography>
+            </div>
+          </div>
         </div>
         <div>
           <Tooltip
