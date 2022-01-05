@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import React from "react";
 import ky from "ky";
 
 class ConnectionDatastore {

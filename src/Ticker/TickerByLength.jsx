@@ -8,10 +8,10 @@ export default function TickerByLength(props) {
   } else {
     return (
       <Ticker speed={props.speed} mode={props.mode}>
-        {({ index }) => (
-          <>
-            <Typography align="right">{props.text}</Typography>
-          </>
+        {() => (
+          <Typography align="right" noWrap>
+            {props.text}
+          </Typography>
         )}
       </Ticker>
     );

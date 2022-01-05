@@ -12,6 +12,7 @@ class OctoprintDataStore {
   settingsPath = "/settings";
   printerStatePath = "/printer";
   jobPath = "/job";
+  filePath = "/files";
   connectionPath = "/connection";
   restartPath = "/system/commands/core/restart";
   basePath = "/api";
@@ -125,6 +126,32 @@ class OctoprintDataStore {
     });
 
     return Promise.all([api.get(this.makeApiUrl(link, this.jobPath))])
+      .then((responses) => {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
+  }
+
+  fetchAllFiles(link, apiKey) {
+    const api = ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+
+    return Promise.all([api.get(this.makeApiUrl(link, this.filePath))])
       .then((responses) => {
         // Get a JSON object from each of the responses
         return Promise.all(
