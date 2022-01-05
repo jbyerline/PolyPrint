@@ -303,7 +303,7 @@ const PrinterCard = observer((props) => {
                 >
                   <Grid item xs={6}>
                     <Typography align="left">Server Version:</Typography>
-                    <Typography align="left">Link to Download File:</Typography>
+                    <Typography align="left">Current File Download:</Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography align="right">{printerVersion}</Typography>

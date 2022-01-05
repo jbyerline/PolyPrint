@@ -28,7 +28,10 @@ function HeaderLoggedIn() {
     <AppBar position="static" sx={{ bgcolor: theme.palette.primary.main }}>
       <CssBaseline />
       <Toolbar className={classes.header}>
-        <Typography variant="h4">OctoPod</Typography>
+        <div>
+          <Typography variant="h4">PolyPrint</Typography>
+          <Typography variant="h8">for OctoPrint</Typography>
+        </div>
         <Link
           to="/login"
           onClick={() => localStorage.clear()}
