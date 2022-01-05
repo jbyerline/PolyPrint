@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import theme from "../appTheme";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
     display: "flex",
     justifyContent: "space-between",

@@ -1,11 +1,19 @@
 import React from "react";
-import { AppBar, Toolbar, CssBaseline, Typography } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  CssBaseline,
+  Typography,
+  Tooltip,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import theme from "../appTheme";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
     display: "flex",
     justifyContent: "space-between",
@@ -32,13 +40,23 @@ function HeaderLoggedIn() {
           <Typography variant="h4">PolyPrint</Typography>
           <Typography variant="h8">for OctoPrint</Typography>
         </div>
-        <Link
-          to="/login"
-          onClick={() => localStorage.clear()}
-          className={classes.link}
-        >
-          Logout
-        </Link>
+        <div>
+          <Tooltip
+            title="Settings"
+            style={{ marginRight: "10px", marginBottom: "5px" }}
+          >
+            <IconButton>
+              <SettingsIcon aria-label="settings" style={{ fill: "white" }} />
+            </IconButton>
+          </Tooltip>
+          <Link
+            to="/login"
+            onClick={() => localStorage.clear()}
+            className={classes.link}
+          >
+            Logout
+          </Link>
+        </div>
       </Toolbar>
     </AppBar>
   );

@@ -30,6 +30,8 @@ import ConnectIcon from "../Icons/ConnectIcon";
 import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
 import PowerMenu from "../Menu/PowerMenu";
 
+import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
+
 const octoprintDataStore = new OctoprintDataStore();
 
 const ExpandMore = styled((props) => {
@@ -166,27 +168,12 @@ const PrinterCard = observer((props) => {
     setGeneralDataRefresh(!generalDataRefresh);
   };
 
-  const redirectToOctoPrintURL = () => {
-    window.open(props.octoPrintLink, "_blank");
-  };
-
   const downloadFile = () => {
     window.open(downloadLink, "_blank");
   };
 
   if (!generalData) {
-    return (
-      <Card sx={{ width: 400 }}>
-        <CardHeader title="Printer Unavailable" />
-        <CardContent>
-          <Typography>Unable to connect to: </Typography>
-          <Button variant="text" onClick={redirectToOctoPrintURL}>
-            {props.octoPrintLink}
-          </Button>
-          <Typography>OctoPrint is most likely powered off</Typography>
-        </CardContent>
-      </Card>
-    );
+    return <DisconnectedPrinterCard octoPrintLink={props.octoPrintLink} />;
   } else {
     return (
       <Card sx={{ width: 400 }}>
@@ -265,12 +252,12 @@ const PrinterCard = observer((props) => {
             apiKey={props.printerApiKey}
           />
           <Tooltip title="GCode Terminal">
-            <IconButton>
-              <TerminalIcon aria-label="gcode-terminal" />
+            <IconButton aria-label="gcode-terminal">
+              <TerminalIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Control">
-            <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
+            <IconButton aria-label="octo-print">
               <FontAwesomeIcon icon={faArrowsAlt} />
             </IconButton>
           </Tooltip>
@@ -279,7 +266,6 @@ const PrinterCard = observer((props) => {
               <FontAwesomeIcon icon={faOctopusDeploy} />
             </IconButton>
           </Tooltip>
-
           <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}

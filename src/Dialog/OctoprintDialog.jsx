@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   dialogPaper: {
     minHeight: "80vh",
     maxHeight: "80vh",
@@ -37,6 +37,7 @@ export default function OctoprintDialog(props) {
       </DialogTitle>
       <DialogContent>
         <iframe
+          title="Octoprint-in-dialog"
           style={{
             width: "100%",
             height: "80vh",

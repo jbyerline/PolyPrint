@@ -8,7 +8,6 @@ import {
 
 import HeaderLoggedIn from "../Header/HeaderLoggedIn";
 import SignIn from "../Pages/SignIn";
-import SignUp from "../Pages/SignUp";
 import Home from "../Pages/Home";
 import HeaderLoggedOut from "../Header/HeaderLoggedOut";
 import Footer from "../Footer/Footer";

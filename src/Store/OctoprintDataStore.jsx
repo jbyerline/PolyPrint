@@ -21,8 +21,8 @@ class OctoprintDataStore {
     return url + this.basePath + path;
   }
 
-  updateIFramePolicy = (link, apiKey) => {
-    const api = ky.extend({
+  createApiInstance(apiKey) {
+    return ky.extend({
       hooks: {
         beforeRequest: [
           (request) => {
@@ -31,6 +31,10 @@ class OctoprintDataStore {
         ],
       },
     });
+  }
+
+  updateIFramePolicy = (link, apiKey) => {
+    const api = this.createApiInstance(apiKey);
 
     api
       .post(this.makeApiUrl(link, this.settingsPath), {
@@ -41,15 +45,7 @@ class OctoprintDataStore {
   };
 
   restartOctoprint = (link, apiKey) => {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     api
       .post(this.makeApiUrl(link, this.restartPath))
@@ -58,15 +54,7 @@ class OctoprintDataStore {
   };
 
   fetchGeneralInfo(link, apiKey) {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     return Promise.all([
       api.get(this.makeApiUrl(link, this.versionPath)),
@@ -89,15 +77,7 @@ class OctoprintDataStore {
   }
 
   fetchPrinterStatus(link, apiKey) {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     return Promise.all([api.get(this.makeApiUrl(link, this.printerStatePath))])
       .then((responses) => {
@@ -115,15 +95,7 @@ class OctoprintDataStore {
   }
 
   fetchJobStatus(link, apiKey) {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     return Promise.all([api.get(this.makeApiUrl(link, this.jobPath))])
       .then((responses) => {
@@ -141,15 +113,7 @@ class OctoprintDataStore {
   }
 
   fetchAllFiles(link, apiKey) {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     return Promise.all([api.get(this.makeApiUrl(link, this.filePath))])
       .then((responses) => {
@@ -167,15 +131,7 @@ class OctoprintDataStore {
   }
 
   fetchConnectionInfo(link, apiKey) {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     return Promise.all([api.get(this.makeApiUrl(link, this.connectionPath))])
       .then((responses) => {
@@ -193,15 +149,7 @@ class OctoprintDataStore {
   }
 
   modifyPrinterConnection = (link, apiKey, connection) => {
-    const api = ky.extend({
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            request.headers.set("X-Api-Key", apiKey);
-          },
-        ],
-      },
-    });
+    const api = this.createApiInstance(apiKey);
 
     api
       .post(this.makeApiUrl(link, this.connectionPath), {

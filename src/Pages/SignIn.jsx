@@ -12,20 +12,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Alert, Collapse } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import ConnectionsStore from "../Store/ConnectionsStore";
 
-const useStyles = makeStyles((theme) => ({
-  grid: {
-    textAlign: "center",
-  },
-}));
-
 export default function SignIn() {
-  const classes = useStyles();
   const history = useHistory();
   const connection = new ConnectionsStore();
 

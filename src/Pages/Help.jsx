@@ -2,7 +2,7 @@ import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { Typography } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   cards: {
     display: "flex",
     gap: "10px",
