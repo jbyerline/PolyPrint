@@ -1,7 +1,9 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
+import { useEffect, useState } from "react";
 
 import PrinterCard from "../Cards/PrinterCard";
+import InitialSetupDialog from "../Dialog/InitialSetupDialog";
 
 const useStyles = makeStyles(() => ({
   cards: {
@@ -14,35 +16,59 @@ const useStyles = makeStyles(() => ({
 
 const Home = () => {
   const classes = useStyles();
-  return (
-    <div className={classes.cards}>
-      <PrinterCard
-        octoPrintLink="https://orusa.byerline.me"
-        printerApiKey="F709DCD954D1417B95B9D57014D05357"
-        printerThemeColor="orange"
-        type="RepRap"
+  const [printerConfig, setPrinterConfig] = useState();
+  const [initialSetUpOpen, setInitialSetUpOpen] = React.useState(false);
+
+  const getData = () => {
+    fetch("PrinterConfig.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        setPrinterConfig(myJson);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const handleCloseSetUpDialog = () => {
+    setInitialSetUpOpen(false);
+  };
+
+  if (printerConfig && printerConfig.printers[0].name === "Demo Printer") {
+    if (initialSetUpOpen === false) {
+      setInitialSetUpOpen(true);
+    }
+    return (
+      <InitialSetupDialog
+        isOpen={initialSetUpOpen}
+        closeDialog={handleCloseSetUpDialog}
       />
-      <PrinterCard
-        octoPrintLink="https://grusa.byerline.me"
-        printerApiKey="4704A7C866C1436EBF08B6514CBAF149"
-      />
-      <PrinterCard
-        octoPrintLink="https://yender3.byerline.me"
-        printerApiKey="10322EDE4D434B1CA2F5679B378285A8"
-      />
-      <PrinterCard
-        octoPrintLink="https://bender3.byerline.me"
-        printerApiKey="48F431A116694F7FAB1740C114A2B6DD"
-      />
-      <PrinterCard
-        octoPrintLink="https://cr10.byerline.me"
-        printerApiKey="B29E741ADF45415E9FD0372488BE3B6E"
-      />
-      <PrinterCard
-        octoPrintLink="http://ender3.danielburns.me:8080/"
-        printerApiKey="3863CCB8919C4D84957897157D964699"
-      />
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className={classes.cards}>
+        {printerConfig ? (
+          printerConfig.printers.map((printer) => (
+            // eslint-disable-next-line react/jsx-key
+            <PrinterCard
+              printerName={printer.name}
+              octoPrintLink={printer.URL}
+              printerApiKey={printer.apiKey}
+            />
+          ))
+        ) : (
+          <p>N/A</p>
+        )}
+      </div>
+    );
+  }
 };
 export default Home;

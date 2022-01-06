@@ -14,9 +14,10 @@ export default function DisconnectedPrinterCard(props) {
     <Card sx={{ width: 400 }}>
       <CardHeader title="Printer Unavailable" />
       <CardContent>
-        <Typography>Unable to connect to: </Typography>
+        <Typography>Unable to connect to:</Typography>
+        <Typography variant="h6">{props.printerName}</Typography>
         <Button variant="text" onClick={redirectToOctoPrintURL}>
-          {props.octoPrintLink}
+          URL: {props.octoPrintLink}
         </Button>
         <Typography>OctoPrint is most likely powered off</Typography>
       </CardContent>

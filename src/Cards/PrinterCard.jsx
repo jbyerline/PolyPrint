@@ -173,7 +173,12 @@ const PrinterCard = observer((props) => {
   };
 
   if (!generalData) {
-    return <DisconnectedPrinterCard octoPrintLink={props.octoPrintLink} />;
+    return (
+      <DisconnectedPrinterCard
+        printerName={props.printerName}
+        octoPrintLink={props.octoPrintLink}
+      />
+    );
   } else {
     return (
       <Card sx={{ width: 400 }}>
@@ -181,13 +186,13 @@ const PrinterCard = observer((props) => {
           avatar={
             <Avatar
               sx={{ bgcolor: printerThemeColor }}
-              aria-label={printerName}
+              aria-label={props.printerName}
             >
-              {printerName ? printerName.charAt(0) : ""}
+              {props.printerName ? props.printerName.charAt(0) : ""}
             </Avatar>
           }
           action={<PowerMenu />}
-          title={printerName}
+          title={props.printerName}
           subheader={printerStatus}
         />
 

@@ -1,0 +1,9 @@
+{
+  "printers": [
+    {
+      "name": "Demo Printer",
+      "URL": "https://my.octoprint.url or 192.168.1.25",
+      "apiKey": "abc...xyz"
+    }
+  ]
+}
