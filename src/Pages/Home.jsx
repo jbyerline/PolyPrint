@@ -1,9 +1,11 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
 
 import PrinterCard from "../Cards/PrinterCard";
 import InitialSetupDialog from "../Dialog/InitialSetupDialog";
+import WelcomeDialog from "../Dialog/WelcomeDialog";
 
 const useStyles = makeStyles(() => ({
   cards: {
@@ -17,7 +19,9 @@ const useStyles = makeStyles(() => ({
 const Home = () => {
   const classes = useStyles();
   const [printerConfig, setPrinterConfig] = useState();
+  const [welcomeOpen, setWelcomeOpen] = React.useState(true);
   const [initialSetUpOpen, setInitialSetUpOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getData = () => {
     fetch("PrinterConfig.json", {
@@ -31,44 +35,68 @@ const Home = () => {
       })
       .then(function (myJson) {
         setPrinterConfig(myJson);
+        setIsLoading(false);
       });
   };
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [initialSetUpOpen]);
+
+  const handleOpenSetUpDialog = () => {
+    setWelcomeOpen(false);
+    setInitialSetUpOpen(true);
+  };
 
   const handleCloseSetUpDialog = () => {
     setInitialSetUpOpen(false);
   };
 
-  if (printerConfig && printerConfig.printers[0].name === "Demo Printer") {
-    if (initialSetUpOpen === false) {
-      setInitialSetUpOpen(true);
-    }
+  if (isLoading) {
     return (
-      <InitialSetupDialog
-        isOpen={initialSetUpOpen}
-        closeDialog={handleCloseSetUpDialog}
-      />
-    );
-  } else {
-    return (
-      <div className={classes.cards}>
-        {printerConfig ? (
-          printerConfig.printers.map((printer) => (
-            // eslint-disable-next-line react/jsx-key
-            <PrinterCard
-              printerName={printer.name}
-              octoPrintLink={printer.URL}
-              printerApiKey={printer.apiKey}
-            />
-          ))
-        ) : (
-          <p>N/A</p>
-        )}
+      <div>
+        <Typography>Loading</Typography>
       </div>
     );
+  } else {
+    if (!printerConfig.printers[0].name === "Demo Printer") {
+      if (welcomeOpen === true) {
+        setWelcomeOpen(false);
+      }
+    }
+    if (welcomeOpen) {
+      return (
+        <WelcomeDialog
+          isOpen={welcomeOpen}
+          openSetupDialog={handleOpenSetUpDialog}
+        />
+      );
+    } else if (initialSetUpOpen) {
+      return (
+        <InitialSetupDialog
+          isOpen={initialSetUpOpen}
+          closeDialog={handleCloseSetUpDialog}
+        />
+      );
+    } else {
+      return (
+        <div className={classes.cards}>
+          {printerConfig ? (
+            printerConfig.printers.map((printer) => (
+              // eslint-disable-next-line react/jsx-key
+              <PrinterCard
+                printerName={printer.name}
+                octoPrintLink={printer.URL}
+                printerApiKey={printer.apiKey}
+                key=""
+              />
+            ))
+          ) : (
+            <p>N/A</p>
+          )}
+        </div>
+      );
+    }
   }
 };
 export default Home;
