@@ -158,5 +158,16 @@ class OctoprintDataStore {
       .json()
       .catch((err) => console.log("Error connecting to printer", err));
   };
+
+  sendJobCommand = (link, apiKey, command, action) => {
+    const api = this.createApiInstance(apiKey);
+
+    api
+      .post(this.makeApiUrl(link, this.jobPath), {
+        json: { command, action },
+      })
+      .json()
+      .catch((err) => console.log("Error sending command to printer", err));
+  };
 }
 export default OctoprintDataStore;

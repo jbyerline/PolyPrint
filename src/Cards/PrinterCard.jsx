@@ -9,9 +9,13 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import PushPinIcon from "@mui/icons-material/PushPin";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import NotStartedIcon from "@mui/icons-material/NotStarted";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faOctopusDeploy } from "@fortawesome/free-brands-svg-icons";
 import { faArrowsAlt } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +33,7 @@ import TickerByLength from "../Ticker/TickerByLength";
 import ConnectIcon from "../Icons/ConnectIcon";
 import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
 import PowerMenu from "../Menu/PowerMenu";
+import StartPrintDialog from "../Dialog/StartPrintDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 
@@ -56,6 +61,9 @@ const PrinterCard = observer((props) => {
   const [jobState, setJobState] = useState();
   const [files, setFiles] = useState();
   const [generalError, setGeneralError] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isStartPrintDialogOpen, setIsStartPrintDialogOpen] =
+    React.useState(false);
 
   const printerName = generalData ? generalData.profiles._default.name : "N/A";
   const printerThemeColor = generalData
@@ -150,6 +158,40 @@ const PrinterCard = observer((props) => {
     setExpanded(!expanded);
   };
 
+  const handlePauseIconClick = () => {
+    setIsPaused(true);
+    octoprintDataStore.sendJobCommand(
+      props.octoPrintLink,
+      props.printerApiKey,
+      "pause",
+      "pause"
+    );
+  };
+
+  const handleResumeIconClick = () => {
+    setIsPaused(false);
+    octoprintDataStore.sendJobCommand(
+      props.octoPrintLink,
+      props.printerApiKey,
+      "pause",
+      "resume"
+    );
+  };
+
+  const handleStartIconClick = () => {
+    // TODO: Upload File, Select file, Issue start command.
+    setIsStartPrintDialogOpen(true);
+    console.log("Starting Print...");
+  };
+
+  const handleStopIconClick = () => {
+    octoprintDataStore.sendJobCommand(
+      props.octoPrintLink,
+      props.printerApiKey,
+      "cancel"
+    );
+  };
+
   const handleOctoIconClick = () => {
     if (generalData.server.allowFraming === false) {
       isIframeDialogOpen(true);
@@ -162,6 +204,9 @@ const PrinterCard = observer((props) => {
   };
   const handleCloseIframeDialog = () => {
     isIframeDialogOpen(false);
+  };
+  const handleCloseStartPrintDialog = () => {
+    setIsStartPrintDialogOpen(false);
   };
 
   const triggerGeneralDataRefresh = () => {
@@ -246,28 +291,71 @@ const PrinterCard = observer((props) => {
           <LinearProgressWithLabel value={printCompletionPercent} />
         </CardContent>
         <CardActions disableSpacing>
-          <Tooltip title="Pin to Front">
-            <IconButton aria-label="add to favorites">
-              <PushPinIcon />
-            </IconButton>
-          </Tooltip>
           <ConnectIcon
             dataStore={octoprintDataStore}
             octoPrintLink={props.octoPrintLink}
             apiKey={props.printerApiKey}
           />
+          {printerStatus === "Printing" || printerStatus === "Paused" ? (
+            <div>
+              {isPaused ? (
+                <Tooltip title="Resume Print">
+                  <IconButton
+                    aria-label="resume print"
+                    onClick={handleResumeIconClick}
+                  >
+                    <PlayCircleIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Pause Print">
+                  <IconButton
+                    aria-label="pause print"
+                    onClick={handlePauseIconClick}
+                  >
+                    <PauseCircleIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+
+              <Tooltip title="Cancel Print">
+                <IconButton
+                  aria-label="cancel print"
+                  onClick={handleStopIconClick}
+                >
+                  <CancelIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          ) : (
+            <div>
+              <Tooltip title="Start Print">
+                <IconButton
+                  aria-label="start print"
+                  onClick={handleStartIconClick}
+                >
+                  <NotStartedIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
           <Tooltip title="GCode Terminal">
-            <IconButton aria-label="gcode-terminal">
+            <IconButton aria-label="gcode terminal">
               <TerminalIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Control">
-            <IconButton aria-label="octo-print">
+            <IconButton aria-label="control printer">
               <FontAwesomeIcon icon={faArrowsAlt} />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Preheat">
+            <IconButton aria-label="preheat">
+              <DeviceThermostatIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="OctoPrint">
-            <IconButton aria-label="octo-print" onClick={handleOctoIconClick}>
+            <IconButton aria-label="octoprint" onClick={handleOctoIconClick}>
               <FontAwesomeIcon icon={faOctopusDeploy} />
             </IconButton>
           </Tooltip>
@@ -323,6 +411,10 @@ const PrinterCard = observer((props) => {
           apiKey={props.printerApiKey}
           closeDialog={handleCloseIframeDialog}
           triggerRefresh={triggerGeneralDataRefresh}
+        />
+        <StartPrintDialog
+          isOpen={isStartPrintDialogOpen}
+          closeDialog={handleCloseStartPrintDialog}
         />
       </Card>
     );
