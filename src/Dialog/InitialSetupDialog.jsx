@@ -22,10 +22,7 @@ export default function InitialSetupDialog(props) {
   const [userConfig, setUserConfig] = useState();
 
   const handleConfigFileUpdate = () => {
-    const userConfigString = JSON.stringify(userConfig);
-    // const fs = require("fs");
-    // fs.writeFile("myjsonfile.json", userConfigString, "utf8");
-    // props.closeDialog();
+    console.log("Update File: ", userConfig);
   };
 
   return (

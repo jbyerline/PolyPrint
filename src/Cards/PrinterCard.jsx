@@ -34,6 +34,7 @@ import ConnectIcon from "../Icons/ConnectIcon";
 import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
 import PowerMenu from "../Menu/PowerMenu";
 import StartPrintDialog from "../Dialog/StartPrintDialog";
+import PreheatDialog from "../Dialog/PreheatDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 
@@ -64,6 +65,7 @@ const PrinterCard = observer((props) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isStartPrintDialogOpen, setIsStartPrintDialogOpen] =
     React.useState(false);
+  const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
 
   const printerName = generalData ? generalData.profiles._default.name : "N/A";
   const printerThemeColor = generalData
@@ -205,6 +207,12 @@ const PrinterCard = observer((props) => {
   };
   const handleCloseStartPrintDialog = () => {
     setIsStartPrintDialogOpen(false);
+  };
+  const handlePreheatIconClick = () => {
+    setIsPreheatDialogOpen(true);
+  };
+  const handleClosePreheatDialog = () => {
+    setIsPreheatDialogOpen(false);
   };
 
   const triggerGeneralDataRefresh = () => {
@@ -350,7 +358,7 @@ const PrinterCard = observer((props) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Preheat">
-            <IconButton aria-label="preheat">
+            <IconButton aria-label="preheat" onClick={handlePreheatIconClick}>
               <DeviceThermostatIcon />
             </IconButton>
           </Tooltip>
@@ -415,6 +423,14 @@ const PrinterCard = observer((props) => {
         <StartPrintDialog
           isOpen={isStartPrintDialogOpen}
           closeDialog={handleCloseStartPrintDialog}
+          printerFiles={files}
+          octoprintUrl={props.octoPrintLink}
+          datastore={octoprintDataStore}
+          apiKey={props.printerApiKey}
+        />
+        <PreheatDialog
+          isOpen={isPreheatDialogOpen}
+          closeDialog={handleClosePreheatDialog}
           printerFiles={files}
           octoprintUrl={props.octoPrintLink}
           datastore={octoprintDataStore}

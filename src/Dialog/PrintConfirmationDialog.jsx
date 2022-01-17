@@ -13,7 +13,6 @@ export default function PrintConfirmationDialog(props) {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const startPrint = () => {
-    console.log("Starting print");
     props.datastore.startPrint(
       props.octoprintUrl,
       props.apiKey,
