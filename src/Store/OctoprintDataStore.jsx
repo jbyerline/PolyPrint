@@ -169,5 +169,16 @@ class OctoprintDataStore {
       .json()
       .catch((err) => console.log("Error sending command to printer", err));
   };
+
+  startPrint = (link, apiKey, origin, path) => {
+    const api = this.createApiInstance(apiKey);
+
+    api
+      .post(this.makeApiUrl(link, this.filePath + "/" + origin + "/" + path), {
+        json: { command: "select", print: true },
+      })
+      .json()
+      .catch((err) => console.log("Error starting print", err));
+  };
 }
 export default OctoprintDataStore;

@@ -179,9 +179,7 @@ const PrinterCard = observer((props) => {
   };
 
   const handleStartIconClick = () => {
-    // TODO: Upload File, Select file, Issue start command.
     setIsStartPrintDialogOpen(true);
-    console.log("Starting Print...");
   };
 
   const handleStopIconClick = () => {
@@ -296,7 +294,9 @@ const PrinterCard = observer((props) => {
             octoPrintLink={props.octoPrintLink}
             apiKey={props.printerApiKey}
           />
-          {printerStatus === "Printing" || printerStatus === "Paused" ? (
+          {printerStatus === "Printing" ||
+          printerStatus === "Paused" ||
+          printerStatus === "Pausing" ? (
             <div>
               {isPaused ? (
                 <Tooltip title="Resume Print">
@@ -304,7 +304,7 @@ const PrinterCard = observer((props) => {
                     aria-label="resume print"
                     onClick={handleResumeIconClick}
                   >
-                    <PlayCircleIcon />
+                    <NotStartedIcon />
                   </IconButton>
                 </Tooltip>
               ) : (
@@ -334,7 +334,7 @@ const PrinterCard = observer((props) => {
                   aria-label="start print"
                   onClick={handleStartIconClick}
                 >
-                  <NotStartedIcon />
+                  <PlayCircleIcon />
                 </IconButton>
               </Tooltip>
             </div>
@@ -415,6 +415,10 @@ const PrinterCard = observer((props) => {
         <StartPrintDialog
           isOpen={isStartPrintDialogOpen}
           closeDialog={handleCloseStartPrintDialog}
+          printerFiles={files}
+          octoprintUrl={props.octoPrintLink}
+          datastore={octoprintDataStore}
+          apiKey={props.printerApiKey}
         />
       </Card>
     );

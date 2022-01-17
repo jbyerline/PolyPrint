@@ -10,6 +10,7 @@ import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 import theme from "../appTheme";
 
@@ -59,6 +60,14 @@ function HeaderLoggedIn() {
           </div>
         </div>
         <div>
+          <Tooltip
+            title="Refresh"
+            style={{ marginRight: "10px", marginBottom: "5px" }}
+          >
+            <IconButton>
+              <RefreshIcon aria-label="refresh" style={{ fill: "white" }} />
+            </IconButton>
+          </Tooltip>
           <Tooltip
             title="Settings"
             style={{ marginRight: "10px", marginBottom: "5px" }}
