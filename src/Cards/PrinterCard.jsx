@@ -35,6 +35,7 @@ import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
 import PowerMenu from "../Menu/PowerMenu";
 import StartPrintDialog from "../Dialog/StartPrintDialog";
 import PreheatDialog from "../Dialog/PreheatDialog";
+import GCodeDialog from "../Dialog/GCodeDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 
@@ -65,6 +66,7 @@ const PrinterCard = observer((props) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isStartPrintDialogOpen, setIsStartPrintDialogOpen] =
     React.useState(false);
+  const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
   const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
 
   const printerName = generalData ? generalData.profiles._default.name : "N/A";
@@ -208,6 +210,12 @@ const PrinterCard = observer((props) => {
   const handleCloseStartPrintDialog = () => {
     setIsStartPrintDialogOpen(false);
   };
+  const handleGCodeIconClick = () => {
+    setIsGCodeDialogOpen(true);
+  };
+  const handleCloseGCodeDialog = () => {
+    setIsGCodeDialogOpen(false);
+  };
   const handlePreheatIconClick = () => {
     setIsPreheatDialogOpen(true);
   };
@@ -348,7 +356,10 @@ const PrinterCard = observer((props) => {
             </div>
           )}
           <Tooltip title="GCode Terminal">
-            <IconButton aria-label="gcode terminal">
+            <IconButton
+              aria-label="gcode terminal"
+              onClick={handleGCodeIconClick}
+            >
               <TerminalIcon />
             </IconButton>
           </Tooltip>
@@ -428,6 +439,10 @@ const PrinterCard = observer((props) => {
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}
           triggerRefresh={triggerGeneralDataRefresh}
+        />
+        <GCodeDialog
+          isOpen={isGCodeDialogOpen}
+          closeDialog={handleCloseGCodeDialog}
         />
         <PreheatDialog
           isOpen={isPreheatDialogOpen}
