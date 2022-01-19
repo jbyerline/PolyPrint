@@ -13,8 +13,11 @@ class OctoprintDataStore {
   printerStatePath = "/printer";
   jobPath = "/job";
   filePath = "/files";
+  fileUploadPath = "/files/local";
   connectionPath = "/connection";
   restartPath = "/system/commands/core/restart";
+  toolPath = "/printer/tool";
+  bedPath = "/printer/bed";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
@@ -170,6 +173,20 @@ class OctoprintDataStore {
       .catch((err) => console.log("Error sending command to printer", err));
   };
 
+  uploadFile = (link, apiKey, file, print) => {
+    const api = this.createApiInstance(apiKey);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("print", print);
+
+    api
+      .post(this.makeApiUrl(link, this.fileUploadPath), {
+        body: formData,
+      })
+      .json()
+      .catch((err) => console.log("Error uploading file", err));
+  };
+
   startPrint = (link, apiKey, origin, path) => {
     const api = this.createApiInstance(apiKey);
 
@@ -179,6 +196,28 @@ class OctoprintDataStore {
       })
       .json()
       .catch((err) => console.log("Error starting print", err));
+  };
+
+  heatNozzle = (link, apiKey, temp) => {
+    const api = this.createApiInstance(apiKey);
+
+    api
+      .post(this.makeApiUrl(link, this.toolPath), {
+        json: { command: "target", targets: { tool0: temp } },
+      })
+      .json()
+      .catch((err) => console.log("Error preheating nozzle", err));
+  };
+
+  heatBed = (link, apiKey, temp) => {
+    const api = this.createApiInstance(apiKey);
+
+    api
+      .post(this.makeApiUrl(link, this.bedPath), {
+        json: { command: "target", target: temp },
+      })
+      .json()
+      .catch((err) => console.log("Error preheating bed", err));
   };
 }
 export default OctoprintDataStore;

@@ -12,12 +12,14 @@ import Divider from "@mui/material/Divider";
 import { useCallback } from "react";
 
 import PrintConfirmationDialog from "./PrintConfirmationDialog";
+import UploadConfirmationDialog from "./UploadConfirmationDialog";
 
 export default function StartPrintDialog(props) {
   const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
     React.useState(false);
-
+  const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState();
+  const [uploadedFile, setUploadedFile] = React.useState();
 
   const handleClick = useCallback(
     (file) => () => {
@@ -31,8 +33,41 @@ export default function StartPrintDialog(props) {
     []
   );
 
+  const handleFileUpload = ({ target }) => {
+    setUploadedFile(target.files[0]);
+    setIsUploadPromptOpen(true);
+  };
+
+  const handleJustUpload = () => {
+    setIsUploadPromptOpen(false);
+    props.closeDialog();
+    props.datastore.uploadFile(
+      props.octoprintUrl,
+      props.apiKey,
+      uploadedFile,
+      false
+    );
+    props.triggerRefresh();
+  };
+
+  const handleUploadAndPrint = () => {
+    setIsUploadPromptOpen(false);
+    props.closeDialog();
+    props.datastore.uploadFile(
+      props.octoprintUrl,
+      props.apiKey,
+      uploadedFile,
+      true
+    );
+    props.triggerRefresh();
+  };
+
   const closeConfirmationPrompt = () => {
     setIsConfirmationPromptOpen(false);
+  };
+
+  const closeUploadPrompt = () => {
+    setIsUploadPromptOpen(false);
   };
 
   const b2s = (t) => {
@@ -79,7 +114,15 @@ export default function StartPrintDialog(props) {
 
       <DialogActions>
         <Button onClick={props.closeDialog}>Cancel</Button>
-        <Button onClick={props.closeDialog}>Upload</Button>
+        <Button component="label">
+          Upload
+          <input
+            onChange={handleFileUpload}
+            type="file"
+            accept=".stl, .gcode, .gco, .g"
+            hidden
+          />
+        </Button>
       </DialogActions>
       <PrintConfirmationDialog
         open={isConfirmationPromptOpen}
@@ -89,6 +132,14 @@ export default function StartPrintDialog(props) {
         octoprintUrl={props.octoprintUrl}
         datastore={props.datastore}
         apiKey={props.apiKey}
+      />
+      <UploadConfirmationDialog
+        open={isUploadPromptOpen}
+        close={closeUploadPrompt}
+        closeOther={props.closeDialog}
+        selectedFile={uploadedFile}
+        justUpload={handleJustUpload}
+        uploadAndPrint={handleUploadAndPrint}
       />
     </Dialog>
   );

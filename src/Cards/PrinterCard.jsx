@@ -427,6 +427,7 @@ const PrinterCard = observer((props) => {
           octoprintUrl={props.octoPrintLink}
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}
+          triggerRefresh={triggerGeneralDataRefresh}
         />
         <PreheatDialog
           isOpen={isPreheatDialogOpen}
@@ -435,6 +436,7 @@ const PrinterCard = observer((props) => {
           octoprintUrl={props.octoPrintLink}
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}
+          printerName={props.printerName}
         />
       </Card>
     );
