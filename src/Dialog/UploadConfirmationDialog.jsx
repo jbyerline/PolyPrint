@@ -10,7 +10,7 @@ export default function UploadConfirmationDialog(props) {
   return (
     <div>
       <Dialog open={props.open} onClose={props.close}>
-        <DialogTitle>Upload and Start Print?</DialogTitle>
+        <DialogTitle>Just Upload or Start Print?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Would you like to print{" "}
