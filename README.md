@@ -27,7 +27,7 @@ This will start a static web server located at [http://localhost:3000](http://lo
 
 ## How to configure PolyPrint
 Inside the folder you unzipped there is a file titled `PrinterConfig.json` you will need to modify this file to
-match the details of each of your OctoPrint printers. 
+set your username and password as well as enter the details for each of your OctoPrint printers. 
 
 The entry must be in valid JSON syntax. The order in which you enter your printers will determine the order of
 appearance on the dashboard
