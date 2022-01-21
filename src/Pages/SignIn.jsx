@@ -14,56 +14,73 @@ import Container from "@mui/material/Container";
 import { Alert, Collapse } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
-import ConnectionsStore from "../Store/ConnectionsStore";
+import { useEffect, useState } from "react";
 
 export default function SignIn() {
   const history = useHistory();
-  const connection = new ConnectionsStore();
 
+  const [formUsername, setUsername] = React.useState("");
+  const [formPassword, setPassword] = React.useState("");
   const [alertIsOpen, setAlertIsOpen] = React.useState(false);
+  const [printerConfig, setPrinterConfig] = useState();
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const getData = () => {
+    fetch("PrinterConfig.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        setPrinterConfig(myJson);
+      });
+  };
 
-    try {
-      const response = await connection.login(
-        data.get("user"),
-        data.get("password"),
-        true
-      );
-      localStorage.setItem("name", response.name);
-      localStorage.setItem("session", response.session);
+  useEffect(() => {
+    getData();
+  }, []);
+
+  function handleSubmit() {
+    if (
+      formUsername === printerConfig.credentials.username &&
+      formPassword === printerConfig.credentials.password
+    ) {
+      localStorage.setItem("name", "PolyPrint");
+      localStorage.setItem("session", "active");
       history.push("/");
-    } catch (e) {
-      console.log("Login unsuccessful \n", e);
+    } else {
+      console.log("Login unsuccessful");
       setAlertIsOpen(true);
     }
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <Collapse in={alertIsOpen}>
-        <Alert
-          severity="error"
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setAlertIsOpen(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          Login Failed
-        </Alert>
-      </Collapse>
+      <div style={{ marginTop: "50px" }}>
+        <Collapse in={alertIsOpen}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setAlertIsOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Login Failed
+          </Alert>
+        </Collapse>
+      </div>
       <CssBaseline />
       <Box
         sx={{
@@ -89,6 +106,9 @@ export default function SignIn() {
             name="user"
             autoComplete="user"
             autoFocus
+            onChange={(event) => {
+              setUsername(event.target.value);
+            }}
           />
           <TextField
             margin="normal"
@@ -99,13 +119,16 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
           <Button
-            type="submit"
+            onClick={handleSubmit}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}

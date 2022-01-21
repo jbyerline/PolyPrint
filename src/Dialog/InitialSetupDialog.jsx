@@ -19,9 +19,32 @@ const useStyles = makeStyles(() => ({
 
 export default function InitialSetupDialog(props) {
   const classes = useStyles();
-  const [userConfig, setUserConfig] = useState();
 
-  const handleConfigFileUpdate = () => {
+  const configPlaceholder = {
+    credentials: {
+      username: "admin",
+      password: "password",
+    },
+    printers: [
+      {
+        name: "Demo Printer",
+        URL: "https://my.octoprint.url",
+        apiKey: "F704DCD954D1417B95B9D57014D05357",
+      },
+      {
+        name: "Other Demo Printer",
+        URL: "192.168.1.25",
+        apiKey: "3863CCB8989C4D84957897157D964699",
+      },
+    ],
+  };
+
+  const [userConfig, setUserConfig] = useState(
+    JSON.stringify(configPlaceholder)
+  );
+
+  const handleConfigCopy = () => {
+    navigator.clipboard.writeText(userConfig);
     console.log("Update File: ", userConfig);
   };
 
@@ -74,25 +97,12 @@ export default function InitialSetupDialog(props) {
         >
           <JSONInput
             id="a_unique_id"
-            placeholder={{
-              printers: [
-                {
-                  name: "Demo Printer",
-                  URL: "https://my.octoprint.url",
-                  apiKey: "F704DCD954D1417B95B9D57014D05357",
-                },
-                {
-                  name: "Other Demo Printer",
-                  URL: "192.168.1.25",
-                  apiKey: "3863CCB8989C4D84957897157D964699",
-                },
-              ],
-            }}
+            placeholder={configPlaceholder}
             locale={locale}
             height="400px"
             width="100%"
             onChange={(data) => {
-              setUserConfig(data.jsObject);
+              setUserConfig(data.json);
             }}
           />
         </div>
@@ -106,13 +116,24 @@ export default function InitialSetupDialog(props) {
           <ListItem>
             <Typography align="left">
               Once you have verified all of the above information is correct,
-              click the continue button to move on.
+              copy the text USING THE BUTTON BELOW! The JSON must be
+              "stringified" in order to be parsed properly.
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography align="left">
+              Then paste it into your PrinterConfig.json file located in the
+              root of the project directory. Once you save that file and refresh
+              you should be at the PolyPrint home screen!
             </Typography>
           </ListItem>
         </List>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleConfigFileUpdate}>Continue</Button>
+        <Typography variant="h4" color="#ff0f0f">
+          Use this button to copy json -->{" "}
+        </Typography>
+        <Button onClick={handleConfigCopy}>Copy Stringified JSON</Button>
       </DialogActions>
     </Dialog>
   );

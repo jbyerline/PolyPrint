@@ -1,13 +1,17 @@
 {
+  "credentials": {
+    "username": "admin",
+    "password": "password"
+  },
   "printers": [
     {
       "name": "Demo Printer 1",
-      "URL": "https://my.octoprint.url or 192.168.1.25",
+      "URL": "https://my.octoprint.url",
       "apiKey": "abc...xyz"
     },
     {
       "name": "Demo Printer 2",
-      "URL": "https://my.octoprint.url or 192.168.1.25",
+      "URL": "http://192.168.1.25",
       "apiKey": "abc...xyz"
     }
   ]
