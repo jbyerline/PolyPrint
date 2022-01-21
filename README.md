@@ -25,18 +25,22 @@ This service is not designed to manage commercial print farms. Rather it is desi
 
 This will start a static web server located at [http://localhost:3000](http://localhost:3000)
 
-## How to make PolyPrint start on boot (Linux)
+## (OPTIONAL) How to make PolyPrint start on boot (Linux)
 1. Create a systemd unit file `sudo nano /etc/systemd/system/polyprint.service`.
 2. Paste the following code into the nano editor:
     1. Change \<yourUser\> to be your actual linux username.
-    2. Change <path/to/PolyPrint.sh> to be the full path to the shell script downloaded from this repo. 
+    2. Change <path/to/build> to be the full path to the build directory. (You can use `pwd` for this)
+    3. Change <path/to/folderAboveBuild> to be the full path to the directory above build. (You can use `cd ..` then `pwd` for this)
+
  ```
 [Unit]
 Description=PolyPrint Dameon
  
 [Service]
 User=<yourUser>
-ExecStart=<path/to/PolyPrint.sh>
+ExecStart=node /usr/local/bin/serve -s -n <path/to/build>
+StandardOutput=file:<path/to/folderAboveBuild>/PolyPrint_info.log
+StandardError=file:<path/to/folderAboveBuild>/PolyPrint_error.log
 Type=simple
 TimeoutStopSec=10
 Restart=on-failure
@@ -45,11 +49,30 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
  ```
-3. Run `sudo  chmod u+x path/to/PolyPrint.sh` to make sure script is executable.
-4. Run `sudo systemctl start polyprint` to start the service for the first time.
-5. Run `sudo systemctl stop polyprint` to stop the service so we can enable it.
-6. Run `sudo systemctl enable polyprint` to enable the service to run on boot.
-7. Reboot the system to verify or run `sudo systemctl start polyprint` to start the service again.
+4. Run `sudo systemctl enable polyprint` to enable the service to run on boot.
+5. Run `sudo systemctl start polyprint` to start the service for the first time.
+Note: Run `sudo systemctl stop polyprint` if you ever want to stop the service.
+Note: Run `sudo systemctl status polyprint` to see if the service is currently running.
+Note: This dameon service assumes you have Node installed on your system and that is is located in `/usr/local/bin`
+
+Here is an example of a working .service file: 
+```
+[Unit]
+Description=PolyPrint Dameon
+
+[Service]
+User=jbyerline
+ExecStart=node /usr/local/bin/serve -s -n /home/jbyerline/PolyPrint/build
+StandardOutput=file:/home/jbyerline/PolyPrint/PolyPrint_info.log
+StandardError=file:/home/jbyerline/PolyPrint/PolyPrint_error.log
+Type=simple
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
  
  
 ## How to configure PolyPrint
