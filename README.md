@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Welcome to PolyPrint!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ <p align="center">
+    <img src="https://user-images.githubusercontent.com/47374239/150470183-31f4f1fc-9bb5-45f4-ba18-30adfcb87549.png" alt="alternate text">
+ </p>
 
-## Available Scripts
+This project was created by Jacob initially as my a project for my masters degree. I have continued adding to it and 
+plan to keep it up for as long as I can manage. This project is currently in Alpha and will contain a lot of bugs. I 
+will do my best to get to them as I can but please be patient and feel free to submit issues and PRs. 
 
-In the project directory, you can run:
+## What is PolyPrint
 
-### `npm start`
+PolyPrint is a 3D printer Web GUI for managing multiple 3D printers. It is a React based web application that uses 
+the OctoPrint API to centrally manage your entire collection. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This service is not designed to manage commercial print farms. Rather it is for Hobbyists and Enthusiasts with multiple
+3D printers to easily keep track of their prints. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## How to set up PolyPrint server
+1. Install `npm` on your system of choice. (A raspberry Pi works fine)
+2. Run `npm i serve` to install the static web server
+3. Download the latest release .zip from [here](https://github.com/jbyerline/PolyPrint/releases/)
+4. Unzip the file into your desired directory
+5. Run `serve -s build` where "build" is the folder you unzipped
 
-### `npm test`
+This will start a static web server located at [http://localhost:3000](http://localhost:3000)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How to configure PolyPrint
+Inside the folder you unzipped there is a file titled `PrinterConfig.json` you will need to modify this file to
+match the details of each of your OctoPrint printers. 
 
-### `npm run build`
+The entry must be in valid JSON syntax. The order in which you enter your printers will determine the order of
+appearance on the dashboard
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. The name is whatever you wish to label the printer in this dashboard.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. The URL is the domain or the IP address of your printers octoprint instance.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. The apiKey is generated from OctoPrint inside settings -> API -> Global API Key
 
-### `npm run eject`
+```json
+{
+  "printers": [
+    {
+      "name": "Demo Printer",
+      "URL": "https://my.octoprint.url",
+      "apiKey": "F704DCD954D1417B95B9D57014D05357"
+    },
+    {
+      "name": "Other Demo Printer",
+      "URL": "192.168.1.25",
+      "apiKey": "3863CCB8989C4D84957897157D964699"
+    }
+  ]
+}
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### NOTE: While inside OctoPrint settings -> API, Please enable CORS as it is required to run this site!
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### You will NOT be able to continue into the dashboard until your config file is valid!
+![Setup](https://user-images.githubusercontent.com/47374239/150470063-744b93d6-9476-486a-b97a-ba32552a2552.png)
+![PolyPrint](https://user-images.githubusercontent.com/47374239/150470009-9308ad61-0537-4a2e-8a86-7fadb1275683.png)
