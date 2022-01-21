@@ -25,6 +25,33 @@ This service is not designed to manage commercial print farms. Rather it is desi
 
 This will start a static web server located at [http://localhost:3000](http://localhost:3000)
 
+## How to make PolyPrint start on boot (Linux)
+1. Create a systemd unit file `sudo nano /etc/systemd/system/polyprint.service`.
+2. Paste the following code into the nano editor:
+    1. Change \<yourUser\> to be your actual linux username.
+    2. Change <path/to/PolyPrint.sh> to be the full path to the shell script downloaded from this repo. 
+ ```
+[Unit]
+Description=PolyPrint Dameon
+ 
+[Service]
+User=<yourUser>
+ExecStart=<path/to/PolyPrint.sh>
+Type=simple
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+ 
+[Install]
+WantedBy=multi-user.target
+ ```
+3. Run `sudo  chmod u+x path/to/PolyPrint.sh` to make sure script is executable.
+4. Run `sudo systemctl start polyprint` to start the service for the first time.
+5. Run `sudo systemctl stop polyprint` to stop the service so we can enable it.
+6. Run `sudo systemctl enable polyprint` to enable the service to run on boot.
+7. Reboot the system to verify or run `sudo systemctl start polyprint` to start the service again.
+ 
+ 
 ## How to configure PolyPrint
 Inside the folder you unzipped there is a file titled `PrinterConfig.json` you will need to modify this file to
 set your username and password as well as enter the details for each of your OctoPrint printers. 
