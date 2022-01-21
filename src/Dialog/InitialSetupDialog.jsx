@@ -45,7 +45,6 @@ export default function InitialSetupDialog(props) {
 
   const handleConfigCopy = () => {
     navigator.clipboard.writeText(userConfig);
-    console.log("Update File: ", userConfig);
   };
 
   return (
@@ -54,7 +53,7 @@ export default function InitialSetupDialog(props) {
       classes={{ paper: classes.dialogPaper }}
       maxWidth="md"
     >
-      <DialogTitle variant="h6">Initial Setup: </DialogTitle>
+      <DialogTitle variant="h5">Initial Setup: </DialogTitle>
       <DialogContent>
         <Typography align="left">
           Please modify the text below to match your printers credentials. The
@@ -65,20 +64,30 @@ export default function InitialSetupDialog(props) {
         <List>
           <ListItem>
             <Typography align="center">
-              1. The name is whatever you wish to label the printer in this
+              1. The username is whatever you want your username to be.
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography align="center">
+              2. The password is whatever you want your password to be.
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography align="center">
+              3. The name is whatever you wish to label the printer in this
               dashboard.
             </Typography>
           </ListItem>
           <ListItem>
             <Typography align="center">
-              2. The URL is the domain or the IP address of your printers
+              4. The URL is the domain or the IP address of your printers
               octoprint instance.
             </Typography>
           </ListItem>
           <ListItem>
             <Typography align="center">
-              3. The apiKey is generated from OctoPrint inside settings -> API
-              -> Global API Key
+              5. The apiKey is generated from OctoPrint inside settings --> API
+              --> Global API Key
             </Typography>
           </ListItem>
           <ListItem>

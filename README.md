@@ -32,14 +32,18 @@ match the details of each of your OctoPrint printers.
 The entry must be in valid JSON syntax. The order in which you enter your printers will determine the order of
 appearance on the dashboard
 
-1. The name is whatever you wish to label the printer in this dashboard.
-
-2. The URL is the domain or the IP address of your printers octoprint instance.
-
-3. The apiKey is generated from OctoPrint inside settings -> API -> Global API Key
+1. The username is whatever you want your username to be.
+2. The password is whatever you want your password to be.
+3. The name is whatever you wish to label the printer in this dashboard.
+4. The URL is the domain or the IP address of your printers octoprint instance.
+5. The apiKey is generated from OctoPrint inside settings -> API -> Global API Key
 
 ```json
 {
+  "credentials": {
+    "username": "admin",
+    "password": "password"
+  },
   "printers": [
     {
       "name": "Demo Printer",
