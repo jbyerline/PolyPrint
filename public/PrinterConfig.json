@@ -1,34 +1,14 @@
 {
   "printers": [
     {
-      "name": "Orusa",
-      "URL": "https://orusa.byerline.me",
-      "apiKey": "F709DCD954D1417B95B9D57014D05357"
+      "name": "Demo Printer 1",
+      "URL": "https://my.octoprint.url or 192.168.1.25",
+      "apiKey": "abc...xyz"
     },
     {
-      "name": "Grusa",
-      "URL": "https://grusa.byerline.me",
-      "apiKey": "4704A7C866C1436EBF08B6514CBAF149"
-    },
-    {
-      "name": "Yender 3",
-      "URL": "https://yender3.byerline.me",
-      "apiKey": "10322EDE4D434B1CA2F5679B378285A8"
-    },
-    {
-      "name": "Bender 3",
-      "URL": "https://bender3.byerline.me",
-      "apiKey": "48F431A116694F7FAB1740C114A2B6DD"
-    },
-    {
-      "name": "CR-10",
-      "URL": "https://cr10.byerline.me",
-      "apiKey": "B29E741ADF45415E9FD0372488BE3B6E"
-    },
-    {
-      "name": "Daniel's Ender 3",
-      "URL": "http://ender3.danielburns.me:8080/",
-      "apiKey": "3863CCB8919C4D84957897157D964699"
+      "name": "Demo Printer 2",
+      "URL": "https://my.octoprint.url or 192.168.1.25",
+      "apiKey": "abc...xyz"
     }
   ]
 }

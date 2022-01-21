@@ -59,7 +59,7 @@ const Home = () => {
       </div>
     );
   } else {
-    if (printerConfig.printers[0].name !== "Demo Printer") {
+    if (printerConfig.printers[0].name !== "Demo Printer 1") {
       if (welcomeOpen === true) {
         setWelcomeOpen(false);
       }
