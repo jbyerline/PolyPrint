@@ -106,7 +106,7 @@ appearance on the dashboard
     },
     {
       "name": "Other Demo Printer",
-      "URL": "192.168.1.25",
+      "URL": "http://192.168.1.25",
       "apiKey": "3863CCB8989C4D84957897157D964699"
     }
   ]
