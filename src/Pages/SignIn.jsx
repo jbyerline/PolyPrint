@@ -16,6 +16,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 
+import theme from "../appTheme";
+
 export default function SignIn() {
   const history = useHistory();
 
@@ -90,7 +92,7 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
