@@ -21,7 +21,7 @@ This service is not designed to manage commercial print farms. Rather it is desi
 2. Run `npm i serve` to install the static web server
 3. Download the latest release .zip from [here](https://github.com/jbyerline/PolyPrint/releases/)
 4. Unzip the file into your desired directory
-5. Run `serve -s build` where "build" is the folder you unzipped
+5. Run `serve -s -n build` where "build" is the folder you unzipped
 
 This will start a static web server located at [http://localhost:3000](http://localhost:3000)
 
