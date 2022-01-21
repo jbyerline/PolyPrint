@@ -51,9 +51,13 @@ WantedBy=multi-user.target
  ```
 4. Run `sudo systemctl enable polyprint` to enable the service to run on boot.
 5. Run `sudo systemctl start polyprint` to start the service for the first time.
-Note: Run `sudo systemctl stop polyprint` if you ever want to stop the service.
-Note: Run `sudo systemctl status polyprint` to see if the service is currently running.
-Note: This dameon service assumes you have Node installed on your system and that is is located in `/usr/local/bin`
+
+
+**NOTE:** Run `sudo systemctl stop polyprint` if you ever want to stop the service.
+
+**NOTE:** Run `sudo systemctl status polyprint` to see if the service is currently running.
+
+**NOTE:** This dameon service assumes you have Node installed on your system and that is is located in `/usr/local/bin`
 
 Here is an example of a working .service file: 
 ```
@@ -109,7 +113,7 @@ appearance on the dashboard
 }
 ```
 
-### NOTE: While inside OctoPrint settings -> API, Please enable CORS as it is required to run this site!
+### **NOTE**: While inside OctoPrint settings -> API, Please enable CORS as it is required to run this site!
 
 ### You will NOT be able to continue into the dashboard until your config file is valid!
 ![Setup](https://user-images.githubusercontent.com/47374239/150470063-744b93d6-9476-486a-b97a-ba32552a2552.png)
