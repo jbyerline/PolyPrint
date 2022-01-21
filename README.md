@@ -4,17 +4,17 @@
     <img src="https://user-images.githubusercontent.com/47374239/150470183-31f4f1fc-9bb5-45f4-ba18-30adfcb87549.png" alt="alternate text">
  </p>
 
-This project was created by Jacob initially as my a project for my masters degree. I have continued adding to it and 
-plan to keep it up for as long as I can manage. This project is currently in Alpha and will contain a lot of bugs. I 
+This project was created by Jacob Byerline. Initially it was my final project for my masters degree. I have continued adding to it and 
+plan to keep it up to date for as long as I can manage. This project is currently in Alpha and will contain a lot of bugs. I 
 will do my best to get to them as I can but please be patient and feel free to submit issues and PRs. 
 
 ## What is PolyPrint
 
 PolyPrint is a 3D printer Web GUI for managing multiple 3D printers. It is a React based web application that uses 
-the OctoPrint API to centrally manage your entire collection. 
+the OctoPrint API to centrally manage your entire printer collection. 
 
-This service is not designed to manage commercial print farms. Rather it is for Hobbyists and Enthusiasts with multiple
-3D printers to easily keep track of their prints. 
+This service is not designed to manage commercial print farms. Rather it is designed for Hobbyists and Enthusiasts with multiple
+3D printers to easily keep control and track of their printers.
 
 ## How to set up PolyPrint server
 1. Install `npm` on your system of choice. (A raspberry Pi works fine)
