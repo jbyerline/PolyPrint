@@ -499,7 +499,7 @@ const PrinterCard = observer((props) => {
                       {generalData !== "N/A" ? generalData.text : generalData}
                     </Typography>
                     <Typography align="right">
-                      {!isConnected ? (
+                      {isConnected ? (
                         <Button variant="text" onClick={downloadFile}>
                           download
                         </Button>
