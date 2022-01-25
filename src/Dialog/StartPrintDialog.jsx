@@ -86,8 +86,7 @@ export default function StartPrintDialog(props) {
             <List>
               {props.printerFiles ? (
                 props.printerFiles[0].files.map((file) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <div>
+                  <div key={file.display}>
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>
                         <ListItemText
