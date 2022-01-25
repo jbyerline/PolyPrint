@@ -32,7 +32,6 @@ import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
 import IframeDialog from "../Dialog/IframeDialog";
 import TickerByLength from "../Ticker/TickerByLength";
-import ConnectIcon from "../Icons/ConnectIcon";
 import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
 import PowerMenu from "../Menu/PowerMenu";
 import StartPrintDialog from "../Dialog/StartPrintDialog";
@@ -69,7 +68,6 @@ const PrinterCard = observer((props) => {
     React.useState(false);
   const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
   const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
-  const [connectionInfo, setConnectionInfo] = useState();
 
   const printerThemeColor =
     generalData !== "N/A" ? generalData.appearance.color : "black";
@@ -389,12 +387,6 @@ const PrinterCard = observer((props) => {
               </IconButton>
             </Tooltip>
           )}
-          {/*<ConnectIcon*/}
-          {/*  dataStore={octoprintDataStore}*/}
-          {/*  octoPrintLink={props.octoPrintLink}*/}
-          {/*  apiKey={props.printerApiKey}*/}
-          {/*  triggerGeneralRefresh={triggerGeneralDataRefresh}*/}
-          {/*/>*/}
           {printerStatus === "Printing" ||
           printerStatus === "Paused" ||
           printerStatus === "Pausing" ? (
