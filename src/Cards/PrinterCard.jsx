@@ -25,6 +25,8 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import { Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
+import UsbIcon from "@mui/icons-material/Usb";
+import { UsbOff } from "@mui/icons-material";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
@@ -58,34 +60,39 @@ const PrinterCard = observer((props) => {
   const [octoPrintDialogOpen, isOctoPrintDialogOpen] = React.useState(false);
   const [iFrameDialogOpen, isIframeDialogOpen] = React.useState(false);
   const [generalDataRefresh, setGeneralDataRefresh] = React.useState(false);
-  const [generalData, setGeneralData] = useState();
+  const [generalData, setGeneralData] = useState("N/A");
   const [printerState, setPrinterState] = useState();
   const [jobState, setJobState] = useState();
   const [files, setFiles] = useState();
-  const [generalError, setGeneralError] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [isStartPrintDialogOpen, setIsStartPrintDialogOpen] =
     React.useState(false);
   const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
   const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
+  const [connectionInfo, setConnectionInfo] = useState();
 
-  const printerName = generalData ? generalData.profiles._default.name : "N/A";
-  const printerThemeColor = generalData
-    ? generalData.appearance.color
-    : "black";
+  const printerThemeColor =
+    generalData !== "N/A" ? generalData.appearance.color : "black";
   const printerStatus = printerState ? printerState[0].state.text : "N/A";
-  const printerVersion = generalData ? generalData.text : "N/A";
   const bedTempActual = printerState
-    ? printerState[0].temperature.bed.actual
+    ? printerState[0].temperature.bed
+      ? printerState[0].temperature.bed.actual
+      : "N/A"
     : "N/A";
   const bedTempTarget = printerState
-    ? printerState[0].temperature.bed.target
+    ? printerState[0].temperature.bed
+      ? printerState[0].temperature.bed.target
+      : "N/A"
     : "N/A";
   const nozzleTempActual = printerState
-    ? printerState[0].temperature.tool0.actual
+    ? printerState[0].temperature.tool0
+      ? printerState[0].temperature.tool0.actual
+      : "N/A"
     : "N/A";
   const nozzleTempTarget = printerState
-    ? printerState[0].temperature.tool0.target
+    ? printerState[0].temperature.tool0
+      ? printerState[0].temperature.tool0.target
+      : "N/A"
     : "N/A";
   const currentFileName = jobState ? jobState[0].job.file.display : "N/A";
   const printCompletionPercent = jobState ? jobState[0].progress.completion : 0;
@@ -113,49 +120,113 @@ const PrinterCard = observer((props) => {
     timeRemaining = "N/A";
   }
 
+  const [currentPrinterState, setCurrentPrinterState] = useState("N/A");
+  const [isOnline, setIsOnline] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionRefresh, setConnectionRefresh] = useState(false);
+
+  // Initial UseEffect to check if connection exists
   useEffect(() => {
     octoprintDataStore
-      .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
+      .fetchConnectionInfo(props.octoPrintLink, props.printerApiKey)
       .then((data) => {
-        setGeneralData(Object.assign(...data));
-        setGeneralError(false);
+        if (data) {
+          setCurrentPrinterState(data.current.state);
+          setIsOnline(true);
+          if (data.current.state === "Closed") {
+            setIsConnected(false);
+          } else {
+            setIsConnected(true);
+          }
+        }
       })
       .catch((err) => {
-        console.log("Error retrieving general printer info", err);
+        setIsOnline(false);
+        console.log("Error retrieving connection info", err);
       });
+  }, [connectionRefresh]);
 
-    octoprintDataStore
-      .fetchAllFiles(props.octoPrintLink, props.printerApiKey)
-      .then((data) => {
-        setFiles(data);
-      })
-      .catch((err) => console.log("Error retrieving files from printer", err));
-  }, [generalDataRefresh]);
+  // Once connection status is determined
+  const fetchGeneralData = () => {
+    // If we are connected, fetch general info every 10 sec
+    if (isConnected) {
+      octoprintDataStore
+        .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          if (data) {
+            setGeneralData(Object.assign(...data));
+          }
+        })
+        .catch((err) => {
+          console.log("Error retrieving general printer info", err);
+        });
+
+      octoprintDataStore
+        .fetchAllFiles(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          setFiles(data);
+        })
+        .catch((err) =>
+          console.log("Error retrieving files from printer", err)
+        );
+
+      octoprintDataStore
+        .fetchPrinterStatus(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          setPrinterState(data);
+        })
+        .catch((err) =>
+          console.log("Error retrieving printer status info", err)
+        );
+
+      octoprintDataStore
+        .fetchJobStatus(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          setJobState(data);
+        })
+        .catch((err) => console.log("Error retrieving job info", err));
+
+      octoprintDataStore
+        .fetchConnectionInfo(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          if (data) {
+            setCurrentPrinterState(data.current.state);
+          }
+        })
+        .catch((err) => {
+          console.log("Error retrieving connection info", err);
+        });
+    }
+  };
 
   useEffect(() => {
-    fetchReoccurringData();
+    fetchGeneralData();
     const interval = setInterval(() => {
-      if (!generalError) {
-        fetchReoccurringData();
-      }
-    }, 10000);
+      fetchGeneralData();
+    }, 4000);
     return () => clearInterval(interval);
-  }, [generalError]);
+  }, [isConnected, isOnline]);
 
-  const fetchReoccurringData = () => {
-    octoprintDataStore
-      .fetchPrinterStatus(props.octoPrintLink, props.printerApiKey)
-      .then((data) => {
-        setPrinterState(data);
-      })
-      .catch((err) => console.log("Error retrieving printer status info", err));
+  const handleConnect = () => {
+    octoprintDataStore.modifyPrinterConnection(
+      props.octoPrintLink,
+      props.printerApiKey,
+      "connect"
+    );
+    setTimeout(() => {
+      setConnectionRefresh(!connectionRefresh);
+    }, 2000);
+  };
+  const handleDisconnect = () => {
+    octoprintDataStore.modifyPrinterConnection(
+      props.octoPrintLink,
+      props.printerApiKey,
+      "disconnect"
+    );
 
-    octoprintDataStore
-      .fetchJobStatus(props.octoPrintLink, props.printerApiKey)
-      .then((data) => {
-        setJobState(data);
-      })
-      .catch((err) => console.log("Error retrieving job info", err));
+    setTimeout(() => {
+      setConnectionRefresh(!connectionRefresh);
+    }, 2000);
   };
 
   const handleExpandClick = () => {
@@ -231,7 +302,7 @@ const PrinterCard = observer((props) => {
     window.open(downloadLink, "_blank");
   };
 
-  if (!generalData) {
+  if (!isOnline) {
     return (
       <DisconnectedPrinterCard
         printerName={props.printerName}
@@ -252,7 +323,7 @@ const PrinterCard = observer((props) => {
           }
           action={<PowerMenu />}
           title={props.printerName}
-          subheader={printerStatus}
+          subheader={currentPrinterState}
         />
 
         <Container sx={{ height: "285px" }}>
@@ -305,11 +376,25 @@ const PrinterCard = observer((props) => {
           <LinearProgressWithLabel value={printCompletionPercent} />
         </CardContent>
         <CardActions disableSpacing>
-          <ConnectIcon
-            dataStore={octoprintDataStore}
-            octoPrintLink={props.octoPrintLink}
-            apiKey={props.printerApiKey}
-          />
+          {printerStatus === "N/A" ? (
+            <Tooltip title="Connect">
+              <IconButton aria-label="connect" onClick={handleConnect}>
+                <UsbIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Disconnect">
+              <IconButton aria-label="Disconnect" onClick={handleDisconnect}>
+                <UsbOff />
+              </IconButton>
+            </Tooltip>
+          )}
+          {/*<ConnectIcon*/}
+          {/*  dataStore={octoprintDataStore}*/}
+          {/*  octoPrintLink={props.octoPrintLink}*/}
+          {/*  apiKey={props.printerApiKey}*/}
+          {/*  triggerGeneralRefresh={triggerGeneralDataRefresh}*/}
+          {/*/>*/}
           {printerStatus === "Printing" ||
           printerStatus === "Paused" ||
           printerStatus === "Pausing" ? (
@@ -346,32 +431,46 @@ const PrinterCard = observer((props) => {
           ) : (
             <div>
               <Tooltip title="Start Print">
-                <IconButton
-                  aria-label="start print"
-                  onClick={handleStartIconClick}
-                >
-                  <PlayCircleIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    aria-label="start print"
+                    onClick={handleStartIconClick}
+                    disabled={!isConnected}
+                  >
+                    <PlayCircleIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
             </div>
           )}
           <Tooltip title="GCode Terminal">
-            <IconButton
-              aria-label="gcode terminal"
-              onClick={handleGCodeIconClick}
-            >
-              <TerminalIcon />
-            </IconButton>
+            <span>
+              <IconButton
+                aria-label="gcode terminal"
+                onClick={handleGCodeIconClick}
+                disabled={!isConnected}
+              >
+                <TerminalIcon />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="Control">
-            <IconButton aria-label="control printer">
-              <FontAwesomeIcon icon={faArrowsAlt} />
-            </IconButton>
+            <span>
+              <IconButton aria-label="control printer" disabled={!isConnected}>
+                <FontAwesomeIcon icon={faArrowsAlt} />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="Preheat">
-            <IconButton aria-label="preheat" onClick={handlePreheatIconClick}>
-              <DeviceThermostatIcon />
-            </IconButton>
+            <span>
+              <IconButton
+                aria-label="preheat"
+                onClick={handlePreheatIconClick}
+                disabled={!isConnected}
+              >
+                <DeviceThermostatIcon />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="OctoPrint">
             <IconButton aria-label="octoprint" onClick={handleOctoIconClick}>
@@ -404,11 +503,17 @@ const PrinterCard = observer((props) => {
                     <Typography align="left">Current File Download:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right">{printerVersion}</Typography>
                     <Typography align="right">
-                      <Button variant="text" onClick={downloadFile}>
-                        download
-                      </Button>
+                      {generalData !== "N/A" ? generalData.text : generalData}
+                    </Typography>
+                    <Typography align="right">
+                      {!isConnected ? (
+                        <Button variant="text" onClick={downloadFile}>
+                          download
+                        </Button>
+                      ) : (
+                        <text>Unavailable</text>
+                      )}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -418,13 +523,13 @@ const PrinterCard = observer((props) => {
         </Collapse>
         <OctoprintDialog
           isOpen={octoPrintDialogOpen}
-          printerName={printerName}
+          printerName={props.printerName}
           octoprintUrl={props.octoPrintLink}
           closeDialog={handleCloseOctoPrintDialog}
         />
         <IframeDialog
           isOpen={iFrameDialogOpen}
-          printerName={printerName}
+          printerName={props.printerName}
           octoprintUrl={props.octoPrintLink}
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}

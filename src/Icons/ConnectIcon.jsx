@@ -26,6 +26,7 @@ export default function ConnectIcon(props) {
     );
     // TODO: Add in delay to allow printer to connect before changing icon
     triggerConnectionRefresh(!dataRefresh);
+    props.triggerGeneralRefresh();
   };
   const handleDisconnect = () => {
     props.dataStore.modifyPrinterConnection(
@@ -35,6 +36,7 @@ export default function ConnectIcon(props) {
     );
     // TODO: Add in delay to allow printer to disconnect before changing icon
     triggerConnectionRefresh(!dataRefresh);
+    props.triggerGeneralRefresh();
   };
 
   const connectionState = connectionInfo

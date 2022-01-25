@@ -24,7 +24,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getData = () => {
-    fetch("PrinterConfig.json", {
+    fetch("PrinterConfigLocal.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -83,12 +83,11 @@ const Home = () => {
         <div className={classes.cards}>
           {printerConfig ? (
             printerConfig.printers.map((printer) => (
-              // eslint-disable-next-line react/jsx-key
               <PrinterCard
                 printerName={printer.name}
                 octoPrintLink={printer.URL}
                 printerApiKey={printer.apiKey}
-                key=""
+                key={printer.URL}
               />
             ))
           ) : (

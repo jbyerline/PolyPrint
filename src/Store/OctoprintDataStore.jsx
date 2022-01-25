@@ -136,14 +136,10 @@ class OctoprintDataStore {
   fetchConnectionInfo(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
-    return Promise.all([api.get(this.makeApiUrl(link, this.connectionPath))])
-      .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
+    return api
+      .get(this.makeApiUrl(link, this.connectionPath))
+      .then((response) => {
+        return response.json();
       })
       .catch((error) => {
         // if there's an error, log it
