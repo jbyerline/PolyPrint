@@ -24,7 +24,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getData = () => {
-    fetch("PrinterConfigLocal.json", {
+    fetch("PrinterConfig.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
