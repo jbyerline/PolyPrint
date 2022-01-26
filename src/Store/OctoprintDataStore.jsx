@@ -18,6 +18,7 @@ class OctoprintDataStore {
   restartPath = "/system/commands/core/restart";
   toolPath = "/printer/tool";
   bedPath = "/printer/bed";
+  systemPath = "/system/commands/core";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
@@ -212,6 +213,15 @@ class OctoprintDataStore {
       .post(this.makeApiUrl(link, this.bedPath), {
         json: { command: "target", target: temp },
       })
+      .json()
+      .catch((err) => console.log("Error preheating bed", err));
+  };
+
+  controlSystem = (link, apiKey, command) => {
+    const api = this.createApiInstance(apiKey);
+
+    api
+      .post(this.makeApiUrl(link, this.systemPath + "/" + command))
       .json()
       .catch((err) => console.log("Error preheating bed", err));
   };
