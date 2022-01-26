@@ -75,6 +75,15 @@ export default function StartPrintDialog(props) {
     return (t / 1024 ** (e = e <= 0 ? 0 : e)).toFixed(1) + "BKMGP"[e];
   };
 
+  // Reverse Sort Files based on Date Uploaded
+  const fileArray = props.printerFiles
+    ? props.printerFiles[0].files
+        .sort(function (a, b) {
+          return a.date - b.date;
+        })
+        .reverse()
+    : "N/A";
+
   return (
     <Dialog open={props.isOpen} maxWidth="xl">
       <DialogTitle variant="h5" align="center">
@@ -84,8 +93,8 @@ export default function StartPrintDialog(props) {
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
           <nav>
             <List>
-              {props.printerFiles ? (
-                props.printerFiles[0].files.map((file) => (
+              {fileArray !== "N/A" ? (
+                fileArray.map((file) => (
                   <div key={file.display}>
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>

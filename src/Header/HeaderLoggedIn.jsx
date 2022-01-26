@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import theme from "../appTheme";
 
@@ -35,6 +36,10 @@ const useStyles = makeStyles(() => ({
     marginRight: "10px",
   },
 }));
+
+function refreshPage() {
+  window.location.reload(false);
+}
 
 function HeaderLoggedIn() {
   const classes = useStyles();
@@ -64,7 +69,7 @@ function HeaderLoggedIn() {
             title="Refresh"
             style={{ marginRight: "10px", marginBottom: "5px" }}
           >
-            <IconButton>
+            <IconButton onClick={refreshPage}>
               <RefreshIcon aria-label="refresh" style={{ fill: "white" }} />
             </IconButton>
           </Tooltip>
@@ -80,8 +85,16 @@ function HeaderLoggedIn() {
             to="/login"
             onClick={() => localStorage.clear()}
             className={classes.link}
+            style={{ borderBottom: "none" }}
           >
-            Logout
+            <Tooltip
+              title="Logout"
+              style={{ marginRight: "10px", marginBottom: "5px" }}
+            >
+              <IconButton>
+                <LogoutIcon aria-label="settings" style={{ fill: "white" }} />
+              </IconButton>
+            </Tooltip>
           </Link>
         </div>
       </Toolbar>

@@ -26,6 +26,7 @@ import Container from "@mui/material/Container";
 import { Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 import UsbIcon from "@mui/icons-material/Usb";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { UsbOff } from "@mui/icons-material";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
@@ -68,6 +69,8 @@ const PrinterCard = observer((props) => {
     React.useState(false);
   const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
   const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
+  const [isTimelapseDialogOpen, setIsTimelapseDialogOpen] =
+    React.useState(false);
 
   const printerThemeColor =
     generalData !== "N/A" ? generalData.appearance.color : "black";
@@ -288,6 +291,9 @@ const PrinterCard = observer((props) => {
   const handlePreheatIconClick = () => {
     setIsPreheatDialogOpen(true);
   };
+  const handleTimelapseIconClick = () => {
+    setIsTimelapseDialogOpen(true);
+  };
   const handleClosePreheatDialog = () => {
     setIsPreheatDialogOpen(false);
   };
@@ -319,7 +325,13 @@ const PrinterCard = observer((props) => {
               {props.printerName ? props.printerName.charAt(0) : ""}
             </Avatar>
           }
-          action={<PowerMenu />}
+          action={
+            <PowerMenu
+              octoprintUrl={props.octoPrintLink}
+              datastore={octoprintDataStore}
+              apiKey={props.printerApiKey}
+            />
+          }
           title={props.printerName}
           subheader={currentPrinterState}
         />
@@ -461,6 +473,17 @@ const PrinterCard = observer((props) => {
                 disabled={!isConnected}
               >
                 <DeviceThermostatIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Timelapse Library">
+            <span>
+              <IconButton
+                aria-label="timelapse"
+                onClick={handleTimelapseIconClick}
+                disabled={!isConnected}
+              >
+                <VideoLibraryIcon />
               </IconButton>
             </span>
           </Tooltip>
