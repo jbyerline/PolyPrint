@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import IconButton from "@mui/material/IconButton";
@@ -11,7 +11,9 @@ import PowerConfirmDialog from "../Dialog/PowerConfirmDialog";
 const PowerMenu = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
-  const [dialogText, setDialogText] = React.useState(null);
+  const [dialogTitle, setDialogTitle] = React.useState("N/A");
+  const [dialogMessage, setDialogMessage] = React.useState("N/A");
+  const [command, setCommand] = React.useState();
 
   const handleIconClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,88 +30,36 @@ const PowerMenu = (props) => {
   };
 
   const handleShutdown = () => {
-    setDialogText({
-      title: "Shutdown System?",
-      message: (
-        <div>
-          <p>
-            <strong>You are about to shutdown the system.</strong>
-          </p>
-          <p>
-            This action may disrupt any ongoing print jobs (depending on your
-            printer's controller and general setup that might also apply to
-            prints run directly from your printer's internal storage).
-          </p>
-        </div>
-      ),
-    });
+    setCommand("shutdown");
+    setDialogTitle("Shutdown System?");
+    setDialogMessage("You are about to shutdown the system.");
     setConfirmOpen(true);
-    //callSystemApi("shutdown");
     handleClose();
   };
 
   const handleReboot = () => {
-    setDialogText({
-      title: "Reboot System?",
-      message: (
-        <div>
-          <p>
-            <strong>You are about to reboot the system.</strong>
-          </p>
-          <p>
-            This action may disrupt any ongoing print jobs (depending on your
-            printer's controller and general setup that might also apply to
-            prints run directly from your printer's internal storage).
-          </p>
-        </div>
-      ),
-    });
+    setCommand("reboot");
+    setDialogTitle("Reboot System?");
+    setDialogMessage("You are about to reboot the system.");
     setConfirmOpen(true);
-    //callSystemApi("reboot");
     handleClose();
   };
 
   const handleOctoPrintRestart = () => {
-    setDialogText({
-      title: "Restart OctoPrint Server?",
-      message: (
-        <div>
-          <p>
-            <strong>You are about to restart the OctoPrint server.</strong>
-          </p>
-          <p>
-            This action may disrupt any ongoing print jobs (depending on your
-            printer's controller and general setup that might also apply to
-            prints run directly from your printer's internal storage).
-          </p>
-        </div>
-      ),
-    });
+    setCommand("restart");
+    setDialogTitle("Restart OctoPrint Server?");
+    setDialogMessage("You are about to restart the OctoPrint server.");
     setConfirmOpen(true);
-    //callSystemApi("restart");
     handleClose();
   };
 
   const handleOctoPrintSafeMode = () => {
-    setDialogText({
-      title: "Restart OctoPrint Server in safe mode?",
-      message: (
-        <div>
-          <p>
-            <strong>
-              You are about to restart the OctoPrint server in safe mode.
-            </strong>
-          </p>
-          <p>
-            This action may disrupt any ongoing print jobs (depending on your
-            printer's controller and general setup that might also apply to
-            prints run directly from your printer's internal storage).
-          </p>
-        </div>
-      ),
-    });
+    setCommand("restart_safe");
+    setDialogTitle("Restart OctoPrint Server in safe mode?");
+    setDialogMessage(
+      "You are about to restart the OctoPrint server in safe mode."
+    );
     setConfirmOpen(true);
-    //callSystemApi("restart_safe");
     handleClose();
   };
 
@@ -135,12 +85,12 @@ const PowerMenu = (props) => {
         </MenuItem>
       </Menu>
       <PowerConfirmDialog
-        title={dialogText.title}
-        children={dialogText.message}
+        title={dialogTitle}
+        head={dialogMessage}
         open={confirmOpen}
         setOpen={setConfirmOpen}
         onConfirm={() => {
-          console.log("Confirmed");
+          callSystemApi(command);
         }}
       />
     </div>
