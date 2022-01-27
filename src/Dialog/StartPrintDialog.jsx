@@ -4,17 +4,28 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { List, ListItemText } from "@mui/material";
+import { List, ListItemText, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Divider from "@mui/material/Divider";
 import { useCallback } from "react";
+import { makeStyles } from "@mui/styles";
+
+import theme from "../appTheme";
 
 import PrintConfirmationDialog from "./PrintConfirmationDialog";
 import UploadConfirmationDialog from "./UploadConfirmationDialog";
 
+const useStyles = makeStyles(() => ({
+  indexNumbers: {
+    marginRight: "25px",
+  },
+}));
+
 export default function StartPrintDialog(props) {
+  const classes = useStyles();
+
   const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
     React.useState(false);
   const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
@@ -84,8 +95,16 @@ export default function StartPrintDialog(props) {
         .reverse()
     : "N/A";
 
+  const twoDigitNum = (number) => {
+    if (number < 10) {
+      return "0" + number.toString();
+    } else {
+      return number.toString();
+    }
+  };
+
   return (
-    <Dialog open={props.isOpen} maxWidth="xl">
+    <Dialog open={props.isOpen} fullWidth="%100" maxWidth="sm">
       <DialogTitle variant="h5" align="center">
         Select File Below to Start
       </DialogTitle>
@@ -94,19 +113,33 @@ export default function StartPrintDialog(props) {
           <nav>
             <List>
               {fileArray !== "N/A" ? (
-                fileArray.map((file) => (
+                fileArray.map((file, index) => (
                   <div key={file.display}>
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>
-                        <ListItemText
-                          primary={"Name: " + file.display}
-                          secondary={
-                            "Uploaded: " +
-                            new Date(file.date * 1000).toLocaleDateString() +
-                            "    Size: " +
-                            b2s(file.size)
-                          }
-                        />
+                        <div className={classes.indexNumbers}>
+                          <Typography variant="h6">
+                            <strong>{twoDigitNum(index + 1)}.</strong>
+                          </Typography>
+                        </div>
+                        <div
+                          style={{
+                            color: file.prints
+                              ? file.prints.last.success === true
+                                ? theme.palette.status.successGreen
+                                : theme.palette.status.errorRed
+                              : null,
+                          }}
+                        >
+                          <Typography>
+                            <strong>Name:</strong> {file.display}
+                          </Typography>
+                          <Typography>
+                            <strong>Uploaded:</strong>{" "}
+                            {new Date(file.date * 1000).toLocaleDateString()}{" "}
+                            <strong>Size:</strong> {b2s(file.size)}
+                          </Typography>
+                        </div>
                       </ListItemButton>
                     </ListItem>
                     <Divider />

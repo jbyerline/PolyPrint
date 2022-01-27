@@ -14,6 +14,11 @@ const theme = createTheme({
       dark: "#ba000d",
       contrastText: "#000",
     },
+    status: {
+      successGreen: "#32996D",
+      warningOrange: "#E8590D",
+      errorRed: "#BA3C46",
+    },
   },
 });
 
