@@ -9,9 +9,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
 export default function PrintConfirmationDialog(props) {
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
   const startPrint = () => {
     props.datastore.startPrint(
       props.octoprintUrl,
@@ -26,7 +23,6 @@ export default function PrintConfirmationDialog(props) {
   return (
     <div>
       <Dialog
-        fullScreen={fullScreen}
         open={props.open}
         onClose={props.close}
         aria-labelledby="responsive-dialog-title"

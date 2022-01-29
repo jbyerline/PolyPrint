@@ -1,6 +1,6 @@
 {
   "name": "polyprint",
-  "version": "0.0.4",
+  "version": "0.0.3",
   "private": true,
   "dependencies": {
     "@babel/compat-data": "^7.16.4",
