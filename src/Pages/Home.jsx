@@ -19,12 +19,14 @@ const useStyles = makeStyles(() => ({
 const Home = () => {
   const classes = useStyles();
   const [printerConfig, setPrinterConfig] = useState();
+  const [printerArray, setPrinterArray] = useState();
   const [welcomeOpen, setWelcomeOpen] = React.useState(true);
   const [initialSetUpOpen, setInitialSetUpOpen] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [render, setRender] = useState(false);
 
   const getData = () => {
-    fetch("PrinterConfig.json", {
+    fetch("PrinterConfigLocal.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -35,6 +37,10 @@ const Home = () => {
       })
       .then(function (myJson) {
         setPrinterConfig(myJson);
+        myJson.printers.forEach((printer, index) => {
+          printer.position = index;
+        });
+        setPrinterArray(myJson.printers);
         setIsLoading(false);
       });
   };
@@ -42,6 +48,10 @@ const Home = () => {
   useEffect(() => {
     getData();
   }, [initialSetUpOpen]);
+
+  useEffect(() => {
+    setRender(!render);
+  }, [printerArray]);
 
   const handleOpenSetUpDialog = () => {
     setWelcomeOpen(false);
@@ -51,6 +61,53 @@ const Home = () => {
   const handleCloseSetUpDialog = () => {
     setInitialSetUpOpen(false);
   };
+
+  const sendPrinterToFront = (name, status) => {
+    let arr = printerArray;
+    const index = arr.map((i) => i.name).indexOf(name);
+    // If a status exists for the printer
+    if (arr[index].status) {
+      // If the status has changed
+      if (arr[index].status !== status) {
+        // Update Status
+        arr[index].status = status;
+      } else {
+        // Otherwise, do nothing
+        return;
+      }
+    } else {
+      // Create status field if it doesnt exits
+      arr[index].status = status;
+    }
+    // If printer is online
+    if (arr[index].status === "online") {
+      // Send element to front of arr
+      moveToFront(arr, arr[index]);
+
+      // Split array into offline and online sub-arrays and sort them based off of position
+      let onlineArray = arr
+        .filter((printer) => printer.status === "online")
+        .sort(function (a, b) {
+          return a.position - b.position;
+        });
+      let offlineArray = arr
+        .filter((printer) => printer.status === "offline")
+        .sort(function (a, b) {
+          return a.position - b.position;
+        });
+
+      // Combine the two arrays and rerender
+      setPrinterArray(onlineArray.concat(offlineArray));
+    }
+  };
+
+  const moveToFront = (arr, queryStr) =>
+    arr.reduce((acc, curr) => {
+      if (queryStr === curr) {
+        return [curr, ...acc];
+      }
+      return [...acc, curr];
+    }, []);
 
   if (isLoading) {
     return (
@@ -81,13 +138,15 @@ const Home = () => {
     } else {
       return (
         <div className={classes.cards}>
-          {printerConfig ? (
-            printerConfig.printers.map((printer) => (
+          {printerArray ? (
+            printerArray.map((printer) => (
               <PrinterCard
                 printerName={printer.name}
                 octoPrintLink={printer.URL}
                 printerApiKey={printer.apiKey}
+                sendToFront={sendPrinterToFront}
                 key={printer.URL}
+                render={render}
               />
             ))
           ) : (

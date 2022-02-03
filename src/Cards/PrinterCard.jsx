@@ -307,6 +307,8 @@ const PrinterCard = observer((props) => {
   };
 
   if (!isOnline) {
+    // TODO: Change this to happen during data fetch use effect, not during render.
+    props.sendToFront(props.printerName, "offline");
     return (
       <DisconnectedPrinterCard
         printerName={props.printerName}
@@ -314,6 +316,8 @@ const PrinterCard = observer((props) => {
       />
     );
   } else {
+    // TODO: Change this to happen during data fetch use effect, not during render.
+    props.sendToFront(props.printerName, "online");
     return (
       <Card sx={{ width: 400 }}>
         <CardHeader
