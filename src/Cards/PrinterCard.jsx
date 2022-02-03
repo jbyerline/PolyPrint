@@ -159,7 +159,6 @@ const PrinterCard = observer((props) => {
         .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
         .then((data) => {
           if (data) {
-            console.log("HERE: ", Object.assign(...data));
             setGeneralData(Object.assign(...data));
           }
         })
