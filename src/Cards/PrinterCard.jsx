@@ -102,6 +102,10 @@ const PrinterCard = observer((props) => {
     : "N/A";
   const downloadLink =
     currentFile !== "N/A" && currentFile ? currentFile.refs.download : "N/A";
+  const webcamEnabled =
+    generalData !== "N/A" ? generalData.webcam.webcamEnabled : false;
+  const streamUrl =
+    generalData !== "N/A" ? generalData.webcam.streamUrl : "N/A";
 
   let elapsedTime;
   if (jobState) {
@@ -155,6 +159,7 @@ const PrinterCard = observer((props) => {
         .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
         .then((data) => {
           if (data) {
+            console.log("HERE: ", Object.assign(...data));
             setGeneralData(Object.assign(...data));
           }
         })
@@ -339,14 +344,28 @@ const PrinterCard = observer((props) => {
           title={props.printerName}
           subheader={currentPrinterState}
         />
-
-        <Container sx={{ height: "285px" }}>
-          <CardMedia
-            component="img"
-            image={octoPrintLink + "/webcam/?action=stream"}
-            alt="Printer"
-          />
-        </Container>
+        {webcamEnabled ? (
+          <Container sx={{ height: "285px" }}>
+            <CardMedia
+              component="img"
+              image={
+                streamUrl === "/webcam/?action=stream"
+                  ? octoPrintLink + "/webcam/?action=stream"
+                  : streamUrl
+              }
+              alt="Printer"
+            />
+          </Container>
+        ) : (
+          <Container sx={{ height: "285px" }}>
+            <CardMedia
+              height="285"
+              component="img"
+              image="./printer_16x9.png"
+              alt="Printer"
+            />
+          </Container>
+        )}
         <CardContent>
           <Container>
             <Grid container spacing={3}>

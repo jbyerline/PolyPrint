@@ -16,7 +16,7 @@ export default function WelcomeDialog(props) {
         </Typography>
         <Typography align="center">
           <img
-            src="/Logo_White_100x100.png"
+            src="/Logo_Black_192x192.png"
             alt="logo"
             width="100"
             height="100"

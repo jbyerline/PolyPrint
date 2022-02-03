@@ -37,7 +37,7 @@ function HeaderLoggedOut() {
         <div className={classes.header}>
           <div className={classes.image}>
             <img
-              src="/Logo_White_100x100.png"
+              src="/Logo_White_192x192.png"
               alt="logo"
               width="50"
               height="50"
