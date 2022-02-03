@@ -19,6 +19,7 @@ class OctoprintDataStore {
   toolPath = "/printer/tool";
   bedPath = "/printer/bed";
   systemPath = "/system/commands/core";
+  commandPath = "/printer/command";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
@@ -224,6 +225,17 @@ class OctoprintDataStore {
       .post(this.makeApiUrl(link, this.systemPath + "/" + command))
       .json()
       .catch((err) => console.log("Error preheating bed", err));
+  };
+
+  sendGcode = (link, apiKey, commands) => {
+    const api = this.createApiInstance(apiKey);
+
+    return api
+      .post(this.makeApiUrl(link, this.commandPath), {
+        json: { commands },
+      })
+      .json()
+      .catch((err) => console.log("Error sending GCODE command", err));
   };
 }
 export default OctoprintDataStore;
