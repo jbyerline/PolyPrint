@@ -38,6 +38,7 @@ import PowerMenu from "../Menu/PowerMenu";
 import StartPrintDialog from "../Dialog/StartPrintDialog";
 import PreheatDialog from "../Dialog/PreheatDialog";
 import GCodeDialog from "../Dialog/GCodeDialog";
+import CancelConfirmDialog from "../Dialog/CancelConfirmDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 
@@ -71,6 +72,7 @@ const PrinterCard = observer((props) => {
   const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
   const [isTimelapseDialogOpen, setIsTimelapseDialogOpen] =
     React.useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
   const printerThemeColor =
     generalData !== "N/A" ? generalData.appearance.color : "black";
@@ -159,7 +161,6 @@ const PrinterCard = observer((props) => {
         .fetchGeneralInfo(props.octoPrintLink, props.printerApiKey)
         .then((data) => {
           if (data) {
-            console.log("HERE: ", Object.assign(...data));
             setGeneralData(Object.assign(...data));
           }
         })
@@ -264,6 +265,10 @@ const PrinterCard = observer((props) => {
   };
 
   const handleStopIconClick = () => {
+    setCancelDialogOpen(true);
+  };
+
+  const handleCancelPrint = () => {
     octoprintDataStore.sendJobCommand(
       props.octoPrintLink,
       props.printerApiKey,
@@ -312,6 +317,7 @@ const PrinterCard = observer((props) => {
   };
 
   if (!isOnline) {
+    props.sendToFront(props.printerName, "offline");
     return (
       <DisconnectedPrinterCard
         printerName={props.printerName}
@@ -319,6 +325,7 @@ const PrinterCard = observer((props) => {
       />
     );
   } else {
+    props.sendToFront(props.printerName, "online");
     return (
       <Card sx={{ width: 400 }}>
         <CardHeader
@@ -466,35 +473,56 @@ const PrinterCard = observer((props) => {
               </Tooltip>
             </div>
           )}
-          <Tooltip title="GCode Terminal">
-            <span>
-              <IconButton
-                aria-label="gcode terminal"
-                onClick={handleGCodeIconClick}
-                disabled={!isConnected}
-              >
-                <TerminalIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Control">
-            <span>
-              <IconButton aria-label="control printer" disabled={!isConnected}>
-                <FontAwesomeIcon icon={faArrowsAlt} />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Preheat">
-            <span>
-              <IconButton
-                aria-label="preheat"
-                onClick={handlePreheatIconClick}
-                disabled={!isConnected}
-              >
-                <DeviceThermostatIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
+          {printerStatus !== "Printing" ? (
+            <Tooltip title="GCode Terminal">
+              <span>
+                <IconButton
+                  aria-label="gcode terminal"
+                  onClick={handleGCodeIconClick}
+                  disabled={!isConnected}
+                >
+                  <TerminalIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          ) : null}
+          {printerStatus !== "Printing" ? (
+            <Tooltip title="Control">
+              <span>
+                <IconButton
+                  aria-label="control printer"
+                  disabled={!isConnected}
+                >
+                  <FontAwesomeIcon icon={faArrowsAlt} />
+                </IconButton>
+              </span>
+            </Tooltip>
+          ) : null}
+          {printerStatus !== "Printing" ? (
+            <Tooltip title="Preheat">
+              <span>
+                <IconButton
+                  aria-label="preheat"
+                  onClick={handlePreheatIconClick}
+                  disabled={!isConnected}
+                >
+                  <DeviceThermostatIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Change Temperature">
+              <span>
+                <IconButton
+                  aria-label="change-temperature"
+                  onClick={handlePreheatIconClick}
+                  disabled={!isConnected}
+                >
+                  <DeviceThermostatIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
           <Tooltip title="Timelapse Library">
             <span>
               <IconButton
@@ -506,6 +534,7 @@ const PrinterCard = observer((props) => {
               </IconButton>
             </span>
           </Tooltip>
+
           <Tooltip title="OctoPrint">
             <IconButton aria-label="octoprint" onClick={handleOctoIconClick}>
               <FontAwesomeIcon icon={faOctopusDeploy} />
@@ -582,6 +611,9 @@ const PrinterCard = observer((props) => {
         <GCodeDialog
           isOpen={isGCodeDialogOpen}
           closeDialog={handleCloseGCodeDialog}
+          octoprintUrl={props.octoPrintLink}
+          datastore={octoprintDataStore}
+          apiKey={props.printerApiKey}
         />
         <PreheatDialog
           isOpen={isPreheatDialogOpen}
@@ -591,6 +623,15 @@ const PrinterCard = observer((props) => {
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}
           printerName={props.printerName}
+        />
+        <CancelConfirmDialog
+          title="Cancel Print?"
+          head="Are you sure you want to cancel the current print job? "
+          open={cancelDialogOpen}
+          setOpen={setCancelDialogOpen}
+          onConfirm={() => {
+            handleCancelPrint();
+          }}
         />
       </Card>
     );
