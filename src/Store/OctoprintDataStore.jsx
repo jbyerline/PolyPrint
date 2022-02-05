@@ -20,6 +20,7 @@ class OctoprintDataStore {
   bedPath = "/printer/bed";
   systemPath = "/system/commands/core";
   commandPath = "/printer/command";
+  lightPath = "/plugin/octolight";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
@@ -230,12 +231,21 @@ class OctoprintDataStore {
   sendGcode = (link, apiKey, commands) => {
     const api = this.createApiInstance(apiKey);
 
-    return api
+    api
       .post(this.makeApiUrl(link, this.commandPath), {
         json: { commands },
       })
       .json()
       .catch((err) => console.log("Error sending GCODE command", err));
+  };
+
+  octolight = (link, apiKey, command) => {
+    const api = this.createApiInstance(apiKey);
+
+    return api
+      .get(this.makeApiUrl(link, this.lightPath + "?action=" + command))
+      .json()
+      .catch((err) => console.log("Error sending light command", err));
   };
 }
 export default OctoprintDataStore;

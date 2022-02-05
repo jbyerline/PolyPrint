@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { makeStyles } from "@mui/styles";
-import { Typography, List, ListItem } from "@mui/material";
+import { Typography, List, ListItem, AlertTitle, Alert } from "@mui/material";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
 import { useState } from "react";
@@ -14,6 +14,9 @@ const useStyles = makeStyles(() => ({
   dialogPaper: {
     minHeight: "80vh",
     maxHeight: "80vh",
+  },
+  margin: {
+    marginRight: "20px",
   },
 }));
 
@@ -35,6 +38,7 @@ export default function InitialSetupDialog(props) {
         name: "Other Demo Printer",
         URL: "192.168.1.25",
         apiKey: "3863CCB8989C4D84957897157D964699",
+        octoLight: true,
       },
     ],
   };
@@ -63,37 +67,44 @@ export default function InitialSetupDialog(props) {
         </Typography>
         <List>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               1. The username is whatever you want your username to be.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               2. The password is whatever you want your password to be.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               3. The name is whatever you wish to label the printer in this
               dashboard.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               4. The URL is the domain or the IP address of your printers
               octoprint instance.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               5. The apiKey is generated from OctoPrint inside settings --> API
               --> Global API Key
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography align="center">
+            <Typography align="left">
               NOTE: While inside OctoPrint settings -> API, Please enable CORS
               as it is required to run this site.
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography align="left">
+              6. [Optional] The octoLight field is for the OctoLight plugin for
+              OctoPi and must be installed for this functionality. It allows you
+              to toggle a light attached to your Raspberry Pi's GPIO.
             </Typography>
           </ListItem>
         </List>
@@ -139,10 +150,12 @@ export default function InitialSetupDialog(props) {
         </List>
       </DialogContent>
       <DialogActions>
-        <Typography variant="h4" color="#ff0f0f">
-          Use this button to copy json -->{" "}
-        </Typography>
-        <Button onClick={handleConfigCopy}>Copy Stringified JSON</Button>
+        <Alert severity="error" className={classes.margin}>
+          <strong>Use this button to copy json --> </strong>
+        </Alert>
+        <Button onClick={handleConfigCopy} variant="contained">
+          Copy Stringified JSON
+        </Button>
       </DialogActions>
     </Dialog>
   );
