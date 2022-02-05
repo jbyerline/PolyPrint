@@ -18,7 +18,11 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faOctopusDeploy } from "@fortawesome/free-brands-svg-icons";
-import { faArrowsAlt } from "@fortawesome/free-solid-svg-icons";
+import { faLightbulb as lightOutlined } from "@fortawesome/free-regular-svg-icons";
+import {
+  faArrowsAlt,
+  faLightbulb as lightSolid,
+} from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
@@ -131,6 +135,7 @@ const PrinterCard = observer((props) => {
   const [isOnline, setIsOnline] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionRefresh, setConnectionRefresh] = useState(false);
+  const [lightState, setLightState] = useState(false);
 
   // Initial UseEffect to check if connection exists
   useEffect(() => {
@@ -203,6 +208,19 @@ const PrinterCard = observer((props) => {
         .catch((err) => {
           console.log("Error retrieving connection info", err);
         });
+      if (props.octolight === true) {
+        octoprintDataStore
+          .octolight(props.octoPrintLink, props.printerApiKey, "getState")
+          .then((data) => {
+            if (data) {
+              console.log(data);
+              setLightState(data.state);
+            }
+          })
+          .catch((err) => {
+            console.log("Error retrieving connection info", err);
+          });
+      }
     }
   };
 
@@ -306,6 +324,33 @@ const PrinterCard = observer((props) => {
   };
   const handleClosePreheatDialog = () => {
     setIsPreheatDialogOpen(false);
+  };
+
+  const handleLightChange = (status) => {
+    console.log("I got here");
+    if (status === true) {
+      octoprintDataStore
+        .octolight(props.octoPrintLink, props.printerApiKey, "turnOn")
+        .then((data) => {
+          if (data) {
+            setLightState(data.state);
+          }
+        })
+        .catch((err) => {
+          console.log("Error turning light on", err);
+        });
+    } else if (status === false) {
+      octoprintDataStore
+        .octolight(props.octoPrintLink, props.printerApiKey, "turnOff")
+        .then((data) => {
+          if (data) {
+            setLightState(data.state);
+          }
+        })
+        .catch((err) => {
+          console.log("Error turning light off", err);
+        });
+    }
   };
 
   const triggerGeneralDataRefresh = () => {
@@ -534,7 +579,37 @@ const PrinterCard = observer((props) => {
               </IconButton>
             </span>
           </Tooltip>
-
+          {props.octolight ? (
+            lightState ? (
+              <Tooltip title="Turn Off">
+                <span>
+                  <IconButton
+                    aria-label="light-off"
+                    onClick={() => {
+                      handleLightChange(false);
+                    }}
+                    disabled={!isConnected}
+                  >
+                    <FontAwesomeIcon icon={lightOutlined} />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Turn On">
+                <span>
+                  <IconButton
+                    aria-label="light-on"
+                    onClick={() => {
+                      handleLightChange(true);
+                    }}
+                    disabled={!isConnected}
+                  >
+                    <FontAwesomeIcon icon={lightSolid} />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )
+          ) : null}
           <Tooltip title="OctoPrint">
             <IconButton aria-label="octoprint" onClick={handleOctoIconClick}>
               <FontAwesomeIcon icon={faOctopusDeploy} />

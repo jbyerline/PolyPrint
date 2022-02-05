@@ -26,7 +26,7 @@ const Home = () => {
   const [render, setRender] = useState(false);
 
   const getData = () => {
-    fetch("PrinterConfigLocal.json", {
+    fetch("PrinterConfig.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -144,6 +144,7 @@ const Home = () => {
                 printerName={printer.name}
                 octoPrintLink={printer.URL}
                 printerApiKey={printer.apiKey}
+                octolight={printer.octoLight ? printer.octoLight : false}
                 sendToFront={sendPrinterToFront}
                 key={printer.URL}
                 render={render}
