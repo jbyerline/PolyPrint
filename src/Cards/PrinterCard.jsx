@@ -43,6 +43,7 @@ import StartPrintDialog from "../Dialog/StartPrintDialog";
 import PreheatDialog from "../Dialog/PreheatDialog";
 import GCodeDialog from "../Dialog/GCodeDialog";
 import CancelConfirmDialog from "../Dialog/CancelConfirmDialog";
+import TimelapseDialog from "../Dialog/TimelapseDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 
@@ -72,10 +73,10 @@ const PrinterCard = observer((props) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isStartPrintDialogOpen, setIsStartPrintDialogOpen] =
     React.useState(false);
-  const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
-  const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
   const [isTimelapseDialogOpen, setIsTimelapseDialogOpen] =
     React.useState(false);
+  const [isGCodeDialogOpen, setIsGCodeDialogOpen] = React.useState(false);
+  const [isPreheatDialogOpen, setIsPreheatDialogOpen] = React.useState(false);
   const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
   const printerThemeColor =
@@ -136,6 +137,7 @@ const PrinterCard = observer((props) => {
   const [isConnected, setIsConnected] = useState(false);
   const [connectionRefresh, setConnectionRefresh] = useState(false);
   const [lightState, setLightState] = useState(false);
+  const [timelapseData, setTimelapse] = useState("N/A");
 
   // Initial UseEffect to check if connection exists
   useEffect(() => {
@@ -208,12 +210,22 @@ const PrinterCard = observer((props) => {
         .catch((err) => {
           console.log("Error retrieving connection info", err);
         });
+
+      octoprintDataStore
+        .getTimelapses(props.octoPrintLink, props.printerApiKey)
+        .then((data) => {
+          if (data) {
+            setTimelapse(data);
+          }
+        })
+        .catch((err) => {
+          console.log("Error retrieving timelapse info", err);
+        });
       if (props.octolight === true) {
         octoprintDataStore
           .octolight(props.octoPrintLink, props.printerApiKey, "getState")
           .then((data) => {
             if (data) {
-              console.log(data);
               setLightState(data.state);
             }
           })
@@ -310,6 +322,9 @@ const PrinterCard = observer((props) => {
   const handleCloseStartPrintDialog = () => {
     setIsStartPrintDialogOpen(false);
   };
+  const handleCloseTimelapseDialog = () => {
+    setIsTimelapseDialogOpen(false);
+  };
   const handleGCodeIconClick = () => {
     setIsGCodeDialogOpen(true);
   };
@@ -327,7 +342,6 @@ const PrinterCard = observer((props) => {
   };
 
   const handleLightChange = (status) => {
-    console.log("I got here");
     if (status === true) {
       octoprintDataStore
         .octolight(props.octoPrintLink, props.printerApiKey, "turnOn")
@@ -682,6 +696,14 @@ const PrinterCard = observer((props) => {
           datastore={octoprintDataStore}
           apiKey={props.printerApiKey}
           triggerRefresh={triggerGeneralDataRefresh}
+        />
+        <TimelapseDialog
+          isOpen={isTimelapseDialogOpen}
+          closeDialog={handleCloseTimelapseDialog}
+          timelapseData={timelapseData}
+          octoprintUrl={props.octoPrintLink}
+          datastore={octoprintDataStore}
+          apiKey={props.printerApiKey}
         />
         <GCodeDialog
           isOpen={isGCodeDialogOpen}
