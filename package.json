@@ -1,6 +1,6 @@
 {
   "name": "polyprint",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "dependencies": {
     "@babel/code-frame": "^7.16.7",
