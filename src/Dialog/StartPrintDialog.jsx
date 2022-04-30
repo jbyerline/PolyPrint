@@ -11,6 +11,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Divider from "@mui/material/Divider";
 import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import theme from "../appTheme";
 
@@ -25,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 export default function StartPrintDialog(props) {
   const classes = useStyles();
-
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
     React.useState(false);
   const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
@@ -104,7 +105,12 @@ export default function StartPrintDialog(props) {
   };
 
   return (
-    <Dialog open={props.isOpen} fullWidth="%100" maxWidth="sm">
+    <Dialog
+      open={props.isOpen}
+      fullWidth="%100"
+      maxWidth="sm"
+      fullScreen={fullScreen}
+    >
       <DialogTitle variant="h5" align="center">
         Select File Below to Start
       </DialogTitle>

@@ -8,6 +8,9 @@ import { makeStyles } from "@mui/styles";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+import theme from "../appTheme";
 
 const useStyles = makeStyles(() => ({
   dialogPaper: {
@@ -18,12 +21,14 @@ const useStyles = makeStyles(() => ({
 
 export default function OctoprintDialog(props) {
   const classes = useStyles();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("xl"));
   return (
     <Dialog
       classes={{ paper: classes.dialogPaper }}
       fullWidth={true}
       maxWidth="xl"
       open={props.isOpen}
+      fullScreen={fullScreen}
     >
       <DialogTitle>
         <Box display="flex" alignItems="center">

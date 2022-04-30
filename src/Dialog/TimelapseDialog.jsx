@@ -11,8 +11,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Divider from "@mui/material/Divider";
 import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import TickerByLengthV2 from "../Ticker/TickerByLengthV2";
+import theme from "../appTheme";
 
 import TimelapseConfirmationDialog from "./TimelapseConfirmationDialog";
 
@@ -24,6 +26,7 @@ const useStyles = makeStyles(() => ({
 
 export default function TimelapseDialog(props) {
   const classes = useStyles();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
     React.useState(false);
@@ -68,7 +71,12 @@ export default function TimelapseDialog(props) {
   };
 
   return (
-    <Dialog open={props.isOpen} fullWidth="%100" maxWidth="sm">
+    <Dialog
+      open={props.isOpen}
+      fullWidth="%100"
+      maxWidth="sm"
+      fullScreen={fullScreen}
+    >
       {fileArray !== "N/A" && fileArray.length > 0 ? (
         <DialogTitle variant="h5" align="center">
           Select Timelapse File Below
