@@ -46,6 +46,7 @@ import CancelConfirmDialog from "../Dialog/CancelConfirmDialog";
 import TimelapseDialog from "../Dialog/TimelapseDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
+import ButtonCardMedia from "./ButtonCardMedia";
 
 const octoprintDataStore = new OctoprintDataStore();
 
@@ -408,14 +409,9 @@ const PrinterCard = observer((props) => {
         />
         {webcamEnabled ? (
           <Container sx={{ height: "285px" }}>
-            <CardMedia
-              component="img"
-              image={
-                streamUrl === "/webcam/?action=stream"
-                  ? octoPrintLink + "/webcam/?action=stream"
-                  : streamUrl
-              }
-              alt="Printer"
+            <ButtonCardMedia
+              streamUrl={streamUrl}
+              octoPrintLink={octoPrintLink}
             />
           </Container>
         ) : (
