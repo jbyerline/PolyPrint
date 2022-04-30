@@ -13,10 +13,10 @@ import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import TickerByLengthV2 from "../Ticker/TickerByLengthV2";
 import theme from "../appTheme";
 
-import PrintConfirmationDialog from "./PrintConfirmationDialog";
-import UploadConfirmationDialog from "./UploadConfirmationDialog";
+import TimelapseConfirmationDialog from "./TimelapseConfirmationDialog";
 
 const useStyles = makeStyles(() => ({
   indexNumbers: {
@@ -24,62 +24,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function StartPrintDialog(props) {
+export default function TimelapseDialog(props) {
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
     React.useState(false);
-  const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState();
-  const [uploadedFile, setUploadedFile] = React.useState();
 
   const handleClick = useCallback(
     (file) => () => {
       setSelectedFile({
         name: file.name,
-        path: file.path,
-        origin: file.origin,
+        path: file.url,
       });
       setIsConfirmationPromptOpen(true);
     },
     []
   );
 
-  const handleFileUpload = ({ target }) => {
-    setUploadedFile(target.files[0]);
-    setIsUploadPromptOpen(true);
-  };
-
-  const handleJustUpload = () => {
-    setIsUploadPromptOpen(false);
-    props.closeDialog();
-    props.datastore.uploadFile(
-      props.octoprintUrl,
-      props.apiKey,
-      uploadedFile,
-      false
-    );
-    props.triggerRefresh();
-  };
-
-  const handleUploadAndPrint = () => {
-    setIsUploadPromptOpen(false);
-    props.closeDialog();
-    props.datastore.uploadFile(
-      props.octoprintUrl,
-      props.apiKey,
-      uploadedFile,
-      true
-    );
-    props.triggerRefresh();
-  };
-
   const closeConfirmationPrompt = () => {
     setIsConfirmationPromptOpen(false);
-  };
-
-  const closeUploadPrompt = () => {
-    setIsUploadPromptOpen(false);
   };
 
   const b2s = (t) => {
@@ -88,13 +53,14 @@ export default function StartPrintDialog(props) {
   };
 
   // Reverse Sort Files based on Date Uploaded
-  const fileArray = props.printerFiles
-    ? props.printerFiles[0].files
-        .sort(function (a, b) {
-          return a.date - b.date;
-        })
-        .reverse()
-    : "N/A";
+  const fileArray =
+    props.timelapseData && props.timelapseData !== "N/A"
+      ? props.timelapseData.files
+          .sort(function (a, b) {
+            return Date.parse(a.date) - Date.parse(b.date);
+          })
+          .reverse()
+      : "N/A";
 
   const twoDigitNum = (number) => {
     if (number < 10) {
@@ -111,16 +77,22 @@ export default function StartPrintDialog(props) {
       maxWidth="sm"
       fullScreen={fullScreen}
     >
-      <DialogTitle variant="h5" align="center">
-        Select File Below to Start
-      </DialogTitle>
+      {fileArray !== "N/A" && fileArray.length > 0 ? (
+        <DialogTitle variant="h5" align="center">
+          Select Timelapse File Below
+        </DialogTitle>
+      ) : (
+        <DialogTitle variant="h5" align="center">
+          No Timelapse Files Found
+        </DialogTitle>
+      )}
       <DialogContent>
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
           <nav>
             <List>
-              {fileArray !== "N/A" ? (
+              {fileArray !== "N/A" && fileArray.length > 0 ? (
                 fileArray.map((file, index) => (
-                  <div key={file.display}>
+                  <div key={file.name}>
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>
                         <div className={classes.indexNumbers}>
@@ -128,22 +100,26 @@ export default function StartPrintDialog(props) {
                             <strong>{twoDigitNum(index + 1)}.</strong>
                           </Typography>
                         </div>
-                        <div
-                          style={{
-                            color: file.prints
-                              ? file.prints.last.success === true
-                                ? theme.palette.status.successGreen
-                                : theme.palette.status.errorRed
-                              : null,
-                          }}
-                        >
+                        <div>
                           <Typography>
-                            <strong>Name:</strong> {file.display}
+                            <strong>Name:</strong>{" "}
+                            <TickerByLengthV2
+                              text={
+                                file.name
+                                  ? file.name.replace(
+                                      /_[0-9]+\.mp4|_[0-9]+-fail\.mp4/,
+                                      ".mp4"
+                                    )
+                                  : "N/A"
+                              }
+                              maxLen={45}
+                              speed={3}
+                              mode="await"
+                            />
                           </Typography>
                           <Typography>
-                            <strong>Uploaded:</strong>{" "}
-                            {new Date(file.date * 1000).toLocaleDateString()}{" "}
-                            <strong>Size:</strong> {b2s(file.size)}
+                            <strong>Uploaded:</strong> {file.date}{" "}
+                            <strong>Size:</strong> {b2s(file.bytes)}
                           </Typography>
                         </div>
                       </ListItemButton>
@@ -152,26 +128,26 @@ export default function StartPrintDialog(props) {
                   </div>
                 ))
               ) : (
-                <p>N/A</p>
+                <Typography>
+                  No timelapse videos were found. Please make sure timelapse is
+                  enabled on OctoPrint to use this feature.
+                </Typography>
               )}
             </List>
           </nav>
         </Box>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={props.closeDialog}>Cancel</Button>
-        <Button component="label">
-          Upload
-          <input
-            onChange={handleFileUpload}
-            type="file"
-            accept=".stl, .gcode, .gco, .g"
-            hidden
-          />
-        </Button>
-      </DialogActions>
-      <PrintConfirmationDialog
+      {fileArray !== "N/A" && fileArray.length > 0 ? (
+        <DialogActions>
+          <Button onClick={props.closeDialog}>Cancel</Button>
+        </DialogActions>
+      ) : (
+        <DialogActions>
+          <Button onClick={props.closeDialog}>Close</Button>
+        </DialogActions>
+      )}
+      <TimelapseConfirmationDialog
         open={isConfirmationPromptOpen}
         close={closeConfirmationPrompt}
         closeOther={props.closeDialog}
@@ -179,14 +155,6 @@ export default function StartPrintDialog(props) {
         octoprintUrl={props.octoprintUrl}
         datastore={props.datastore}
         apiKey={props.apiKey}
-      />
-      <UploadConfirmationDialog
-        open={isUploadPromptOpen}
-        close={closeUploadPrompt}
-        closeOther={props.closeDialog}
-        selectedFile={uploadedFile}
-        justUpload={handleJustUpload}
-        uploadAndPrint={handleUploadAndPrint}
       />
     </Dialog>
   );

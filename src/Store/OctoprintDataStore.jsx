@@ -21,6 +21,7 @@ class OctoprintDataStore {
   systemPath = "/system/commands/core";
   commandPath = "/printer/command";
   lightPath = "/plugin/octolight";
+  timelapsePath = "/timelapse";
   basePath = "/api";
 
   makeApiUrl(url, path = "") {
@@ -246,6 +247,24 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.lightPath + "?action=" + command))
       .json()
       .catch((err) => console.log("Error sending light command", err));
+  };
+
+  getTimelapses = (link, apiKey) => {
+    const api = this.createApiInstance(apiKey);
+
+    return api
+      .get(this.makeApiUrl(link, this.timelapsePath))
+      .json()
+      .catch((err) => console.log("Error getting timelapse data", err));
+  };
+
+  downloadTimelapse = (link, apiKey, path) => {
+    const api = this.createApiInstance(apiKey);
+
+    return api
+      .get(link + path)
+      .blob()
+      .catch((err) => console.log("Error getting timelapse data", err));
   };
 }
 export default OctoprintDataStore;
