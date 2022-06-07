@@ -145,6 +145,7 @@ const Home = () => {
                 octoPrintLink={printer.URL}
                 printerApiKey={printer.apiKey}
                 octolight={printer.octoLight ? printer.octoLight : false}
+                colorCode={printer.colorCode ? printer.colorCode : false}
                 sendToFront={sendPrinterToFront}
                 key={printer.URL}
                 render={render}

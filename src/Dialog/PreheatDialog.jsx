@@ -36,7 +36,7 @@ export default function PreheatDialog(props) {
 
   const handleSetPETG = () => {
     setBedTemp(85);
-    setNozzleTemp(245);
+    setNozzleTemp(230);
   };
 
   return (

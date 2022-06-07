@@ -87,13 +87,27 @@ export default function StartPrintDialog(props) {
     return (t / 1024 ** (e = e <= 0 ? 0 : e)).toFixed(1) + "BKMGP"[e];
   };
 
-  // Reverse Sort Files based on Date Uploaded
+  // Reverse Sort Files numerically first based on Date Uploaded, then alphabetically by display name
   const fileArray = props.printerFiles
     ? props.printerFiles[0].files
         .sort(function (a, b) {
-          return a.date - b.date;
+          if (a.date !== b.date) {
+            return a.date - b.date;
+          } else {
+            return a.date;
+          }
         })
-        .reverse()
+        .sort(function (a, b) {
+          if (a.date === b.date) {
+            if (a.display >= b.display) {
+              return 1;
+            } else {
+              return -1;
+            }
+          } else {
+            return -1;
+          }
+        })
     : "N/A";
 
   const twoDigitNum = (number) => {

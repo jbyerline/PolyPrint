@@ -3,42 +3,82 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
-import Camera_Off from "../Icons/Camera_Off";
-import Camera_On from "../Icons/Camera_On";
+import CameraOffIcon from "../Icons/CameraOffIcon";
+import CameraOnIcon from "../Icons/CameraOnIcon";
+import ExpandIcon from "../Icons/ExpandIcon";
+import VideoDialog from "../Dialog/VideoDialog";
+
+const useStyles = makeStyles(() => ({
+  circleIcon: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40px",
+    height: "40px",
+    backgroundColor: "#ffffff7f",
+    borderRadius: "40px",
+  },
+}));
 
 const ButtonCardMedia = (props) => {
+  const classes = useStyles();
+
   const [webcamOn, setWebcamOn] = useState(true);
+  const [openVideoDialog, setOpenVideoDialog] = useState(false);
+
+  const streamLink =
+    props.streamUrl === "/webcam/?action=stream"
+      ? props.octoPrintLink + "/webcam/?action=stream"
+      : props.streamUrl;
 
   if (webcamOn === true) {
     return (
-      <Card>
-        <div style={{ position: "relative" }}>
-          <CardMedia
-            component="img"
-            image={
-              props.streamUrl === "/webcam/?action=stream"
-                ? props.octoPrintLink + "/webcam/?action=stream"
-                : props.streamUrl
-            }
-            alt="Printer"
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 10,
-              left: "90%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            <Tooltip title="Webcam Off">
-              <IconButton onClick={() => setWebcamOn(false)}>
-                <Camera_Off />
-              </IconButton>
-            </Tooltip>
+      <div>
+        <Card>
+          <div style={{ position: "relative" }}>
+            <CardMedia component="img" image={streamLink} alt="Printer" />
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                left: "90%",
+                transform: "translateX(-50%)",
+              }}
+            >
+              <Tooltip title="Video Off">
+                <IconButton onClick={() => setWebcamOn(false)}>
+                  <div className={classes.circleIcon}>
+                    <CameraOffIcon fill="black" height={25} width={25} />
+                  </div>
+                </IconButton>
+              </Tooltip>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: 10,
+                left: "90%",
+                transform: "translateX(-50%)",
+              }}
+            >
+              <Tooltip title="Fullscreen">
+                <IconButton onClick={() => setOpenVideoDialog(true)}>
+                  <div className={classes.circleIcon}>
+                    <ExpandIcon fill="black" height={25} width={25} />
+                  </div>
+                </IconButton>
+              </Tooltip>
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+        <VideoDialog
+          open={openVideoDialog}
+          setOpen={setOpenVideoDialog}
+          url={streamLink}
+        />
+      </div>
     );
   } else {
     return (
@@ -59,9 +99,11 @@ const ButtonCardMedia = (props) => {
               transform: "translateX(-50%)",
             }}
           >
-            <Tooltip title="Webcam On">
+            <Tooltip title="Video On">
               <IconButton onClick={() => setWebcamOn(true)}>
-                <Camera_On />
+                <div className={classes.circleIcon}>
+                  <CameraOnIcon fill="black" height={25} width={25} />
+                </div>
               </IconButton>
             </Tooltip>
           </div>

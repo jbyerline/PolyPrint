@@ -391,7 +391,9 @@ const PrinterCard = observer((props) => {
         <CardHeader
           avatar={
             <Avatar
-              sx={{ bgcolor: printerThemeColor }}
+              sx={{
+                bgcolor: props.colorCode ? props.colorCode : printerThemeColor,
+              }}
               aria-label={props.printerName}
             >
               {props.printerName ? props.printerName.charAt(0) : ""}
