@@ -30,9 +30,11 @@ export default function InitialSetupDialog(props) {
     },
     printers: [
       {
-        name: "Demo Printer",
+        name: "Demo Printer 1",
         URL: "https://my.octoprint.url",
         apiKey: "F704DCD954D1417B95B9D57014D05357",
+        octoLight: false,
+        colorCode: "#FC6D09",
       },
       {
         name: "Other Demo Printer",
@@ -107,6 +109,13 @@ export default function InitialSetupDialog(props) {
               to toggle a light attached to your Raspberry Pi's GPIO.
             </Typography>
           </ListItem>
+          <ListItem>
+            <Typography align="left">
+              7. [Optional] The colorCode field is for specifying the avatar
+              color for a given printer. If none is provided it will use the
+              color chosen within the appearance settings in the OctoPrint UI.
+            </Typography>
+          </ListItem>
         </List>
         <div
           style={{
@@ -119,7 +128,7 @@ export default function InitialSetupDialog(props) {
             id="a_unique_id"
             placeholder={configPlaceholder}
             locale={locale}
-            height="400px"
+            height="375px"
             width="100%"
             onChange={(data) => {
               setUserConfig(data.json);
