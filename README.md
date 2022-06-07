@@ -94,6 +94,10 @@ appearance on the dashboard
 6. [Optional] The `octoLight` field is for the OctoLight plugin for
       OctoPi and must be installed on your RPI for this functionality. It allows you
       to toggle a light attached to your Raspberry Pi's GPIO.
+7. [Optional] The `colorCode` field is for specifying the avatar color for a given printer. If none 
+is provided it will use the color chosen within the appearance settings in the OctoPrint UI. This was
+put into place to give more color options for each of your printers rather than having a set selection
+to choose from.
 
 ```json
 {
@@ -103,18 +107,20 @@ appearance on the dashboard
   },
   "printers": [
     {
-      "name": "Demo Printer",
+      "name": "Demo Printer 1",
       "URL": "https://my.octoprint.url",
-      "apiKey": "F704DCD954D1417B95B9D57014D05357"
+      "apiKey": "abc...xyz",
+      "octoLight": true,
+      "colorCode": "#FC6D09"
     },
     {
-      "name": "Other Demo Printer",
+      "name": "Demo Printer 2",
       "URL": "http://192.168.1.25",
-      "apiKey": "3863CCB8989C4D84957897157D964699", 
-      "octoLight": "true"
+      "apiKey": "abc...xyz"
     }
   ]
 }
+
 ```
 
 ### **NOTE**: While inside OctoPrint settings -> API, Please enable CORS as it is required to run this site!

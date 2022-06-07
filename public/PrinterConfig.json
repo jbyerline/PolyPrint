@@ -7,7 +7,9 @@
     {
       "name": "Demo Printer 1",
       "URL": "https://my.octoprint.url",
-      "apiKey": "abc...xyz"
+      "apiKey": "abc...xyz",
+      "octoLight": true,
+      "colorCode": "#FC6D09"
     },
     {
       "name": "Demo Printer 2",
