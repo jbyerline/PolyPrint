@@ -121,7 +121,7 @@ export default function StartPrintDialog(props) {
   return (
     <Dialog
       open={props.isOpen}
-      fullWidth="%100"
+      fullWidth={true}
       maxWidth="sm"
       fullScreen={fullScreen}
     >
