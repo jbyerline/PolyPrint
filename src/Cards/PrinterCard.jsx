@@ -2,7 +2,6 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
@@ -32,6 +31,7 @@ import Button from "@mui/material/Button";
 import UsbIcon from "@mui/icons-material/Usb";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { UsbOff } from "@mui/icons-material";
+import Image from "material-ui-image";
 
 import OctoprintDialog from "../Dialog/OctoprintDialog";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
@@ -46,11 +46,11 @@ import CancelConfirmDialog from "../Dialog/CancelConfirmDialog";
 import TimelapseDialog from "../Dialog/TimelapseDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
-import ButtonCardMedia from "./ButtonCardMedia";
 
 const octoprintDataStore = new OctoprintDataStore();
 
 const ExpandMore = styled((props) => {
+  // eslint-disable-next-line no-unused-vars
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -139,6 +139,9 @@ const PrinterCard = observer((props) => {
   const [connectionRefresh, setConnectionRefresh] = useState(false);
   const [lightState, setLightState] = useState(false);
   const [timelapseData, setTimelapse] = useState("N/A");
+  const [isMobile] = useState(
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  );
 
   // Initial UseEffect to check if connection exists
   useEffect(() => {
@@ -377,6 +380,7 @@ const PrinterCard = observer((props) => {
   };
 
   if (!isOnline) {
+    // TODO: This line is against the rules, we cannot sort the cards before they have all been rendered...
     props.sendToFront(props.printerName, "offline");
     return (
       <DisconnectedPrinterCard
@@ -411,18 +415,37 @@ const PrinterCard = observer((props) => {
         />
         {webcamEnabled ? (
           <Container sx={{ height: "285px" }}>
-            <ButtonCardMedia
-              streamUrl={streamUrl}
-              octoPrintLink={octoPrintLink}
-            />
+            {document.visibilityState === "visible" ? (
+              isMobile === true ? (
+                <Image
+                  src={
+                    streamUrl === "/webcam/?action=stream"
+                      ? octoPrintLink + "/webcam/?action=stream"
+                      : streamUrl
+                  }
+                  disableTransition={true}
+                  aspectRatio={16 / 9}
+                />
+              ) : (
+                <Image
+                  src={
+                    streamUrl === "/webcam/?action=stream"
+                      ? octoPrintLink + "/webcam/?action=stream"
+                      : streamUrl
+                  }
+                  disableSpinner={true}
+                  disableTransition={false}
+                  aspectRatio={16 / 9}
+                />
+              )
+            ) : null}
           </Container>
         ) : (
           <Container sx={{ height: "285px" }}>
-            <CardMedia
-              height="285"
-              component="img"
-              image="./printer_16x9.png"
-              alt="Printer"
+            <Image
+              src="./printer_16x9.png"
+              disableSpinner={true}
+              aspectRatio={16 / 9}
             />
           </Container>
         )}

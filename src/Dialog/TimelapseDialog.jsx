@@ -73,7 +73,7 @@ export default function TimelapseDialog(props) {
   return (
     <Dialog
       open={props.isOpen}
-      fullWidth="%100"
+      fullWidth={true}
       maxWidth="sm"
       fullScreen={fullScreen}
     >
