@@ -24,6 +24,28 @@ class OctoprintDataStore {
   timelapsePath = "/timelapse";
   basePath = "/api";
 
+  generalInfo = {};
+  printerStatus = {};
+  jobStatus = {};
+  gcodeFiles = {};
+  connectionInfo = {};
+
+  downloadTextBlob(data, downloadFileName) {
+    if (data) {
+      const a = window.document.createElement("a");
+      const objectURL = URL.createObjectURL(data, {
+        type: "text/plain",
+      });
+      a.setAttribute("href", objectURL);
+      a.setAttribute("download", downloadFileName);
+
+      window.document.body.appendChild(a);
+      a.click();
+      window.document.body.removeChild(a);
+      URL.revokeObjectURL(objectURL);
+    }
+  }
+
   makeApiUrl(url, path = "") {
     return url + this.basePath + path;
   }
@@ -63,19 +85,23 @@ class OctoprintDataStore {
   fetchGeneralInfo(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
-    return Promise.all([
-      api.get(this.makeApiUrl(link, this.versionPath)),
-      api.get(this.makeApiUrl(link, this.profilePath)),
-      api.get(this.makeApiUrl(link, this.serverPath)),
-      api.get(this.makeApiUrl(link, this.settingsPath)),
+    let respArr = [];
+
+    Promise.allSettled([
+      api.get(this.makeApiUrl(link, this.versionPath)).json(),
+      api.get(this.makeApiUrl(link, this.profilePath)).json(),
+      api.get(this.makeApiUrl(link, this.serverPath)).json(),
+      api.get(this.makeApiUrl(link, this.settingsPath)).json(),
     ])
       .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
+        responses.forEach((response) => {
+          respArr.push(response.value);
+        });
+        if (!respArr.includes(undefined)) {
+          this.generalInfo[apiKey] = Object.assign(...respArr);
+        }
+
+        // console.log(JSON.stringify(this.generalInfo));
       })
       .catch((error) => {
         // if there's an error, log it
@@ -85,18 +111,14 @@ class OctoprintDataStore {
 
   fetchPrinterStatus(link, apiKey) {
     const api = this.createApiInstance(apiKey);
-
-    return Promise.all([api.get(this.makeApiUrl(link, this.printerStatePath))])
-      .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
+    api
+      .get(this.makeApiUrl(link, this.printerStatePath))
+      .json()
+      .then((response) => {
+        console.log(response);
+        this.printerStatus[apiKey] = response;
       })
       .catch((error) => {
-        // if there's an error, log it
         console.log(error);
       });
   }
@@ -104,17 +126,14 @@ class OctoprintDataStore {
   fetchJobStatus(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
-    return Promise.all([api.get(this.makeApiUrl(link, this.jobPath))])
-      .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
+    api
+      .get(this.makeApiUrl(link, this.jobPath))
+      .json()
+      .then((response) => {
+        console.log(response);
+        this.jobStatus[apiKey] = response;
       })
       .catch((error) => {
-        // if there's an error, log it
         console.log(error);
       });
   }
@@ -122,17 +141,14 @@ class OctoprintDataStore {
   fetchAllFiles(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
-    return Promise.all([api.get(this.makeApiUrl(link, this.filePath))])
-      .then((responses) => {
-        // Get a JSON object from each of the responses
-        return Promise.all(
-          responses.map(function (response) {
-            return response.json();
-          })
-        );
+    api
+      .get(this.makeApiUrl(link, this.filePath))
+      .json()
+      .then((response) => {
+        console.log(response);
+        this.gcodeFiles[apiKey] = response;
       })
       .catch((error) => {
-        // if there's an error, log it
         console.log(error);
       });
   }
@@ -142,11 +158,12 @@ class OctoprintDataStore {
 
     return api
       .get(this.makeApiUrl(link, this.connectionPath))
+      .json()
       .then((response) => {
-        return response.json();
+        console.log(response);
+        this.connectionInfo[apiKey] = response;
       })
       .catch((error) => {
-        // if there's an error, log it
         console.log(error);
       });
   }
@@ -264,6 +281,9 @@ class OctoprintDataStore {
     return api
       .get(link + path)
       .blob()
+      .then((data) => {
+        this.downloadTextBlob(data, "timelapse.mp4");
+      })
       .catch((err) => console.log("Error getting timelapse data", err));
   };
 }

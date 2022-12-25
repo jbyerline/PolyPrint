@@ -460,8 +460,12 @@ const PrinterCard = observer((props) => {
               >
                 <Grid item xs={6}>
                   <Typography align="left">Print Name:</Typography>
-                  <Typography align="left">Hot End Temp:</Typography>
-                  <Typography align="left">Bed Actual Temp:</Typography>
+                  {!props.isCNC ? (
+                    <>
+                      <Typography align="left">Hot End Temp:</Typography>
+                      <Typography align="left">Bed Actual Temp:</Typography>
+                    </>
+                  ) : null}
                   <Typography align="left">Time Elapsed:</Typography>
                   <Typography align="left" gutterBottom>
                     Time Left:
@@ -474,12 +478,16 @@ const PrinterCard = observer((props) => {
                     speed={3}
                     mode="await"
                   />
-                  <Typography align="right">
-                    {nozzleTempActual} / {nozzleTempTarget}
-                  </Typography>
-                  <Typography align="right">
-                    {bedTempActual} / {bedTempTarget}
-                  </Typography>
+                  {!props.isCNC ? (
+                    <>
+                      <Typography align="right">
+                        {nozzleTempActual} / {nozzleTempTarget}
+                      </Typography>
+                      <Typography align="right">
+                        {bedTempActual} / {bedTempTarget}
+                      </Typography>
+                    </>
+                  ) : null}
                   <Typography align="right">{elapsedTime}</Typography>
                   <Typography align="right" gutterBottom>
                     {timeRemaining}
@@ -578,7 +586,7 @@ const PrinterCard = observer((props) => {
               </span>
             </Tooltip>
           ) : null}
-          {printerStatus !== "Printing" ? (
+          {printerStatus !== "Printing" && !props.isCNC ? (
             <Tooltip title="Preheat">
               <span>
                 <IconButton
@@ -590,7 +598,7 @@ const PrinterCard = observer((props) => {
                 </IconButton>
               </span>
             </Tooltip>
-          ) : (
+          ) : printerStatus === "printing" && !props.isCNC ? (
             <Tooltip title="Change Temperature">
               <span>
                 <IconButton
@@ -602,7 +610,7 @@ const PrinterCard = observer((props) => {
                 </IconButton>
               </span>
             </Tooltip>
-          )}
+          ) : null}
           <Tooltip title="Timelapse Library">
             <span>
               <IconButton

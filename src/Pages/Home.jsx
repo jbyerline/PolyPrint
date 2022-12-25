@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import PrinterCard from "../Cards/PrinterCard";
 import InitialSetupDialog from "../Dialog/InitialSetupDialog";
 import WelcomeDialog from "../Dialog/WelcomeDialog";
+import PrinterCardRevised from "../Cards/PrinterCardRevised";
 
 const useStyles = makeStyles(() => ({
   cards: {
@@ -26,7 +27,7 @@ const Home = () => {
   const [render, setRender] = useState(false);
 
   const getData = () => {
-    fetch("PrinterConfig.json", {
+    fetch("PrinterConfigLocal.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -140,12 +141,13 @@ const Home = () => {
         <div className={classes.cards}>
           {printerArray ? (
             printerArray.map((printer) => (
-              <PrinterCard
+              <PrinterCardRevised
                 printerName={printer.name}
                 octoPrintLink={printer.URL}
                 printerApiKey={printer.apiKey}
                 octolight={printer.octoLight ? printer.octoLight : false}
                 colorCode={printer.colorCode ? printer.colorCode : false}
+                isCNC={printer.isCNC ? printer.isCNC : false}
                 sendToFront={sendPrinterToFront}
                 key={printer.URL}
                 render={render}
