@@ -75,6 +75,20 @@ const PrinterCardRevised = observer((props) => {
     octoprintDataStore.fetchTimelapses(url, apiKey);
   }, [fullDataRefresh]);
 
+  // TODO: This calls each endpoint for each printer for each card
+  //  So if 4 printers are online = 4 printers * 4 cards * 4 calls = 64 calls every 4 sec...
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (apiKey in octoprintDataStore.generalInfo) {
+        octoprintDataStore.fetchGeneralInfo(url, apiKey);
+        octoprintDataStore.fetchConnectionInfo(url, apiKey);
+        octoprintDataStore.fetchJobStatus(url, apiKey);
+        octoprintDataStore.fetchPrinterStatus(url, apiKey);
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   if (
     generalInfo() &&
     connectionInfo() &&
