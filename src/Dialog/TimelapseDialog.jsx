@@ -54,9 +54,10 @@ export default function TimelapseDialog(props) {
 
   // Reverse Sort Files based on Date Uploaded
   const fileArray =
-    props.timelapseData && props.timelapseData !== "N/A"
-      ? props.timelapseData.files
-          .sort(function (a, b) {
+    props.timelapseData() && props.timelapseData() !== "N/A"
+      ? props
+          .timelapseData()
+          .files.sort(function (a, b) {
             return Date.parse(a.date) - Date.parse(b.date);
           })
           .reverse()

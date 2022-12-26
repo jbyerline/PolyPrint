@@ -6,8 +6,10 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 
 export default function DisconnectedPrinterCard(props) {
+  const { url, configName } = props;
+
   const redirectToOctoPrintURL = () => {
-    window.open(props.octoPrintLink, "_blank");
+    window.open(url, "_blank");
   };
 
   return (
@@ -15,9 +17,9 @@ export default function DisconnectedPrinterCard(props) {
       <CardHeader title="Printer Unavailable" />
       <CardContent>
         <Typography>Unable to connect to:</Typography>
-        <Typography variant="h6">{props.printerName}</Typography>
+        <Typography variant="h6">{configName}</Typography>
         <Button variant="text" onClick={redirectToOctoPrintURL}>
-          URL: {props.octoPrintLink}
+          URL: {url}
         </Button>
         <Typography>OctoPrint is most likely powered off</Typography>
       </CardContent>

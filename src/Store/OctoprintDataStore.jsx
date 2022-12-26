@@ -29,6 +29,7 @@ class OctoprintDataStore {
   jobStatus = {};
   gcodeFiles = {};
   connectionInfo = {};
+  timelapseFiles = {};
 
   downloadTextBlob(data, downloadFileName) {
     if (data) {
@@ -100,8 +101,6 @@ class OctoprintDataStore {
         if (!respArr.includes(undefined)) {
           this.generalInfo[apiKey] = Object.assign(...respArr);
         }
-
-        // console.log(JSON.stringify(this.generalInfo));
       })
       .catch((error) => {
         // if there's an error, log it
@@ -115,7 +114,6 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.printerStatePath))
       .json()
       .then((response) => {
-        console.log(response);
         this.printerStatus[apiKey] = response;
       })
       .catch((error) => {
@@ -130,7 +128,6 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.jobPath))
       .json()
       .then((response) => {
-        console.log(response);
         this.jobStatus[apiKey] = response;
       })
       .catch((error) => {
@@ -145,7 +142,6 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.filePath))
       .json()
       .then((response) => {
-        console.log(response);
         this.gcodeFiles[apiKey] = response;
       })
       .catch((error) => {
@@ -156,11 +152,10 @@ class OctoprintDataStore {
   fetchConnectionInfo(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
-    return api
+    api
       .get(this.makeApiUrl(link, this.connectionPath))
       .json()
       .then((response) => {
-        console.log(response);
         this.connectionInfo[apiKey] = response;
       })
       .catch((error) => {
@@ -171,12 +166,11 @@ class OctoprintDataStore {
   modifyPrinterConnection = (link, apiKey, connection) => {
     const api = this.createApiInstance(apiKey);
 
-    api
+    return api
       .post(this.makeApiUrl(link, this.connectionPath), {
         json: { command: connection },
       })
-      .json()
-      .catch((err) => console.log("Error connecting to printer", err));
+      .json();
   };
 
   sendJobCommand = (link, apiKey, command, action) => {
@@ -266,23 +260,24 @@ class OctoprintDataStore {
       .catch((err) => console.log("Error sending light command", err));
   };
 
-  getTimelapses = (link, apiKey) => {
+  fetchTimelapses = (link, apiKey) => {
     const api = this.createApiInstance(apiKey);
 
-    return api
+    api
       .get(this.makeApiUrl(link, this.timelapsePath))
       .json()
+      .then((response) => (this.timelapseFiles[apiKey] = response))
       .catch((err) => console.log("Error getting timelapse data", err));
   };
 
-  downloadTimelapse = (link, apiKey, path) => {
+  downloadTimelapse = (link, apiKey, path, name) => {
     const api = this.createApiInstance(apiKey);
 
     return api
       .get(link + path)
       .blob()
       .then((data) => {
-        this.downloadTextBlob(data, "timelapse.mp4");
+        this.downloadTextBlob(data, name);
       })
       .catch((err) => console.log("Error getting timelapse data", err));
   };

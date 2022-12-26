@@ -142,12 +142,12 @@ const Home = () => {
           {printerArray ? (
             printerArray.map((printer) => (
               <PrinterCardRevised
-                printerName={printer.name}
-                octoPrintLink={printer.URL}
-                printerApiKey={printer.apiKey}
-                octolight={printer.octoLight ? printer.octoLight : false}
-                colorCode={printer.colorCode ? printer.colorCode : false}
-                isCNC={printer.isCNC ? printer.isCNC : false}
+                configName={printer.name}
+                url={printer.URL}
+                apiKey={printer.apiKey}
+                hasOctolight={printer.octoLight ? printer.octoLight : false}
+                configColor={printer.colorCode ? printer.colorCode : false}
+                isCnc={printer.isCNC ? printer.isCNC : false}
                 sendToFront={sendPrinterToFront}
                 key={printer.URL}
                 render={render}

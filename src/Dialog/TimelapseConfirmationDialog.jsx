@@ -39,7 +39,8 @@ export default function TimelapseConfirmationDialog(props) {
     const fileBlob = props.datastore.downloadTimelapse(
       props.octoprintUrl,
       props.apiKey,
-      props.selectedFile.path
+      props.selectedFile.path,
+      props.selectedFile.name
     );
     props.close();
     props.closeOther();
@@ -68,9 +69,9 @@ export default function TimelapseConfirmationDialog(props) {
           <Button autoFocus onClick={props.close}>
             Cancel
           </Button>
-          <Button onClick={deleteFile} autoFocus>
-            Delete
-          </Button>
+          {/*<Button onClick={deleteFile} autoFocus>*/}
+          {/*  Delete*/}
+          {/*</Button>*/}
           <Button onClick={downloadFile} autoFocus>
             Download
           </Button>

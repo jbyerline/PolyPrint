@@ -88,9 +88,10 @@ export default function StartPrintDialog(props) {
   };
 
   // Reverse Sort Files numerically first based on Date Uploaded, then alphabetically by display name
-  const fileArray = props.printerFiles
-    ? props.printerFiles[0].files
-        .sort(function (a, b) {
+  const fileArray = props.printerFiles()
+    ? props
+        .printerFiles()
+        .files.sort(function (a, b) {
           if (a.date !== b.date) {
             return a.date - b.date;
           } else {

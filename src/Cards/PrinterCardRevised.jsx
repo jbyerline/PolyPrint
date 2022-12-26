@@ -1,18 +1,24 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import Container from "@mui/material/Container";
-import Image from "material-ui-image";
+import CardContent from "@mui/material/CardContent";
 
-import PowerMenu from "../Menu/PowerMenu";
 import OctoprintDataStore from "../Store/OctoprintDataStore";
+import PowerMenu from "../Menu/PowerMenu";
+
+import InfoTable from "./Subcomponents/InfoTable";
+import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
+import WebcamContainer from "./Subcomponents/WebcamContainer";
+import CardAvatar from "./Subcomponents/CardAvatar";
+import LowerIconBar from "./Subcomponents/LowerIconBar";
 
 const octoprintDataStore = new OctoprintDataStore();
 
 const PrinterCardRevised = observer((props) => {
+  const { configName, url, apiKey, hasOctolight, configColor, isCnc } = props;
+
   const [isMobile] = useState(
     /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
       navigator.userAgent
@@ -22,86 +28,112 @@ const PrinterCardRevised = observer((props) => {
       )
   );
 
-  const [generalInfo, setGeneralInfo] = useState({});
+  const [fullDataRefresh, setFullDataRefresh] = useState(false);
+
+  const generalInfo = () => {
+    if (apiKey in octoprintDataStore.generalInfo) {
+      return octoprintDataStore.generalInfo[apiKey];
+    } else return null;
+  };
+
+  const printerStatus = () => {
+    if (apiKey in octoprintDataStore.printerStatus) {
+      return octoprintDataStore.printerStatus[apiKey];
+    } else return null;
+  };
+
+  const jobStatus = () => {
+    if (apiKey in octoprintDataStore.jobStatus) {
+      return octoprintDataStore.jobStatus[apiKey];
+    } else return null;
+  };
+
+  const connectionInfo = () => {
+    if (apiKey in octoprintDataStore.connectionInfo) {
+      return octoprintDataStore.connectionInfo[apiKey];
+    } else return null;
+  };
+
+  const gcodeFiles = () => {
+    if (apiKey in octoprintDataStore.gcodeFiles) {
+      return octoprintDataStore.gcodeFiles[apiKey];
+    } else return null;
+  };
+
+  const timelapseFiles = () => {
+    if (apiKey in octoprintDataStore.timelapseFiles) {
+      return octoprintDataStore.timelapseFiles[apiKey];
+    } else return null;
+  };
 
   useEffect(() => {
-    octoprintDataStore.fetchGeneralInfo(
-      props.octoPrintLink,
-      props.printerApiKey
-    );
-    octoprintDataStore.fetchConnectionInfo(
-      props.octoPrintLink,
-      props.printerApiKey
-    );
-  }, []);
+    octoprintDataStore.fetchGeneralInfo(url, apiKey);
+    octoprintDataStore.fetchConnectionInfo(url, apiKey);
+    octoprintDataStore.fetchJobStatus(url, apiKey);
+    octoprintDataStore.fetchPrinterStatus(url, apiKey);
+    octoprintDataStore.fetchAllFiles(url, apiKey);
+    octoprintDataStore.fetchTimelapses(url, apiKey);
+  }, [fullDataRefresh]);
 
   if (
-    props.printerApiKey in octoprintDataStore.generalInfo &&
-    props.printerApiKey in octoprintDataStore.connectionInfo
+    generalInfo() &&
+    connectionInfo() &&
+    jobStatus() &&
+    gcodeFiles() &&
+    timelapseFiles()
   ) {
     return (
       <Card sx={{ width: 400 }}>
         <CardHeader
           avatar={
-            <Avatar
-              sx={{
-                bgcolor: props.colorCode
-                  ? props.colorCode
-                  : octoprintDataStore.generalInfo[props.printerApiKey]
-                      .appearance.color,
-              }}
-              aria-label={props.printerName}
-            >
-              {props.printerName ? props.printerName.charAt(0) : ""}
-            </Avatar>
+            <CardAvatar
+              configColor={configColor}
+              configName={configName}
+              generalInfo={generalInfo}
+            />
           }
           action={
             <PowerMenu
-              octoprintUrl={props.octoPrintLink}
+              octoprintUrl={url}
               datastore={octoprintDataStore}
-              apiKey={props.printerApiKey}
+              apiKey={apiKey}
             />
           }
-          title={
-            props.printerName
-              ? props.printerName
-              : octoprintDataStore.generalInfo[props.printerApiKey].appearance
-                  .name
-          }
-          subheader={
-            octoprintDataStore.connectionInfo[props.printerApiKey].current.state
-          }
+          title={configName ? configName : generalInfo().appearance.name}
+          subheader={connectionInfo().current.state}
         />
-        {octoprintDataStore.generalInfo[props.printerApiKey].webcam
-          .webcamEnabled ? (
-          <Container sx={{ height: "285px" }}>
-            {document.visibilityState === "visible" ? (
-              <Image
-                src={
-                  props.octoPrintLink +
-                  octoprintDataStore.generalInfo[props.printerApiKey].webcam
-                    .streamUrl
-                }
-                // disableSpinner={isMobile}
-                // disableTransition={!isMobile}
-                aspectRatio={16 / 9}
-              />
-            ) : null}
-          </Container>
-        ) : (
-          <Container sx={{ height: "285px" }}>
-            <Image
-              src="./printer_16x9.png"
-              disableSpinner={true}
-              aspectRatio={16 / 9}
+        <WebcamContainer
+          webcamEnabled={generalInfo().webcam.webcamEnabled}
+          streamUrl={url + generalInfo().webcam.streamUrl}
+          isMobile={isMobile}
+        />
+        {printerStatus() && connectionInfo().current.state !== "Closed" ? (
+          <CardContent>
+            <InfoTable
+              printerStatus={printerStatus}
+              jobStatus={jobStatus}
+              isCnc={isCnc}
             />
-          </Container>
-        )}
-        <div />
+          </CardContent>
+        ) : null}
+        <LowerIconBar
+          url={url}
+          apiKey={apiKey}
+          configName={configName}
+          isCnc={isCnc}
+          hasOctolight={hasOctolight}
+          dataStore={octoprintDataStore}
+          generalInfo={generalInfo}
+          connectionInfo={connectionInfo}
+          gcodeFiles={gcodeFiles}
+          timelapseFiles={timelapseFiles}
+          fullDataRefresh={fullDataRefresh}
+          setFullDataRefresh={setFullDataRefresh}
+        />
       </Card>
     );
   } else {
-    return <p>Loading...</p>;
+    return <DisconnectedPrinterCard url={url} configName={configName} />;
   }
 });
 export default PrinterCardRevised;
