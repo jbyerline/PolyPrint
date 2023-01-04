@@ -2,8 +2,8 @@ import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
+import ky from "ky";
 
-import PrinterCard from "../Cards/PrinterCard";
 import InitialSetupDialog from "../Dialog/InitialSetupDialog";
 import WelcomeDialog from "../Dialog/WelcomeDialog";
 import PrinterCardRevised from "../Cards/PrinterCardRevised";
@@ -38,11 +38,43 @@ const Home = () => {
       })
       .then(function (myJson) {
         setPrinterConfig(myJson);
+        // Get the public IP of the user
+        // TODO: This API "ip-api.com" is free but has a rate limit we may exceed. Try to find alternative?
+        const userProm = ky.get("http://ip-api.com/json/").json();
         myJson.printers.forEach((printer, index) => {
           printer.position = index;
+          // If user provides both a URL
+          if (printer.publicUrl) {
+            // Get the public IP of the printer
+            const printerProm = ky
+              .get(
+                "http://ip-api.com/json/" + new URL(printer.publicUrl).hostname
+              )
+              .json();
+            // Once both requests come back
+            Promise.allSettled([printerProm, userProm]).then((response) => {
+              if (printer.publicUrl && printer.privateIp) {
+                // If they are the same WAN
+                if (response[0].value.query === response[1].value.query) {
+                  console.log("IP Addresses are the same");
+                  printer.idealUrl = printer.privateIp;
+                } else {
+                  console.log("User and Printer are on different WANs");
+                  printer.idealUrl = printer.publicUrl;
+                }
+              } else if (printer.publicUrl) {
+                printer.idealUrl = printer.publicUrl;
+              } else {
+                printer.idealUrl = printer.privateIp;
+              }
+              // After last printer loads, then set state
+              if (index === myJson.printers.length - 1) {
+                setPrinterArray(myJson.printers);
+                setIsLoading(false);
+              }
+            });
+          }
         });
-        setPrinterArray(myJson.printers);
-        setIsLoading(false);
       });
   };
 
@@ -143,13 +175,19 @@ const Home = () => {
             printerArray.map((printer) => (
               <PrinterCardRevised
                 configName={printer.name}
-                url={printer.URL}
+                url={
+                  printer.idealUrl
+                    ? printer.idealUrl
+                    : printer.publicUrl
+                    ? printer.publicUrl
+                    : printer.privateIp
+                }
                 apiKey={printer.apiKey}
                 hasOctolight={printer.octoLight ? printer.octoLight : false}
                 configColor={printer.colorCode ? printer.colorCode : false}
                 isCnc={printer.isCNC ? printer.isCNC : false}
                 sendToFront={sendPrinterToFront}
-                key={printer.URL}
+                key={printer.apiKey}
                 render={render}
               />
             ))

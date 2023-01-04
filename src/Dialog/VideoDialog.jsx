@@ -71,6 +71,13 @@ const VideoDialog = (props) => {
                       onClick={() => {
                         console.log("Loading image click");
                       }}
+                      imageStyle={{
+                        borderRadius: "4px",
+                      }}
+                      style={{
+                        backgroundColor: "#13191c",
+                        borderRadius: "4px",
+                      }}
                     />
                   </div>
                   <div
@@ -85,7 +92,7 @@ const VideoDialog = (props) => {
                         paddingLeft: 10,
                       }}
                     >
-                      <Tooltip title="Reload Stream">
+                      <Tooltip title="Reload Stream" arrow={true}>
                         <IconButton
                           style={{ padding: 0 }}
                           onClick={() => {

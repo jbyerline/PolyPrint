@@ -4,6 +4,10 @@ import CardHeader from "@mui/material/CardHeader";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import CardContent from "@mui/material/CardContent";
+import { Tooltip } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 import OctoprintDataStore from "../Store/OctoprintDataStore";
 import PowerMenu from "../Menu/PowerMenu";
@@ -114,7 +118,18 @@ const PrinterCardRevised = observer((props) => {
               apiKey={apiKey}
             />
           }
-          title={configName ? configName : generalInfo().appearance.name}
+          title={
+            <Tooltip title={url} arrow={true}>
+              <Button
+                sx={{ textTransform: "none" }}
+                onClick={() => {
+                  window.open(url, "_blank");
+                }}
+              >
+                {configName ? configName : generalInfo().appearance.name}
+              </Button>
+            </Tooltip>
+          }
           subheader={connectionInfo().current.state}
         />
         <WebcamContainer

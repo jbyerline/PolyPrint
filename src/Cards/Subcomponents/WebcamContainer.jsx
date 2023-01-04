@@ -25,8 +25,9 @@ export default function WebcamContainer(props) {
               alignItems="center"
               sx={{
                 width: 350,
-                height: 233,
+                height: 230,
                 backgroundColor: "#13191c",
+                borderRadius: "4px",
               }}
             >
               <Stack justifyContent="space-between" spacing={0.5}>
@@ -48,6 +49,13 @@ export default function WebcamContainer(props) {
                     }}
                     onClick={() => {
                       console.log("Loading image click");
+                    }}
+                    imageStyle={{
+                      borderRadius: "4px",
+                    }}
+                    style={{
+                      backgroundColor: "#13191c",
+                      borderRadius: "4px",
                     }}
                   />
                 </div>
