@@ -55,6 +55,7 @@ export default function PreheatDialog(props) {
             value={nozzleTemp}
             onChange={handleNozzleChange}
             helperText="Please enter nozzle temp"
+            type="number"
           />
         </DialogContent>
         <DialogContent>
@@ -62,6 +63,7 @@ export default function PreheatDialog(props) {
             value={bedTemp}
             onChange={handleBedChange}
             helperText="Please enter bed temp"
+            type="number"
           />
         </DialogContent>
         <DialogActions>

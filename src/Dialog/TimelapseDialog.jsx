@@ -15,12 +15,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import TickerByLengthV2 from "../Ticker/TickerByLengthV2";
 import theme from "../appTheme";
+import TickerByLength from "../Ticker/TickerByLength";
 
 import TimelapseConfirmationDialog from "./TimelapseConfirmationDialog";
 
 const useStyles = makeStyles(() => ({
   indexNumbers: {
-    marginRight: "25px",
+    marginRight: "10px",
   },
 }));
 
@@ -71,6 +72,14 @@ export default function TimelapseDialog(props) {
     }
   };
 
+  const formatTitle = (text) => {
+    if (text) {
+      return text.replace(/_[0-9]+\.mp4|_[0-9]+-fail\.mp4/, ".mp4");
+    } else {
+      return "N/A";
+    }
+  };
+
   return (
     <Dialog
       open={props.isOpen}
@@ -97,27 +106,27 @@ export default function TimelapseDialog(props) {
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>
                         <div className={classes.indexNumbers}>
-                          <Typography variant="h6">
+                          <Typography variant="body1">
                             <strong>{twoDigitNum(index + 1)}.</strong>
                           </Typography>
                         </div>
                         <div>
-                          <Typography>
-                            <strong>Name:</strong>{" "}
-                            <TickerByLengthV2
-                              text={
-                                file.name
-                                  ? file.name.replace(
-                                      /_[0-9]+\.mp4|_[0-9]+-fail\.mp4/,
-                                      ".mp4"
-                                    )
-                                  : "N/A"
-                              }
-                              maxLen={45}
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
+                          >
+                            <Typography style={{ paddingRight: "5px" }}>
+                              <strong>Name:</strong>
+                            </Typography>
+                            <TickerByLength
+                              text={formatTitle(file.name)}
+                              maxLen={props.isMobile ? 30 : 44}
                               speed={3}
                               mode="await"
+                              divLen={props.isMobile ? 215 : 425}
                             />
-                          </Typography>
+                          </div>
                           <Typography>
                             <strong>Uploaded:</strong> {file.date}{" "}
                             <strong>Size:</strong> {b2s(file.bytes)}

@@ -96,6 +96,7 @@ const PrinterCardRevised = observer((props) => {
     gcodeFiles() &&
     timelapseFiles()
   ) {
+    props.sendToFront(configName, "online");
     return (
       <Card sx={{ width: 400 }}>
         <CardHeader
@@ -143,10 +144,12 @@ const PrinterCardRevised = observer((props) => {
           timelapseFiles={timelapseFiles}
           fullDataRefresh={fullDataRefresh}
           setFullDataRefresh={setFullDataRefresh}
+          isMobile={isMobile}
         />
       </Card>
     );
   } else {
+    props.sendToFront(configName, "offline");
     return <DisconnectedPrinterCard url={url} configName={configName} />;
   }
 });

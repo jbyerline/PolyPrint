@@ -36,6 +36,7 @@ export default function LowerIconBar(props) {
     connectionInfo,
     setFullDataRefresh,
     fullDataRefresh,
+    isMobile,
   } = props;
 
   const [lightState, setLightState] = useState(false);
@@ -258,6 +259,7 @@ export default function LowerIconBar(props) {
         datastore={dataStore}
         apiKey={apiKey}
         triggerRefresh={() => setFullDataRefresh(!fullDataRefresh)}
+        isMobile={isMobile}
       />
       <TimelapseDialog
         isOpen={timelapseDialogOpen}
@@ -266,6 +268,7 @@ export default function LowerIconBar(props) {
         octoprintUrl={url}
         datastore={dataStore}
         apiKey={apiKey}
+        isMobile={isMobile}
       />
       {/*<GCodeDialog*/}
       {/*  isOpen={isGCodeDialogOpen}*/}

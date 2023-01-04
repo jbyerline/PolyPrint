@@ -23,6 +23,8 @@ export default function InfoTable(props) {
             maxLen={23}
             speed={3}
             mode="await"
+            divLen={175}
+            isCardView={true}
           />
         </TableCell>
       </TableRow>
@@ -61,7 +63,7 @@ export default function InfoTable(props) {
       </TableRow>
       <TableRow>
         <TableCell variant="head">
-          <strong>Time Remaining</strong>
+          <strong>Time Left</strong>
         </TableCell>
         <TableCell>
           {new Date(jobStatus().progress.printTimeLeft * 1000)

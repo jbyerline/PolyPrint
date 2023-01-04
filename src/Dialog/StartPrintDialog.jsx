@@ -14,13 +14,14 @@ import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import theme from "../appTheme";
+import TickerByLength from "../Ticker/TickerByLength";
 
 import PrintConfirmationDialog from "./PrintConfirmationDialog";
 import UploadConfirmationDialog from "./UploadConfirmationDialog";
 
 const useStyles = makeStyles(() => ({
   indexNumbers: {
-    marginRight: "25px",
+    marginRight: "10px",
   },
 }));
 
@@ -139,7 +140,7 @@ export default function StartPrintDialog(props) {
                     <ListItem disablePadding>
                       <ListItemButton onClick={handleClick(file)}>
                         <div className={classes.indexNumbers}>
-                          <Typography variant="h6">
+                          <Typography variant="body1">
                             <strong>{twoDigitNum(index + 1)}.</strong>
                           </Typography>
                         </div>
@@ -152,9 +153,22 @@ export default function StartPrintDialog(props) {
                               : null,
                           }}
                         >
-                          <Typography>
-                            <strong>Name:</strong> {file.display}
-                          </Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
+                          >
+                            <Typography style={{ paddingRight: "5px" }}>
+                              <strong>Name:</strong>
+                            </Typography>
+                            <TickerByLength
+                              text={file.display}
+                              maxLen={props.isMobile ? 30 : 45}
+                              speed={3}
+                              mode="await"
+                              divLen={props.isMobile ? 215 : 425}
+                            />
+                          </div>
                           <Typography>
                             <strong>Uploaded:</strong>{" "}
                             {new Date(file.date * 1000).toLocaleDateString()}{" "}
