@@ -27,7 +27,7 @@ const Home = () => {
   const [render, setRender] = useState(false);
 
   const getData = () => {
-    fetch("PrinterConfigLocal.json", {
+    fetch("PrinterConfig.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -40,7 +40,9 @@ const Home = () => {
         setPrinterConfig(myJson);
         // Get the public IP of the user
         // TODO: This API "ip-api.com" is free but has a rate limit we may exceed. Try to find alternative?
-        const userProm = ky.get("http://ip-api.com/json/").json();
+        const userProm = ky
+          .get("https://www.google.com/url?q=http://ip-api.com/json")
+          .json();
         myJson.printers.forEach((printer, index) => {
           printer.position = index;
           // If user provides both a URL
@@ -48,7 +50,8 @@ const Home = () => {
             // Get the public IP of the printer
             const printerProm = ky
               .get(
-                "http://ip-api.com/json/" + new URL(printer.publicUrl).hostname
+                "https://www.google.com/url?q=http://ip-api.com/json" +
+                  new URL(printer.publicUrl).hostname
               )
               .json();
             // Once both requests come back

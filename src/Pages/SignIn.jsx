@@ -27,7 +27,7 @@ export default function SignIn() {
   const [printerConfig, setPrinterConfig] = useState();
 
   const getData = () => {
-    fetch("PrinterConfigLocal.json", {
+    fetch("PrinterConfig.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
