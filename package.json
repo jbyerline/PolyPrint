@@ -20,6 +20,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "domain-ping": "^0.2.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-jest": "^24.3.6",

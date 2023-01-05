@@ -40,17 +40,16 @@ const Home = () => {
         setPrinterConfig(myJson);
         // Get the public IP of the user
         // TODO: This API "ip-api.com" is free but has a rate limit we may exceed. Try to find alternative?
-        const userProm = ky
-          .get("https://www.google.com/url?q=http://ip-api.com/json")
-          .json();
+        const userProm = ky.get("https://api.ipify.org?format=json").json();
         myJson.printers.forEach((printer, index) => {
           printer.position = index;
           // If user provides both a URL
           if (printer.publicUrl) {
             // Get the public IP of the printer
+            // TODO: Proxy works for thus url but cannot access http octoprint over https polyprint :(
             const printerProm = ky
               .get(
-                "https://www.google.com/url?q=http://ip-api.com/json" +
+                "https://domainsearch.byerline.me/json/" +
                   new URL(printer.publicUrl).hostname
               )
               .json();
@@ -58,7 +57,12 @@ const Home = () => {
             Promise.allSettled([printerProm, userProm]).then((response) => {
               if (printer.publicUrl && printer.privateIp) {
                 // If they are the same WAN
-                if (response[0].value.query === response[1].value.query) {
+                console.log(response);
+                const ind = response.findIndex((el) =>
+                  el.value.hasOwnProperty("ip")
+                );
+                const otherInd = ind === 1 ? 0 : 1;
+                if (response[ind].value.ip === response[otherInd].value.query) {
                   console.log("IP Addresses are the same");
                   printer.idealUrl = printer.privateIp;
                 } else {
