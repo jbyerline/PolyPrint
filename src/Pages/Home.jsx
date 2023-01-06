@@ -1,7 +1,7 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { CircularProgress, Stack, Typography } from "@mui/material";
 import ky from "ky";
 
 import InitialSetupDialog from "../Dialog/InitialSetupDialog";
@@ -15,6 +15,18 @@ const useStyles = makeStyles(() => ({
     flexWrap: "wrap",
     margin: "10px",
   },
+  spinnerDiv: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingSpinner: {
+    // width: "100vw",
+    position: "fixed",
+    left: "50%",
+    top: "50%",
+    transform: "translateX(-50%) translateY(-50%)",
+  },
 }));
 
 const Home = () => {
@@ -25,6 +37,18 @@ const Home = () => {
   const [initialSetUpOpen, setInitialSetUpOpen] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [render, setRender] = useState(false);
+
+  const createApiInstance = (apiKey) => {
+    return ky.extend({
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            request.headers.set("X-Api-Key", apiKey);
+          },
+        ],
+      },
+    });
+  };
 
   const getData = () => {
     fetch("PrinterConfig.json", {
@@ -38,48 +62,29 @@ const Home = () => {
       })
       .then(function (myJson) {
         setPrinterConfig(myJson);
-        // Get the public IP of the user
-        // TODO: This API "ip-api.com" is free but has a rate limit we may exceed. Try to find alternative?
-        const userProm = ky.get("https://api.ipify.org?format=json").json();
         myJson.printers.forEach((printer, index) => {
           printer.position = index;
-          // If user provides both a URL
-          if (printer.publicUrl) {
-            // Get the public IP of the printer
-            // TODO: Proxy works for thus url but cannot access http octoprint over https polyprint :(
-            const printerProm = ky
-              .get(
-                "https://domainsearch.byerline.me/json/" +
-                  new URL(printer.publicUrl).hostname
-              )
-              .json();
-            // Once both requests come back
-            Promise.allSettled([printerProm, userProm]).then((response) => {
-              if (printer.publicUrl && printer.privateIp) {
-                // If they are the same WAN
-                console.log(response);
-                const ind = response.findIndex((el) =>
-                  el.value.hasOwnProperty("ip")
-                );
-                const otherInd = ind === 1 ? 0 : 1;
-                if (response[ind].value.ip === response[otherInd].value.query) {
-                  console.log("IP Addresses are the same");
-                  printer.idealUrl = printer.privateIp;
-                } else {
-                  console.log("User and Printer are on different WANs");
-                  printer.idealUrl = printer.publicUrl;
-                }
-              } else if (printer.publicUrl) {
-                printer.idealUrl = printer.publicUrl;
-              } else {
+          // If user provides both a URL and an IP
+          if (printer.publicUrl && printer.privateIp) {
+            // Test the private IP to see if it will load
+            const api = createApiInstance(printer.apiKey);
+            api
+              .get(printer.privateIp + "/api/version")
+              .json()
+              .then(() => {
+                // If it loads, then use the IP
                 printer.idealUrl = printer.privateIp;
-              }
-              // After last printer loads, then set state
-              if (index === myJson.printers.length - 1) {
-                setPrinterArray(myJson.printers);
-                setIsLoading(false);
-              }
-            });
+                console.log("Using ip address");
+              })
+              .catch(() => {
+                // Otherwise use the public URL
+                printer.idealUrl = printer.publicUrl;
+                console.log("Using URL");
+              });
+          }
+          if (index === myJson.printers.length - 1) {
+            setPrinterArray(myJson.printers);
+            setIsLoading(false);
           }
         });
       });
@@ -151,8 +156,11 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div>
-        <Typography>Loading</Typography>
+      <div className={classes.loadingSpinner}>
+        <Stack alignItems="center" justifyContent="center" spacing={4}>
+          <CircularProgress />
+          <Typography>Loading Printers...</Typography>
+        </Stack>
       </div>
     );
   } else {

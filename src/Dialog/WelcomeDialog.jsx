@@ -12,7 +12,7 @@ export default function WelcomeDialog(props) {
       <DialogTitle variant="h4">Initial Setup: </DialogTitle>
       <DialogContent>
         <Typography variant="h5" align="center">
-          Welcome to ProxyPrint
+          Welcome to PolyPrint
         </Typography>
         <Typography align="center">
           <img
@@ -32,7 +32,7 @@ export default function WelcomeDialog(props) {
       </DialogContent>
       <DialogContent>
         <Typography align="center">
-          Please continue through the following prompts to set up ProxyPrint
+          Please continue through the following prompts to set up PolyPrint
         </Typography>
       </DialogContent>
       <DialogActions>

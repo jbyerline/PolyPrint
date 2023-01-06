@@ -31,16 +31,18 @@ export default function InitialSetupDialog(props) {
     printers: [
       {
         name: "Demo Printer 1",
-        URL: "https://my.octoprint.url",
+        publicUrl: "https://my.octoprint.url",
+        privateIp: "http://10.0.0.69",
         apiKey: "F704DCD954D1417B95B9D57014D05357",
         octoLight: false,
         colorCode: "#FC6D09",
       },
       {
         name: "Other Demo Printer",
-        URL: "192.168.1.25",
+        URL: "http://192.168.1.25",
         apiKey: "3863CCB8989C4D84957897157D964699",
         octoLight: true,
+        isCNC: true,
       },
     ],
   };

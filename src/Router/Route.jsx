@@ -44,8 +44,10 @@ function HomePage() {
   return (
     <div>
       <HeaderLoggedIn />
-      <Home />
-      <Footer sx={{ mt: 8, mb: 4 }} />
+      <div style={{ paddingBottom: 50 }}>
+        <Home />
+      </div>
+      <Footer />
     </div>
   );
 }
@@ -54,8 +56,10 @@ function Login() {
   return (
     <div>
       <HeaderLoggedOut />
-      <SignIn />
-      <Footer sx={{ mt: 8, mb: 4 }} />
+      <div style={{ paddingBottom: 100 }}>
+        <SignIn />
+      </div>
+      <Footer />
     </div>
   );
 }
@@ -64,8 +68,10 @@ function HelpPage() {
   return (
     <div>
       <HeaderLoggedOut />
-      <Help />
-      <Footer sx={{ mt: 8, mb: 4 }} />
+      <div style={{ paddingBottom: 50 }}>
+        <Help />
+      </div>
+      <Footer />
     </div>
   );
 }
