@@ -251,6 +251,9 @@ class OctoprintDataStore {
       .catch((err) => console.log("Error sending GCODE command", err));
   };
 
+  // TODO: Fetch initial state of octoLight on start up
+  //  - https://github.com/gigibu5/OctoLight
+  //  - action=getState
   octolight = (link, apiKey, command) => {
     const api = this.createApiInstance(apiKey);
 

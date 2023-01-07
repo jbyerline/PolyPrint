@@ -21,6 +21,7 @@ import TimelapseDialog from "../../Dialog/TimelapseDialog";
 import PreheatDialog from "../../Dialog/PreheatDialog";
 import CancelConfirmDialog from "../../Dialog/CancelConfirmDialog";
 import IframeDialog from "../../Dialog/IframeDialog";
+import KlipperIcon from "../../Icons/KlipperIcon";
 
 export default function LowerIconBar(props) {
   const {
@@ -226,6 +227,17 @@ export default function LowerIconBar(props) {
           <FontAwesomeIcon icon={faOctopusDeploy} />
         </IconButton>
       </Tooltip>
+      {/* TODO: Enable Klipper support*/}
+      {/*<Tooltip title="Klipper">*/}
+      {/*  <IconButton*/}
+      {/*    aria-label="klipper"*/}
+      {/*    onClick={() => {*/}
+      {/*      console.log("Klipper was clicked!");*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <KlipperIcon height={40} width={40} fill="#808080" />*/}
+      {/*  </IconButton>*/}
+      {/*</Tooltip>*/}
       {/*<ExpandMore*/}
       {/*    expand={expanded}*/}
       {/*    onClick={handleExpandClick}*/}
