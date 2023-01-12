@@ -51,7 +51,7 @@ const Home = () => {
   };
 
   const getData = () => {
-    fetch("PrinterConfigLocal.json", {
+    fetch("PrinterConfig.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
