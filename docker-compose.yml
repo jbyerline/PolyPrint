@@ -1,0 +1,11 @@
+version: "2"
+services:
+  polyprint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    environment:
+      NODE_ENV: production
+    image: "registry.byerline.me/polyprint-react:${APP_VERSION}"
