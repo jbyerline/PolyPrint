@@ -1,11 +1,18 @@
 version: "2"
 services:
-  polyprint:
+  react:
     build:
-      context: .
+#      context: polyprint-react
       dockerfile: Dockerfile
     ports:
       - 80:80
     environment:
       NODE_ENV: production
     image: "registry.byerline.me/polyprint-react:${APP_VERSION}"
+  flask:
+    build:
+#      context: polyprint-flask
+      dockerfile: polyprint-flask/Dockerfile
+    ports:
+      - 5000:5000
+    image: "registry.byerline.me/polyprint-flask:${APP_VERSION}"
