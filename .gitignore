@@ -1,7 +1,6 @@
 .idea/
 node_modules/
 .DS_Store
-build/
-/build/
-/public/PrinterConfigLocal.json
+polyprint-react/build/
+polyprint-react/public/PrinterConfigLocal.json
 *.zip

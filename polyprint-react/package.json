@@ -46,8 +46,7 @@
     "web-vitals": "^2.1.2",
     "x-frame-bypass": "^1.0.2",
     "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "typescript": "3.7.0-dev.20191021"
+    "@material-ui/icons": "^4.11.3"
   },
   "scripts": {
     "start": "HOST=0.0.0.0 react-scripts start --no-cache",
