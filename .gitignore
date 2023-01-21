@@ -4,3 +4,4 @@ node_modules/
 polyprint-react/build/
 polyprint-react/public/PrinterConfigLocal.json
 *.zip
+__pycache__/

@@ -90,7 +90,15 @@ const Home = () => {
       });
   };
 
+  const pythonAPI = () => {
+    ky.get("http://127.0.0.1:1234/").then((data)=>
+    data.text().then((j)=>
+      console.log(j)
+    ))
+  }
+
   useEffect(() => {
+    pythonAPI();
     getData();
   }, [initialSetUpOpen]);
 
