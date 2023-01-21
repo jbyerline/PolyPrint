@@ -1,6 +1,6 @@
 {
   "name": "polyprint",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": true,
   "dependencies": {
     "@babel/code-frame": "^7.16.7",
@@ -51,8 +51,7 @@
   },
   "scripts": {
     "start": "HOST=0.0.0.0 react-scripts start --no-cache",
-    "build": "react-scripts build",
-    "build2": "react-scripts build && rimraf build/PrinterConfigLocal.json",
+    "build": "react-scripts build && rimraf build/PrinterConfigLocal.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/index.jsx \"src/**/*.{js,jsx}\"",
