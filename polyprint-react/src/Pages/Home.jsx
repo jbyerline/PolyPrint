@@ -51,18 +51,9 @@ const Home = () => {
   };
 
   const getData = () => {
-    fetch("PrinterConfig.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (myJson) {
-        setPrinterConfig(myJson);
-        myJson.printers.forEach((printer, index) => {
+    ky.get("http://127.0.0.1:1234/config", ).then((resp)=>{
+      resp.json().then((jsonData)=> {
+        jsonData.printers.forEach((printer, index) => {
           printer.position = index;
           // If user provides both a URL and an IP
           if (printer.publicUrl && printer.privateIp) {
@@ -82,16 +73,56 @@ const Home = () => {
                 console.log("Using URL");
               });
           }
-          if (index === myJson.printers.length - 1) {
-            setPrinterArray(myJson.printers);
+          if (index === jsonData.printers.length - 1) {
+            setPrinterArray(jsonData.printers);
             setIsLoading(false);
           }
         });
-      });
+        setPrinterConfig(jsonData);
+      })
+    })
+
+    //   fetch("PrinterConfigLocal.json", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //   },
+    // })
+    //   .then(function (response) {
+    //     return response.json();
+    //   })
+    //   .then(function (myJson) {
+        // setPrinterConfig(myJson);
+        // myJson.printers.forEach((printer, index) => {
+        //   printer.position = index;
+        //   // If user provides both a URL and an IP
+        //   if (printer.publicUrl && printer.privateIp) {
+        //     // Test the private IP to see if it will load
+        //     const api = createApiInstance(printer.apiKey);
+        //     api
+        //       .get(printer.privateIp + "/api/version")
+        //       .json()
+        //       .then(() => {
+        //         // If it loads, then use the IP
+        //         printer.idealUrl = printer.privateIp;
+        //         console.log("Using ip address");
+        //       })
+        //       .catch(() => {
+        //         // Otherwise use the public URL
+        //         printer.idealUrl = printer.publicUrl;
+        //         console.log("Using URL");
+        //       });
+        //   }
+        //   if (index === myJson.printers.length - 1) {
+        //     setPrinterArray(myJson.printers);
+        //     setIsLoading(false);
+        //   }
+        // });
+      // });
   };
 
   const pythonAPI = () => {
-    ky.get("http://127.0.0.1:1234/").then((data)=>
+    ky.get("http://127.0.0.1:1234/config").then((data)=>
     data.text().then((j)=>
       console.log(j)
     ))

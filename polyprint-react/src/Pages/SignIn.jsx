@@ -14,9 +14,9 @@ import Container from "@mui/material/Container";
 import { Alert, Collapse } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
 
 import theme from "../appTheme";
+import ky from "ky";
 
 export default function SignIn() {
   const history = useHistory();
@@ -24,39 +24,22 @@ export default function SignIn() {
   const [formUsername, setUsername] = React.useState("");
   const [formPassword, setPassword] = React.useState("");
   const [alertIsOpen, setAlertIsOpen] = React.useState(false);
-  const [printerConfig, setPrinterConfig] = useState();
 
-  const getData = () => {
-    fetch("PrinterConfig.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+  const login = () => {
+     ky.post("http://127.0.0.1:1234/login", {json:{username: formUsername, password: formPassword}}).then((resp)=>{
+      if(resp.status === 200){
+        localStorage.setItem("name", "PolyPrint");
+        localStorage.setItem("session", "active");
+        history.push("/");
+      } else {
+        console.log("Login unsuccessful");
+        setAlertIsOpen(true);
+      }
     })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (myJson) {
-        setPrinterConfig(myJson);
-      });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  }
 
   function handleSubmit() {
-    if (
-      formUsername === printerConfig.credentials.username &&
-      formPassword === printerConfig.credentials.password
-    ) {
-      localStorage.setItem("name", "PolyPrint");
-      localStorage.setItem("session", "active");
-      history.push("/");
-    } else {
-      console.log("Login unsuccessful");
-      setAlertIsOpen(true);
-    }
+    login()
   }
 
   return (
