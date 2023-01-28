@@ -25,8 +25,10 @@ export default function SignIn() {
   const [formPassword, setPassword] = React.useState("");
   const [alertIsOpen, setAlertIsOpen] = React.useState(false);
 
+  const API_URL = process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/"
+
   const login = () => {
-     ky.post("http://127.0.0.1:1234/login", {json:{username: formUsername, password: formPassword}}).then((resp)=>{
+     ky.post(API_URL + "login", {json:{username: formUsername, password: formPassword}}).then((resp)=>{
       if(resp.status === 200){
         localStorage.setItem("name", "PolyPrint");
         localStorage.setItem("session", "active");
