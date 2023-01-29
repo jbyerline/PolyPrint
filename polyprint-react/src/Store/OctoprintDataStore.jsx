@@ -1,11 +1,16 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, configure } from "mobx";
 import ky from "ky";
 
+
+configure({
+  enforceActions: "never",
+})
 class OctoprintDataStore {
-  constructor() {
+  constructor(name) {
+    this.name = name
     makeAutoObservable(this);
   }
-
+  name
   versionPath = "/version";
   serverPath = "/server";
   profilePath = "/printerprofiles";
@@ -24,6 +29,7 @@ class OctoprintDataStore {
   timelapsePath = "/timelapse";
   basePath = "/api";
 
+  versionInfo = {};
   generalInfo = {};
   printerStatus = {};
   jobStatus = {};
@@ -83,13 +89,36 @@ class OctoprintDataStore {
       .catch((err) => console.log("Error restarting Octoprint", err));
   };
 
+  fetchVersionInfo(link, apiKey) {
+    const api = this.createApiInstance(apiKey);
+
+    let respArr = [];
+
+    return Promise.allSettled([
+      api.get(this.makeApiUrl(link, this.versionPath), {retry:0}).json(),
+    ])
+        .then((responses) => {
+          responses.forEach((response) => {
+            respArr.push(response.value);
+          });
+          if (!respArr.includes(undefined)) {
+            this.versionInfo = Object.assign(...respArr);
+          } else {
+            this.versionInfo = {}
+          }
+        })
+        .catch((error) => {
+          // if there's an error, log it
+          console.log(error);
+        });
+  }
+
   fetchGeneralInfo(link, apiKey) {
     const api = this.createApiInstance(apiKey);
 
     let respArr = [];
 
     Promise.allSettled([
-      api.get(this.makeApiUrl(link, this.versionPath)).json(),
       api.get(this.makeApiUrl(link, this.profilePath)).json(),
       api.get(this.makeApiUrl(link, this.serverPath)).json(),
       api.get(this.makeApiUrl(link, this.settingsPath)).json(),
@@ -99,7 +128,9 @@ class OctoprintDataStore {
           respArr.push(response.value);
         });
         if (!respArr.includes(undefined)) {
-          this.generalInfo[apiKey] = Object.assign(...respArr);
+          this.generalInfo = Object.assign(...respArr);
+        } else {
+          this.generalInfo = {}
         }
       })
       .catch((error) => {
@@ -114,9 +145,10 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.printerStatePath))
       .json()
       .then((response) => {
-        this.printerStatus[apiKey] = response;
+        this.printerStatus = response;
       })
       .catch((error) => {
+        this.printerStatus = {}
         console.log(error);
       });
   }
@@ -128,9 +160,10 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.jobPath))
       .json()
       .then((response) => {
-        this.jobStatus[apiKey] = response;
+        this.jobStatus = response;
       })
       .catch((error) => {
+        this.jobStatus = {}
         console.log(error);
       });
   }
@@ -142,9 +175,10 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.filePath))
       .json()
       .then((response) => {
-        this.gcodeFiles[apiKey] = response;
+        this.gcodeFiles = response;
       })
       .catch((error) => {
+        this.gcodeFiles = {}
         console.log(error);
       });
   }
@@ -156,16 +190,16 @@ class OctoprintDataStore {
       .get(this.makeApiUrl(link, this.connectionPath))
       .json()
       .then((response) => {
-        this.connectionInfo[apiKey] = response;
+        this.connectionInfo = response;
       })
       .catch((error) => {
+        this.connectionInfo = {}
         console.log(error);
       });
   }
 
   modifyPrinterConnection = (link, apiKey, connection) => {
     const api = this.createApiInstance(apiKey);
-
     return api
       .post(this.makeApiUrl(link, this.connectionPath), {
         json: { command: connection },
@@ -175,7 +209,6 @@ class OctoprintDataStore {
 
   sendJobCommand = (link, apiKey, command, action) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.jobPath), {
         json: { command, action },
@@ -269,7 +302,7 @@ class OctoprintDataStore {
     api
       .get(this.makeApiUrl(link, this.timelapsePath))
       .json()
-      .then((response) => (this.timelapseFiles[apiKey] = response))
+      .then((response) => (this.timelapseFiles = response))
       .catch((err) => console.log("Error getting timelapse data", err));
   };
 

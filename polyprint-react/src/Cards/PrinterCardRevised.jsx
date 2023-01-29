@@ -5,23 +5,18 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import CardContent from "@mui/material/CardContent";
 import { Tooltip } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-
-import OctoprintDataStore from "../Store/OctoprintDataStore";
 import PowerMenu from "../Menu/PowerMenu";
-
 import InfoTable from "./Subcomponents/InfoTable";
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 import WebcamContainer from "./Subcomponents/WebcamContainer";
 import CardAvatar from "./Subcomponents/CardAvatar";
 import LowerIconBar from "./Subcomponents/LowerIconBar";
 
-const octoprintDataStore = new OctoprintDataStore();
-
 const PrinterCardRevised = observer((props) => {
-  const { configName, url, apiKey, hasOctolight, configColor, isCnc } = props;
+  const { configName, url, apiKey, hasOctolight, configColor, isCnc, datastore } = props;
+
+  const octoprintDataStore = datastore
 
   const [isMobile] = useState(
     /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
@@ -34,62 +29,67 @@ const PrinterCardRevised = observer((props) => {
 
   const [fullDataRefresh, setFullDataRefresh] = useState(false);
 
+  // TODO: Make util file for small functions
+  function isNotEmpty(obj) {
+    return Object.keys(obj).length !== 0;
+  }
+
+  // TODO: Debate breaking repeated logic below this into a helper function
+  //  - Ex: get(ds.generalInfo)?
   const generalInfo = () => {
-    if (apiKey in octoprintDataStore.generalInfo) {
-      return octoprintDataStore.generalInfo[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.generalInfo) ? octoprintDataStore.generalInfo : null;
   };
-
   const printerStatus = () => {
-    if (apiKey in octoprintDataStore.printerStatus) {
-      return octoprintDataStore.printerStatus[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.printerStatus) ? octoprintDataStore.printerStatus :  null;
   };
-
   const jobStatus = () => {
-    if (apiKey in octoprintDataStore.jobStatus) {
-      return octoprintDataStore.jobStatus[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.jobStatus) ? octoprintDataStore.jobStatus : null;
   };
-
   const connectionInfo = () => {
-    if (apiKey in octoprintDataStore.connectionInfo) {
-      return octoprintDataStore.connectionInfo[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.connectionInfo) ? octoprintDataStore.connectionInfo : null;
   };
-
   const gcodeFiles = () => {
-    if (apiKey in octoprintDataStore.gcodeFiles) {
-      return octoprintDataStore.gcodeFiles[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.gcodeFiles) ? octoprintDataStore.gcodeFiles : null;
   };
-
   const timelapseFiles = () => {
-    if (apiKey in octoprintDataStore.timelapseFiles) {
-      return octoprintDataStore.timelapseFiles[apiKey];
-    } else return null;
+    return isNotEmpty(octoprintDataStore.timelapseFiles) ? octoprintDataStore.timelapseFiles : null;
   };
 
+  // Load initial data and manual trigger refresh upon actions
   useEffect(() => {
-    octoprintDataStore.fetchGeneralInfo(url, apiKey);
-    octoprintDataStore.fetchConnectionInfo(url, apiKey);
-    octoprintDataStore.fetchJobStatus(url, apiKey);
-    octoprintDataStore.fetchPrinterStatus(url, apiKey);
-    octoprintDataStore.fetchAllFiles(url, apiKey);
-    octoprintDataStore.fetchTimelapses(url, apiKey);
-  }, [fullDataRefresh]);
-
-  // TODO: This calls each endpoint for each printer for each card
-  //  So if 4 printers are online = 4 printers * 4 cards * 4 calls = 64 calls every 4 sec...
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (apiKey in octoprintDataStore.generalInfo) {
+    octoprintDataStore.fetchVersionInfo(url, apiKey).then((prom)=>{
+      if(isNotEmpty(octoprintDataStore.versionInfo)){
         octoprintDataStore.fetchGeneralInfo(url, apiKey);
         octoprintDataStore.fetchConnectionInfo(url, apiKey);
+        octoprintDataStore.fetchAllFiles(url, apiKey);
+        octoprintDataStore.fetchTimelapses(url, apiKey);
+      }
+    });
+  }, [fullDataRefresh]);
+
+  // Every 4 sec, update Job and Printer Status
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isNotEmpty(octoprintDataStore.versionInfo)) {
         octoprintDataStore.fetchJobStatus(url, apiKey);
         octoprintDataStore.fetchPrinterStatus(url, apiKey);
       }
     }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Every 10 sec, update General Info and Online Printers
+  useEffect(() => {
+    const interval = setInterval(() => {
+      octoprintDataStore.fetchVersionInfo(url, apiKey).then((prom)=>{
+        if(isNotEmpty(octoprintDataStore.versionInfo)){
+          octoprintDataStore.fetchGeneralInfo(url, apiKey);
+          octoprintDataStore.fetchConnectionInfo(url, apiKey);
+          octoprintDataStore.fetchAllFiles(url, apiKey);
+          octoprintDataStore.fetchTimelapses(url, apiKey);
+        }
+      });
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

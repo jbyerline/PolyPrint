@@ -7,6 +7,7 @@ import ky from "ky";
 import InitialSetupDialog from "../Dialog/InitialSetupDialog";
 import WelcomeDialog from "../Dialog/WelcomeDialog";
 import PrinterCardRevised from "../Cards/PrinterCardRevised";
+import OctoprintDataStore from "../Store/OctoprintDataStore";
 
 const useStyles = makeStyles(() => ({
   cards: {
@@ -37,6 +38,7 @@ const Home = () => {
   const [initialSetUpOpen, setInitialSetUpOpen] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [render, setRender] = useState(false);
+  const [dataStores, setDataStores] = useState([]);
 
   const API_URL = process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/"
 
@@ -52,33 +54,42 @@ const Home = () => {
     });
   };
 
+
+
   const getData = () => {
     ky.get(API_URL + "config", ).then((resp)=>{
       resp.json().then((jsonData)=> {
         jsonData.printers.forEach((printer, index) => {
-          printer.position = index;
-          // If user provides both a URL and an IP
-          if (printer.publicUrl && printer.privateIp) {
-            // Test the private IP to see if it will load
-            const api = createApiInstance(printer.apiKey);
-            api
-              .get(printer.privateIp + "/api/version")
-              .json()
-              .then(() => {
-                // If it loads, then use the IP
-                printer.idealUrl = printer.privateIp;
-                console.log("Using ip address");
-              })
-              .catch(() => {
-                // Otherwise use the public URL
-                printer.idealUrl = printer.publicUrl;
-                console.log("Using URL");
-              });
-          }
+          // TODO: Figure out better way to check ip?
+        //   printer.position = index;
+        //   // If user provides both a URL and an IP
+        //   if (printer.publicUrl && printer.privateIp) {
+        //     // Test the private IP to see if it will load
+        //     const api = createApiInstance(printer.apiKey);
+        //     api
+        //       .get(printer.privateIp + "/api/version")
+        //       .json()
+        //       .then(() => {
+        //         // If it loads, then use the IP
+        //         printer.idealUrl = printer.privateIp;
+        //         console.log("Using ip address");
+        //       })
+        //       .catch(() => {
+        //         // Otherwise use the public URL
+        //         printer.idealUrl = printer.publicUrl;
+        //         console.log("Using URL");
+        //       });
+        //   }
           if (index === jsonData.printers.length - 1) {
             setPrinterArray(jsonData.printers);
           }
         });
+        let stores = []
+        // Instantiate a new datastore for each printer
+        for(let i = 0; i < jsonData.printers.length; i++){
+          stores.push(new OctoprintDataStore(jsonData.printers[i].name))
+        }
+        setDataStores(stores)
         setPrinterConfig(jsonData);
         setIsLoading(false);
       })
@@ -102,6 +113,7 @@ const Home = () => {
     setInitialSetUpOpen(false);
   };
 
+  // TODO: Simplify send to front and rework to mitigate render order issue
   const sendPrinterToFront = (name, status) => {
     let arr = printerArray;
     const index = arr.map((i) => i.name).indexOf(name);
@@ -199,6 +211,7 @@ const Home = () => {
                 sendToFront={sendPrinterToFront}
                 key={printer.apiKey}
                 render={render}
+                datastore={dataStores.filter((store)=>store.name === printer.name)[0]}
               />
             ))
           ) : (
