@@ -25,6 +25,7 @@ const PrinterCardRevised = observer((props) => {
     configColor,
     isCnc,
     datastore,
+    config,
   } = props;
 
   const ds = datastore;
@@ -53,7 +54,7 @@ const PrinterCardRevised = observer((props) => {
 
   // Load initial data and manual trigger refresh upon actions
   useEffect(() => {
-    ds.fetchVersionInfo(url, apiKey).then((prom) => {
+    ds.fetchVersionInfo(url, apiKey).then(() => {
       if (isNotEmpty(ds.versionInfo)) {
         ds.fetchGeneralInfo(url, apiKey);
         ds.fetchConnectionInfo(url, apiKey);
@@ -63,21 +64,21 @@ const PrinterCardRevised = observer((props) => {
     });
   }, [fullDataRefresh]);
 
-  // Every 4 sec, update Job and Printer Status
+  // Every 2 sec, update Job and Printer Status
   useEffect(() => {
     const interval = setInterval(() => {
       if (isNotEmpty(ds.versionInfo)) {
         ds.fetchJobStatus(url, apiKey);
         ds.fetchPrinterStatus(url, apiKey);
       }
-    }, 4000);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
-  // Every 10 sec, update General Info and Online Printers
+  // Every 15 sec, update General Info and Online Printers
   useEffect(() => {
     const interval = setInterval(() => {
-      ds.fetchVersionInfo(url, apiKey).then((prom) => {
+      ds.fetchVersionInfo(url, apiKey).then(() => {
         if (isNotEmpty(ds.versionInfo)) {
           ds.fetchGeneralInfo(url, apiKey);
           ds.fetchConnectionInfo(url, apiKey);
@@ -85,7 +86,7 @@ const PrinterCardRevised = observer((props) => {
           ds.fetchTimelapses(url, apiKey);
         }
       });
-    }, 10000);
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 

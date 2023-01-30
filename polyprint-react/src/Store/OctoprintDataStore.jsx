@@ -1,16 +1,15 @@
 import { makeAutoObservable, configure } from "mobx";
 import ky from "ky";
 
-
 configure({
   enforceActions: "never",
-})
+});
 class OctoprintDataStore {
   constructor(name) {
-    this.name = name
+    this.name = name;
     makeAutoObservable(this);
   }
-  name
+  name;
   versionPath = "/version";
   serverPath = "/server";
   profilePath = "/printerprofiles";
@@ -71,7 +70,6 @@ class OctoprintDataStore {
 
   updateIFramePolicy = (link, apiKey) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.settingsPath), {
         json: { server: { allowFraming: true } },
@@ -95,22 +93,22 @@ class OctoprintDataStore {
     let respArr = [];
 
     return Promise.allSettled([
-      api.get(this.makeApiUrl(link, this.versionPath), {retry:0}).json(),
+      api.get(this.makeApiUrl(link, this.versionPath), { retry: 0 }).json(),
     ])
-        .then((responses) => {
-          responses.forEach((response) => {
-            respArr.push(response.value);
-          });
-          if (!respArr.includes(undefined)) {
-            this.versionInfo = Object.assign(...respArr);
-          } else {
-            this.versionInfo = {}
-          }
-        })
-        .catch((error) => {
-          // if there's an error, log it
-          console.log(error);
+      .then((responses) => {
+        responses.forEach((response) => {
+          respArr.push(response.value);
         });
+        if (!respArr.includes(undefined)) {
+          this.versionInfo = Object.assign(...respArr);
+        } else {
+          this.versionInfo = {};
+        }
+      })
+      .catch((error) => {
+        // if there's an error, log it
+        console.log(error);
+      });
   }
 
   fetchGeneralInfo(link, apiKey) {
@@ -130,7 +128,7 @@ class OctoprintDataStore {
         if (!respArr.includes(undefined)) {
           this.generalInfo = Object.assign(...respArr);
         } else {
-          this.generalInfo = {}
+          this.generalInfo = {};
         }
       })
       .catch((error) => {
@@ -148,14 +146,13 @@ class OctoprintDataStore {
         this.printerStatus = response;
       })
       .catch((error) => {
-        this.printerStatus = {}
+        this.printerStatus = {};
         console.log(error);
       });
   }
 
   fetchJobStatus(link, apiKey) {
     const api = this.createApiInstance(apiKey);
-
     api
       .get(this.makeApiUrl(link, this.jobPath))
       .json()
@@ -163,14 +160,13 @@ class OctoprintDataStore {
         this.jobStatus = response;
       })
       .catch((error) => {
-        this.jobStatus = {}
+        this.jobStatus = {};
         console.log(error);
       });
   }
 
   fetchAllFiles(link, apiKey) {
     const api = this.createApiInstance(apiKey);
-
     api
       .get(this.makeApiUrl(link, this.filePath))
       .json()
@@ -178,14 +174,13 @@ class OctoprintDataStore {
         this.gcodeFiles = response;
       })
       .catch((error) => {
-        this.gcodeFiles = {}
+        this.gcodeFiles = {};
         console.log(error);
       });
   }
 
   fetchConnectionInfo(link, apiKey) {
     const api = this.createApiInstance(apiKey);
-
     api
       .get(this.makeApiUrl(link, this.connectionPath))
       .json()
@@ -193,7 +188,7 @@ class OctoprintDataStore {
         this.connectionInfo = response;
       })
       .catch((error) => {
-        this.connectionInfo = {}
+        this.connectionInfo = {};
         console.log(error);
       });
   }
@@ -222,7 +217,6 @@ class OctoprintDataStore {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("print", print);
-
     api
       .post(this.makeApiUrl(link, this.fileUploadPath), {
         body: formData,
@@ -233,7 +227,6 @@ class OctoprintDataStore {
 
   startPrint = (link, apiKey, origin, path) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.filePath + "/" + origin + "/" + path), {
         json: { command: "select", print: true },
@@ -244,7 +237,6 @@ class OctoprintDataStore {
 
   heatNozzle = (link, apiKey, temp) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.toolPath), {
         json: { command: "target", targets: { tool0: temp } },
@@ -255,7 +247,6 @@ class OctoprintDataStore {
 
   heatBed = (link, apiKey, temp) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.bedPath), {
         json: { command: "target", target: temp },
@@ -266,7 +257,6 @@ class OctoprintDataStore {
 
   controlSystem = (link, apiKey, command) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.systemPath + "/" + command))
       .json()
@@ -275,7 +265,6 @@ class OctoprintDataStore {
 
   sendGcode = (link, apiKey, commands) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .post(this.makeApiUrl(link, this.commandPath), {
         json: { commands },
@@ -289,7 +278,6 @@ class OctoprintDataStore {
   //  - action=getState
   octolight = (link, apiKey, command) => {
     const api = this.createApiInstance(apiKey);
-
     return api
       .get(this.makeApiUrl(link, this.lightPath + "?action=" + command))
       .json()
@@ -298,7 +286,6 @@ class OctoprintDataStore {
 
   fetchTimelapses = (link, apiKey) => {
     const api = this.createApiInstance(apiKey);
-
     api
       .get(this.makeApiUrl(link, this.timelapsePath))
       .json()
@@ -308,7 +295,6 @@ class OctoprintDataStore {
 
   downloadTimelapse = (link, apiKey, path, name) => {
     const api = this.createApiInstance(apiKey);
-
     return api
       .get(link + path)
       .blob()
