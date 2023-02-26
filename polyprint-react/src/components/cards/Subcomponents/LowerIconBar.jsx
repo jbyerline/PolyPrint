@@ -15,13 +15,13 @@ import { faLightbulb as lightOutlined } from "@fortawesome/free-regular-svg-icon
 import { faLightbulb as lightSolid } from "@fortawesome/free-solid-svg-icons";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
-import OctoprintDialog from "../../Dialog/OctoprintDialog";
-import StartPrintDialog from "../../Dialog/StartPrintDialog";
-import TimelapseDialog from "../../Dialog/TimelapseDialog";
-import PreheatDialog from "../../Dialog/PreheatDialog";
-import CancelConfirmDialog from "../../Dialog/CancelConfirmDialog";
-import IframeDialog from "../../Dialog/IframeDialog";
-import KlipperIcon from "../../Icons/KlipperIcon";
+import OctoprintDialog from "../../dialog/OctoprintDialog";
+import StartPrintDialog from "../../dialog/StartPrintDialog";
+import TimelapseDialog from "../../dialog/TimelapseDialog";
+import PreheatDialog from "../../dialog/PreheatDialog";
+import CancelConfirmDialog from "../../dialog/CancelConfirmDialog";
+import IframeDialog from "../../dialog/IframeDialog";
+import KlipperIcon from "../../icons/KlipperIcon";
 
 export default function LowerIconBar(props) {
   const {
@@ -81,7 +81,7 @@ export default function LowerIconBar(props) {
 
   return (
     <CardActions disableSpacing>
-      {/* --- USB Connection Icons --- */}
+      {/* --- USB Connection icons --- */}
       {connectionInfo().current.state === "Closed" ? (
         <Tooltip title="Connect">
           <IconButton

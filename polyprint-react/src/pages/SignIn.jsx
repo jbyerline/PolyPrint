@@ -16,7 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import ky from "ky";
 
-import theme from "../appTheme";
+import theme from "../themes/blueTheme";
 
 export default function SignIn() {
   const history = useHistory();

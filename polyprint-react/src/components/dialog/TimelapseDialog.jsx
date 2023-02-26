@@ -13,9 +13,9 @@ import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import TickerByLengthV2 from "../Ticker/TickerByLengthV2";
-import theme from "../appTheme";
-import TickerByLength from "../Ticker/TickerByLength";
+import TickerByLengthV2 from "../ticker/TickerByLengthV2";
+import theme from "../../themes/blueTheme";
+import TickerByLength from "../ticker/TickerByLength";
 
 import TimelapseConfirmationDialog from "./TimelapseConfirmationDialog";
 

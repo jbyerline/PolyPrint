@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import ky from "ky";
 
-import InitialSetupDialog from "../Dialog/InitialSetupDialog";
-import WelcomeDialog from "../Dialog/WelcomeDialog";
-import PrinterCardRevised from "../Cards/PrinterCardRevised";
-import OctoprintDataStore from "../Store/OctoprintDataStore";
+import InitialSetupDialog from "../components/dialog/InitialSetupDialog";
+import WelcomeDialog from "../components/dialog/WelcomeDialog";
+import PrinterCardRevised from "../components/cards/PrinterCardRevised";
+import OctoprintDataStore from "../datastores/OctoprintDataStore";
 
 const useStyles = makeStyles(() => ({
   cards: {

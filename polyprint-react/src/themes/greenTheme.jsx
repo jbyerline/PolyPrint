@@ -1,13 +1,17 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
+// Theme Docs:
+// https://colorhunt.co/palette/edf1d69dc08b60996640513b
+
+const greenTheme = createTheme({
   palette: {
     primary: {
-      light: "#548CA8",
-      main: "#476072",
+      light: "#9DC08B",
+      main: "#609966",
       dark: "#334257",
-      contrastText: "#EEEEEE",
+      contrastText: "#EDF1D6",
     },
+    // TODO: find a secondary that makes sense with this theme
     secondary: {
       light: "#ff7961",
       main: "#f44336",
@@ -29,4 +33,4 @@ const theme = createTheme({
   },
 });
 
-export default theme;
+export default greenTheme;

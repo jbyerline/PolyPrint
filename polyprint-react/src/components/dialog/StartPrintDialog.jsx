@@ -13,8 +13,8 @@ import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import theme from "../appTheme";
-import TickerByLength from "../Ticker/TickerByLength";
+import theme from "../../themes/blueTheme";
+import TickerByLength from "../ticker/TickerByLength";
 
 import PrintConfirmationDialog from "./PrintConfirmationDialog";
 import UploadConfirmationDialog from "./UploadConfirmationDialog";

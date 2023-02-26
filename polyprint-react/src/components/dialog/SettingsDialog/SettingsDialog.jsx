@@ -15,7 +15,7 @@ import PaletteIcon from "@mui/icons-material/Palette";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { styled } from "@mui/material/styles";
 
-import theme from "../../appTheme";
+import theme from "../../../themes/blueTheme";
 
 import SettingsListItem from "./Subcomponents/SettingsListItem";
 import ThemeSettings from "./Subcomponents/ThemeSettings";
@@ -154,7 +154,12 @@ export default function SettingsDialog(props) {
                 open={isDrawerOpen}
                 label="Theme"
                 icon={<PaletteIcon />}
-                settingComponent={<ThemeSettings />}
+                settingComponent={
+                  <ThemeSettings
+                    themeString={props.themeString}
+                    setThemeString={props.setThemeString}
+                  />
+                }
                 setSettingsComponent={setSettingsComponent}
               />
               <SettingsListItem

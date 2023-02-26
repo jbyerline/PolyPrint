@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import theme from "../appTheme";
+import theme from "../../themes/blueTheme";
 
 const useStyles = makeStyles(() => ({
   dialogPaper: {

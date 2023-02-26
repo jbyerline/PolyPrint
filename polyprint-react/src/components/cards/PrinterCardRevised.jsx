@@ -7,8 +7,8 @@ import CardContent from "@mui/material/CardContent";
 import { Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 
-import PowerMenu from "../Menu/PowerMenu";
-import { isNotEmpty, isMobileDevice } from "../Utils/utils";
+import PowerMenu from "../menu/PowerMenu";
+import { isNotEmpty, isMobileDevice } from "../../utils/utils";
 
 import InfoTable from "./Subcomponents/InfoTable";
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";

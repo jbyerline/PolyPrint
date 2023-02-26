@@ -13,8 +13,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import theme from "../appTheme";
-import SettingsDialog from "../Dialog/SettingsDialog/SettingsDialog";
+import theme from "../../themes/blueTheme";
+import SettingsDialog from "../dialog/SettingsDialog/SettingsDialog";
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -42,7 +42,7 @@ function refreshPage() {
   window.location.reload(false);
 }
 
-function HeaderLoggedIn() {
+function HeaderLoggedIn(props) {
   const classes = useStyles();
 
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -108,6 +108,8 @@ function HeaderLoggedIn() {
       <SettingsDialog
         isOpen={isSettingsOpen}
         closeDialog={() => setIsSettingsOpen(false)}
+        themeString={props.themeString}
+        setThemeString={props.setThemeString}
       />
     </AppBar>
   );

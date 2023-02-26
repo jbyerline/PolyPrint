@@ -3,7 +3,7 @@ import { AppBar, Toolbar, CssBaseline, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 
-import theme from "../appTheme";
+import theme from "../../themes/blueTheme";
 
 const useStyles = makeStyles(() => ({
   header: {

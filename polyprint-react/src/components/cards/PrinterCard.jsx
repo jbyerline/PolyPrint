@@ -33,17 +33,17 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { UsbOff } from "@mui/icons-material";
 import Image from "material-ui-image";
 
-import OctoprintDialog from "../Dialog/OctoprintDialog";
-import OctoprintDataStore from "../Store/OctoprintDataStore";
-import IframeDialog from "../Dialog/IframeDialog";
-import TickerByLength from "../Ticker/TickerByLength";
-import LinearProgressWithLabel from "../Progress/LinearProgressWithLabel";
-import PowerMenu from "../Menu/PowerMenu";
-import StartPrintDialog from "../Dialog/StartPrintDialog";
-import PreheatDialog from "../Dialog/PreheatDialog";
-import GCodeDialog from "../Dialog/GCodeDialog";
-import CancelConfirmDialog from "../Dialog/CancelConfirmDialog";
-import TimelapseDialog from "../Dialog/TimelapseDialog";
+import OctoprintDialog from "../dialog/OctoprintDialog";
+import OctoprintDataStore from "../../datastores/OctoprintDataStore";
+import IframeDialog from "../dialog/IframeDialog";
+import TickerByLength from "../ticker/TickerByLength";
+import LinearProgressWithLabel from "../progress/LinearProgressWithLabel";
+import PowerMenu from "../menu/PowerMenu";
+import StartPrintDialog from "../dialog/StartPrintDialog";
+import PreheatDialog from "../dialog/PreheatDialog";
+import GCodeDialog from "../dialog/GCodeDialog";
+import CancelConfirmDialog from "../dialog/CancelConfirmDialog";
+import TimelapseDialog from "../dialog/TimelapseDialog";
 
 import DisconnectedPrinterCard from "./DisconnectedPrinterCard";
 

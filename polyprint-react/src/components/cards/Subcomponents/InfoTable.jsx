@@ -1,8 +1,8 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 
-import LinearProgressWithLabel from "../../Progress/LinearProgressWithLabel";
-import TickerByLength from "../../Ticker/TickerByLength";
+import LinearProgressWithLabel from "../../progress/LinearProgressWithLabel";
+import TickerByLength from "../../ticker/TickerByLength";
 
 function secondsToDhms(seconds) {
   seconds = Number(seconds);

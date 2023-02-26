@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { Tooltip } from "@mui/material";
 
-import PowerConfirmDialog from "../Dialog/PowerConfirmDialog";
+import PowerConfirmDialog from "../dialog/PowerConfirmDialog";
 
 const PowerMenu = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);

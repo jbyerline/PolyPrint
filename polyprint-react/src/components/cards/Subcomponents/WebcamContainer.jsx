@@ -6,7 +6,7 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { IconButton, Stack, Tooltip } from "@mui/material";
 
-import VideoDialog from "../../Dialog/VideoDialog";
+import VideoDialog from "../../dialog/VideoDialog";
 
 export default function WebcamContainer(props) {
   const { webcamEnabled, streamUrl, isMobile } = props;

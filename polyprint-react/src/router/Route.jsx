@@ -6,16 +6,14 @@ import {
   Switch,
 } from "react-router-dom";
 
-import HeaderLoggedIn from "../Header/HeaderLoggedIn";
-import SignIn from "../Pages/SignIn";
-import Home from "../Pages/Home";
-import HeaderLoggedOut from "../Header/HeaderLoggedOut";
-import Footer from "../Footer/Footer";
-import Help from "../Pages/Help";
+import HeaderLoggedIn from "../components/header/HeaderLoggedIn";
+import SignIn from "../pages/SignIn";
+import Home from "../pages/Home";
+import HeaderLoggedOut from "../components/header/HeaderLoggedOut";
+import Footer from "../components/footer/Footer";
+import Help from "../pages/Help";
 
-let isLoggedIn = false;
-
-export default function RoutingRoots() {
+export default function RoutingRoots(props) {
   return (
     <div>
       <Router>
@@ -30,7 +28,14 @@ export default function RoutingRoots() {
             <Route
               path="/"
               render={() =>
-                VerifyIsLoggedIn() ? <HomePage /> : <Redirect to="/login" />
+                VerifyIsLoggedIn() ? (
+                  <HomePage
+                    themeString={props.themeString}
+                    setThemeString={props.setThemeString}
+                  />
+                ) : (
+                  <Redirect to="/login" />
+                )
               }
             />
           </Switch>
@@ -40,10 +45,13 @@ export default function RoutingRoots() {
   );
 }
 
-function HomePage() {
+function HomePage(props) {
   return (
     <div>
-      <HeaderLoggedIn />
+      <HeaderLoggedIn
+        themeString={props.themeString}
+        setThemeString={props.setThemeString}
+      />
       <div style={{ paddingBottom: 50 }}>
         <Home />
       </div>
@@ -77,10 +85,5 @@ function HelpPage() {
 }
 
 function VerifyIsLoggedIn() {
-  if (localStorage.getItem("name") && localStorage.getItem("session")) {
-    isLoggedIn = true;
-  } else {
-    isLoggedIn = false;
-  }
-  return isLoggedIn;
+  return !!(localStorage.getItem("name") && localStorage.getItem("session"));
 }
