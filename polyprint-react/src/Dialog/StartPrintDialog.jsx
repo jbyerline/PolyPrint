@@ -148,8 +148,8 @@ export default function StartPrintDialog(props) {
                           style={{
                             color: file.prints
                               ? file.prints.last.success === true
-                                ? theme.palette.status.successGreen
-                                : theme.palette.status.errorRed
+                                ? theme.palette.success.main
+                                : theme.palette.error.main
                               : null,
                           }}
                         >

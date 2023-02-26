@@ -1,5 +1,5 @@
 import "./App.css";
-import { ThemeProvider } from "@mui/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { HelmetProvider } from "react-helmet-async";
 
 import theme from "./appTheme";

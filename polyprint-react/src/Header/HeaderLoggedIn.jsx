@@ -14,6 +14,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import theme from "../appTheme";
+import SettingsDialog from "../Dialog/SettingsDialog/SettingsDialog";
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -44,8 +45,10 @@ function refreshPage() {
 function HeaderLoggedIn() {
   const classes = useStyles();
 
+  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
+
   return (
-    <AppBar position="static" sx={{ bgcolor: theme.palette.primary.main }}>
+    <AppBar position="static" color="primary">
       <CssBaseline />
       <Toolbar className={classes.header}>
         <div className={classes.header}>
@@ -77,7 +80,11 @@ function HeaderLoggedIn() {
             title="Settings"
             style={{ marginRight: "10px", marginBottom: "5px" }}
           >
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                setIsSettingsOpen(true);
+              }}
+            >
               <SettingsIcon aria-label="settings" style={{ fill: "white" }} />
             </IconButton>
           </Tooltip>
@@ -98,6 +105,10 @@ function HeaderLoggedIn() {
           </Link>
         </div>
       </Toolbar>
+      <SettingsDialog
+        isOpen={isSettingsOpen}
+        closeDialog={() => setIsSettingsOpen(false)}
+      />
     </AppBar>
   );
 }
