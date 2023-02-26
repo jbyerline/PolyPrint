@@ -1,20 +1,20 @@
 {
-  "credentials": {
-    "username": "admin",
-    "password": "password"
-  },
-  "printers": [
-    {
-      "name": "Demo Printer 1",
-      "URL": "https://my.octoprint.url",
-      "apiKey": "abc...xyz",
-      "octoLight": true,
-      "colorCode": "#FC6D09"
+    "credentials": {
+        "username": "admin",
+        "password": "password"
     },
-    {
-      "name": "Demo Printer 2",
-      "URL": "http://192.168.1.25",
-      "apiKey": "abc...xyz"
-    }
-  ]
+    "printers": [
+        {
+            "name": "Demo Printer 1",
+            "URL": "https://my.octoprint.url",
+            "apiKey": "abc...xyz",
+            "octoLight": true,
+            "colorCode": "#FC6D09"
+        },
+        {
+            "name": "Demo Printer 2",
+            "URL": "http://192.168.1.25",
+            "apiKey": "abc...xyz"
+        }
+    ]
 }

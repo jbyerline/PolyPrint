@@ -1,13 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
 import json
-import os
-import sys
 import utils
 
-# TODO: Make this dynamic? Maybe an env var?
-CONFIG_PATH = "printerConfigLocal.json"
-# CONFIG_PATH = "printerConfig.json"
+DEFAULT_CONFIG_PATH = "defaultConfig.json"
+USER_CONFIG_PATH = "printerConfigLocal.json"
 
 app = Flask(__name__)
 CORS(app)
@@ -15,12 +12,25 @@ CORS(app)
 
 @app.route('/config', methods=['GET'])
 def fetch_config():
-    return json.dumps(utils.read_config(CONFIG_PATH)), 200
+    return json.dumps(utils.read_config(USER_CONFIG_PATH)), 200
+
+
+@app.route('/restore', methods=['POST'])
+def restore_config():
+    utils.save_config(USER_CONFIG_PATH, request.json)
+    return "Success", 200
+
+
+@app.route('/reset', methods=['GET'])
+def reset_config():
+    default_json = utils.read_config(DEFAULT_CONFIG_PATH)
+    utils.save_config(USER_CONFIG_PATH, default_json)
+    return "Success", 200
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = utils.read_config(CONFIG_PATH)
+    data = utils.read_config(USER_CONFIG_PATH)
     if data["credentials"]["username"] == request.json["username"] and data["credentials"]["password"] == request.json[
         "password"]:
         return "Login Success", 200

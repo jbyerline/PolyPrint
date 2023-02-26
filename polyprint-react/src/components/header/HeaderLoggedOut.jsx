@@ -27,11 +27,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function HeaderLoggedOut() {
+function HeaderLoggedOut(props) {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" sx={{ bgcolor: theme.palette.primary.main }}>
+    <AppBar position="static">
       <CssBaseline />
       <Toolbar className={classes.header}>
         <div className={classes.header}>
@@ -50,13 +50,15 @@ function HeaderLoggedOut() {
             </div>
           </div>
         </div>
-        <Link
-          to="/login"
-          onClick={() => localStorage.clear()}
-          className={classes.link}
-        >
-          Login
-        </Link>
+        {!props.reset ? (
+          <Link
+            to="/login"
+            onClick={() => localStorage.clear()}
+            className={classes.link}
+          >
+            Login
+          </Link>
+        ) : null}
       </Toolbar>
     </AppBar>
   );

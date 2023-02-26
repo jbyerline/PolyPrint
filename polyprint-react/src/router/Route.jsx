@@ -12,6 +12,7 @@ import Home from "../pages/Home";
 import HeaderLoggedOut from "../components/header/HeaderLoggedOut";
 import Footer from "../components/footer/Footer";
 import Help from "../pages/Help";
+import Reset from "../pages/Reset";
 
 export default function RoutingRoots(props) {
   return (
@@ -19,6 +20,9 @@ export default function RoutingRoots(props) {
       <Router>
         <div>
           <Switch>
+            <Route path="/reset">
+              <Reset />
+            </Route>
             <Route path="/login">
               <Login />
             </Route>

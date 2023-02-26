@@ -22,12 +22,6 @@ import ThemeSettings from "./Subcomponents/ThemeSettings";
 import GeneralSettings from "./Subcomponents/GeneralSettings";
 import SystemSettings from "./Subcomponents/SystemSettings";
 
-const useStyles = makeStyles(() => ({
-  indexNumbers: {
-    marginRight: "10px",
-  },
-}));
-
 const drawerWidth = 150;
 
 const openedMixin = (theme) => ({
@@ -78,36 +72,11 @@ const MyDrawer = styled(Drawer, {
 }));
 
 export default function SettingsDialog(props) {
-  const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
-    React.useState(false);
-  const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState();
-  const [uploadedFile, setUploadedFile] = React.useState();
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [settingsComponent, setSettingsComponent] = React.useState(
     <SystemSettings />
   );
-
-  const handleClick = useCallback(
-    (file) => () => {
-      setSelectedFile({
-        name: file.name,
-        path: file.path,
-        origin: file.origin,
-      });
-      setIsConfirmationPromptOpen(true);
-    },
-    []
-  );
-
-  const handleFileUpload = ({ target }) => {
-    setUploadedFile(target.files[0]);
-    setIsUploadPromptOpen(true);
-  };
-
-  // const theme = useTheme();
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -180,17 +149,8 @@ export default function SettingsDialog(props) {
         <Button variant="outlined" onClick={props.closeDialog}>
           Close
         </Button>
-        <Button variant="contained" onClick={props.closeDialog}>
-          Save
-        </Button>
-        {/*<Button component="label">*/}
-        {/*  Upload*/}
-        {/*  <input*/}
-        {/*    onChange={handleFileUpload}*/}
-        {/*    type="file"*/}
-        {/*    accept=".stl, .gcode, .gco, .g"*/}
-        {/*    hidden*/}
-        {/*  />*/}
+        {/*<Button variant="contained" onClick={props.closeDialog}>*/}
+        {/*  Save*/}
         {/*</Button>*/}
       </DialogActions>
     </Dialog>
