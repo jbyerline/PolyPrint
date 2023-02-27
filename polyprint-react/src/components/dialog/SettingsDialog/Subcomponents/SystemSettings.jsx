@@ -3,14 +3,15 @@ import { List } from "@mui/material";
 import Button from "@mui/material/Button";
 import ky from "ky";
 
+import { makeApiUrl } from "../../../../utils/utils";
+
 import Setting from "./Setting";
 
 export default function SystemSettings(props) {
   const [uploadedFile, setUploadedFile] = React.useState("");
   const [triggerReset, setTriggerReset] = React.useState(false);
 
-  const API_URL =
-    process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/";
+  const API_URL = makeApiUrl();
 
   // TODO: Update alerts to be pretty toast alerts
   useEffect(() => {

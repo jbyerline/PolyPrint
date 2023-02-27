@@ -6,13 +6,13 @@ import ky from "ky";
 import { Link } from "react-router-dom";
 
 import HeaderLoggedOut from "../components/header/HeaderLoggedOut";
+import { makeApiUrl } from "../utils/utils";
 
 export default function Reset() {
   const [uploadedFile, setUploadedFile] = React.useState("");
   const [triggerReset, setTriggerReset] = React.useState(false);
 
-  const API_URL =
-    process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/";
+  const API_URL = makeApiUrl();
 
   // TODO: Update alerts to be pretty toast alerts
   useEffect(() => {

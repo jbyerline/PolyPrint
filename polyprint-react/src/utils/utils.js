@@ -14,4 +14,17 @@ const isMobileDevice = () => {
     )
   );
 };
-export { isNotEmpty, isMobileDevice };
+
+function makeApiUrl() {
+  // if (process.env.ENV === "prod") {
+  console.log("I am here");
+  return window.location.href + "api/";
+  // } else {
+  //   console.log("I am here 2");
+  //   return (
+  //     window.location.hostname + ":" + process.env.REACT_APP_API_PORT + "/api/"
+  //   );
+  // }
+}
+
+export { isNotEmpty, isMobileDevice, makeApiUrl };

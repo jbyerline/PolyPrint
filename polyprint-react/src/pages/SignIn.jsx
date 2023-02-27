@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ky from "ky";
 
 import theme from "../themes/blueTheme";
+import { makeApiUrl } from "../utils/utils";
 
 export default function SignIn() {
   const history = useHistory();
@@ -25,8 +26,7 @@ export default function SignIn() {
   const [formPassword, setPassword] = React.useState("");
   const [alertIsOpen, setAlertIsOpen] = React.useState(false);
 
-  const API_URL =
-    process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/";
+  const API_URL = makeApiUrl();
 
   const login = () => {
     ky.post(API_URL + "login", {

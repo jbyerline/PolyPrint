@@ -8,6 +8,7 @@ import InitialSetupDialog from "../components/dialog/InitialSetupDialog";
 import WelcomeDialog from "../components/dialog/WelcomeDialog";
 import PrinterCardRevised from "../components/cards/PrinterCardRevised";
 import OctoprintDataStore from "../datastores/OctoprintDataStore";
+import { makeApiUrl } from "../utils/utils";
 
 const useStyles = makeStyles(() => ({
   cards: {
@@ -40,8 +41,7 @@ const Home = () => {
   const [render, setRender] = useState(false);
   const [dataStores, setDataStores] = useState([]);
 
-  const API_URL =
-    process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/";
+  const API_URL = makeApiUrl();
 
   const createApiInstance = (apiKey) => {
     return ky.extend({

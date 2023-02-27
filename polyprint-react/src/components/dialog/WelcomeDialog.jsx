@@ -8,11 +8,12 @@ import { Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import ky from "ky";
 
+import { makeApiUrl } from "../../utils/utils";
+
 export default function WelcomeDialog(props) {
   const [uploadedFile, setUploadedFile] = React.useState("");
 
-  const API_URL =
-    process.env.REACT_APP_API_HOST + ":" + process.env.REACT_APP_API_PORT + "/";
+  const API_URL = makeApiUrl();
 
   // TODO: Update alerts to be pretty toast alerts
   useEffect(() => {
