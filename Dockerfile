@@ -32,7 +32,7 @@ WORKDIR /polyprint/polyprint-flask
 # Install any python dependencies
 RUN pip install -r ./requirements.txt
 # Open port 5000 for Flask
-EXPOSE 5000
+# EXPOSE 5000
 
 # Start nginx and Flask
 CMD service nginx restart ; python3 -m flask run --host=0.0.0.0
