@@ -18,7 +18,7 @@ const isMobileDevice = () => {
 function makeApiUrl() {
   // if (process.env.ENV === "prod") {
   console.log("I am here");
-  return window.location.href + "api/";
+  return window.location.origin + "/api/";
   // } else {
   //   console.log("I am here 2");
   //   return (
