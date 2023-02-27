@@ -1,56 +1,20 @@
 {
     "credentials": {
-        "username": "jbyerline",
-        "password": "Rusty777"
+        "username": "admin",
+        "password": "password"
     },
     "printers": [
         {
-            "name": "Orusa",
-            "publicUrl": "https://orusa.byerline.me",
-            "privateIp": "http://10.0.0.143",
-            "apiKey": "F709DCD954D1417B95B9D57014D05357",
+            "name": "Demo Printer 1",
+            "URL": "https://my.octoprint.url",
+            "apiKey": "abc...xyz",
             "octoLight": true,
             "colorCode": "#FC6D09"
         },
         {
-            "name": "Grusa",
-            "publicUrl": "https://grusa.byerline.me",
-            "privateIp": "http://10.0.0.10",
-            "apiKey": "4704A7C866C1436EBF08B6514CBAF149",
-            "octoLight": true,
-            "colorCode": "#30878f"
-        },
-        {
-            "name": "Brusa",
-            "publicUrl": "https://brusa.byerline.me",
-            "privateIp": "http://10.0.0.226",
-            "apiKey": "81AF77B11F41405AAB9BDF678EAAF6C0",
-            "octoLight": false,
-            "colorCode": "#1e3f6a"
-        },
-        {
-            "name": "PR-10",
-            "publicUrl": "https://pr10.byerline.me",
-            "privateIp": "http://10.0.0.50",
-            "apiKey": "9B995A2EB0C1409098E978ABAD71B51F",
-            "octoLight": true,
-            "colorCode": "#e40e01"
-        },
-        {
-            "name": "CNC",
-            "publicUrl": "https://cnc.byerline.me",
-            "privateIp": "http://10.0.0.155",
-            "apiKey": "B29E741ADF45415E9FD0372488BE3B6E",
-            "octoLight": false,
-            "colorCode": "#657348",
-            "isCNC": true
-        },
-        {
-            "name": "Daniel's Prusa Mini+",
-            "publicUrl": "https://daniel.byerline.me",
-            "apiKey": "8A2D0628AAC949A799100D6C9E12CB18",
-            "octoLight": false,
-            "colorCode": "#393D47"
+            "name": "Demo Printer 2",
+            "URL": "http://192.168.1.25",
+            "apiKey": "abc...xyz"
         }
     ]
 }
