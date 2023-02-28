@@ -112,6 +112,11 @@ export default function SignIn() {
             onChange={(event) => {
               setPassword(event.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit();
+              }
+            }}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}

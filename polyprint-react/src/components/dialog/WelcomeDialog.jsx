@@ -50,7 +50,7 @@ export default function WelcomeDialog(props) {
 
   return (
     <Dialog open={props.isOpen} maxWidth="xl">
-      <DialogTitle variant="h4">Initial Setup: </DialogTitle>
+      {/*<DialogTitle variant="h4">Initial Setup: </DialogTitle>*/}
       <DialogContent>
         <Typography variant="h5" align="center">
           Welcome to PolyPrint
