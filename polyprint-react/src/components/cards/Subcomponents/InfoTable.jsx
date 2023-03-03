@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 
 import LinearProgressWithLabel from "../../progress/LinearProgressWithLabel";
 import TickerByLength from "../../ticker/TickerByLength";
+import { keyExists } from "../../../utils/utils";
 
 function secondsToDhms(seconds) {
   seconds = Number(seconds);
@@ -49,8 +50,13 @@ export default function InfoTable(props) {
                 <strong>Hotend Temp</strong>
               </TableCell>
               <TableCell>
-                {printerStatus().temperature.tool0.actual} /{" "}
-                {printerStatus().temperature.tool0.target}
+                {keyExists(printerStatus(), "actual")
+                  ? printerStatus().temperature.tool0.actual
+                  : "0"}{" "}
+                /{" "}
+                {keyExists(printerStatus(), "target")
+                  ? printerStatus().temperature.tool0.target
+                  : "0"}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -58,8 +64,13 @@ export default function InfoTable(props) {
                 <strong>Bed Temp</strong>
               </TableCell>
               <TableCell>
-                {printerStatus().temperature.bed.actual} /{" "}
-                {printerStatus().temperature.bed.target}
+                {keyExists(printerStatus(), "actual")
+                  ? printerStatus().temperature.bed.actual
+                  : "0"}{" "}
+                /{" "}
+                {keyExists(printerStatus(), "target")
+                  ? printerStatus().temperature.bed.target
+                  : "0"}
               </TableCell>
             </TableRow>
           </>
