@@ -110,6 +110,7 @@ const Home = () => {
   };
 
   const handleCloseSetUpDialog = () => {
+    setWelcomeOpen(true);
     setInitialSetUpOpen(false);
   };
 

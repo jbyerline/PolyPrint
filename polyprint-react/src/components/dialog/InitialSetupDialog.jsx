@@ -161,12 +161,20 @@ export default function InitialSetupDialog(props) {
         </List>
       </DialogContent>
       <DialogActions>
-        <Alert severity="error" className={classes.margin}>
-          <strong>Use this button to copy json --> </strong>
-        </Alert>
-        <Button onClick={handleConfigCopy} variant="contained">
-          Copy Stringified JSON
-        </Button>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button onClick={props.closeDialog} variant="outlined">
+            Back
+          </Button>
+          <Button onClick={handleConfigCopy} variant="contained">
+            Copy Stringified JSON
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
