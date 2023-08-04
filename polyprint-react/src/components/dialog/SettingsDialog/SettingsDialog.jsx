@@ -5,12 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { List, Box, Divider, IconButton, Drawer } from "@mui/material";
-import { useCallback } from "react";
-import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import BuildIcon from "@mui/icons-material/Build";
 import PaletteIcon from "@mui/icons-material/Palette";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { styled } from "@mui/material/styles";
@@ -19,7 +16,6 @@ import theme from "../../../themes/blueTheme";
 
 import SettingsListItem from "./Subcomponents/SettingsListItem";
 import ThemeSettings from "./Subcomponents/ThemeSettings";
-import GeneralSettings from "./Subcomponents/GeneralSettings";
 import SystemSettings from "./Subcomponents/SystemSettings";
 
 const drawerWidth = 150;
@@ -112,13 +108,13 @@ export default function SettingsDialog(props) {
             </DrawerHeader>
             <Divider />
             <List>
-              <SettingsListItem
-                open={isDrawerOpen}
-                label="General"
-                icon={<BuildIcon />}
-                settingComponent={<GeneralSettings />}
-                setSettingsComponent={setSettingsComponent}
-              />
+              {/*<SettingsListItem*/}
+              {/*  open={isDrawerOpen}*/}
+              {/*  label="General"*/}
+              {/*  icon={<BuildIcon />}*/}
+              {/*  settingComponent={<GeneralSettings />}*/}
+              {/*  setSettingsComponent={setSettingsComponent}*/}
+              {/*/>*/}
               <SettingsListItem
                 open={isDrawerOpen}
                 label="Theme"

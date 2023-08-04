@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import { Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import ky from "ky";
@@ -92,9 +91,10 @@ export default function WelcomeDialog(props) {
                 hidden
               />
             </Button>
-            <Button variant="contained" onClick={props.openSetupDialog}>
-              Continue with setup
-            </Button>
+            {/*TODO: Finish config setup*/}
+            {/*<Button variant="contained" onClick={props.openSetupDialog}>*/}
+            {/*  Continue with setup*/}
+            {/*</Button>*/}
           </Stack>
         </div>
       </DialogActions>

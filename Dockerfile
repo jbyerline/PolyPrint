@@ -12,7 +12,7 @@ RUN npm install --legacy-peer-deps && npm run build
 
 ### Production Image Stage ###
 # Download Ubuntu image
-FROM --platform=linux/amd64 ubuntu:20.04
+FROM ubuntu:20.04
 # Download and install updates, Python 3, Pip3, and nignx
 RUN apt-get update &&\
      apt-get install -y --no-install-recommends python3 &&\

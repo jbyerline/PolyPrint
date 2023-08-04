@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { List } from "@mui/material";
 import Button from "@mui/material/Button";
 import ky from "ky";
@@ -10,6 +10,7 @@ import Setting from "./Setting";
 export default function SystemSettings(props) {
   const [uploadedFile, setUploadedFile] = React.useState("");
   const [triggerReset, setTriggerReset] = React.useState(false);
+  const [triggerDownload, setTriggerDownload] = React.useState(false);
 
   const API_URL = makeApiUrl();
 
@@ -38,6 +39,30 @@ export default function SystemSettings(props) {
       restore();
     }
   }, [uploadedFile]);
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const download = () => {
+      ky.get(API_URL + "config")
+        .then((resp) => {
+          if (resp.status === 200) {
+            resp.json().then((data) => {
+              saveTemplateAsFile("config.json", data);
+            });
+          } else {
+            alert("Download Error");
+          }
+        })
+        .catch(() => {
+          alert("Download Error");
+        });
+    };
+    download();
+  }, [triggerDownload]);
 
   // TODO: Update alerts to be pretty toast alerts
   useEffect(() => {
@@ -71,8 +96,46 @@ export default function SystemSettings(props) {
     };
   };
 
+  const saveTemplateAsFile = (filename, dataObjToWrite) => {
+    const blob = new Blob([JSON.stringify(dataObjToWrite, null, 2)], {
+      type: "text/json",
+    });
+    const link = document.createElement("a");
+
+    link.download = filename;
+    link.href = window.URL.createObjectURL(blob);
+    link.dataset.downloadurl = ["text/json", link.download, link.href].join(
+      ":"
+    );
+
+    const evt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+
+    link.dispatchEvent(evt);
+    link.remove();
+  };
+
   return (
     <List>
+      <Setting
+        title="Export current config.json"
+        description="Use this feature to download a backup of your current JSON file."
+        actionComponent={
+          <Button
+            variant="contained"
+            color="success"
+            component="label"
+            onClick={() => {
+              setTriggerDownload(!triggerDownload);
+            }}
+          >
+            Download
+          </Button>
+        }
+      />
       <Setting
         title="Restore from Backup"
         description="Use this feature to restore your PolyPrint config from a backup JSON file."

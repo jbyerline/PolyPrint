@@ -3,7 +3,7 @@ import { Paper, Link, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
-export default function Footer(props) {
+export default function Footer() {
   return (
     <Paper
       sx={{

@@ -13,7 +13,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import theme from "../../themes/blueTheme";
 import SettingsDialog from "../dialog/SettingsDialog/SettingsDialog";
 
 const useStyles = makeStyles(() => ({

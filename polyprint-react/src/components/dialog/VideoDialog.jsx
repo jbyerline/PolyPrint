@@ -3,28 +3,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { Stack, Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Image from "material-ui-image";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import Container from "@mui/material/Container";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
-const useStyles = makeStyles(() => ({
-  circleIcon: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "50px",
-    height: "50px",
-    backgroundColor: "#ffffff7f",
-    borderRadius: "50px",
-  },
-}));
-
 const VideoDialog = (props) => {
-  const classes = useStyles();
-
   const { url, open, setOpen } = props;
   return (
     <Dialog
