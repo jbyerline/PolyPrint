@@ -1,0 +1,10 @@
+version: "2"
+services:
+  polyprint:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      NODE_ENV: production
+    image: "registry.byerline.me/polyprint-nginx-dev:0.0.1"

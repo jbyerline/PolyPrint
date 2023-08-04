@@ -4,7 +4,7 @@
     <img src="https://user-images.githubusercontent.com/47374239/150470183-31f4f1fc-9bb5-45f4-ba18-30adfcb87549.png" alt="alternate text">
  </p>
 
-This project was created by Jacob Byerline. Initially it was my final project for my masters degree. I have continued adding to it and 
+This project was created by Jacob Byerline. Initially it was my final project for my master’s degree. I have continued adding to it and 
 plan to keep it up to date for as long as I can manage. This project is currently in Alpha and will contain a lot of bugs. I 
 will do my best to get to them as I can but please be patient and feel free to submit issues and PRs. 
 
@@ -16,89 +16,59 @@ the OctoPrint API to centrally manage your entire printer collection.
 This service is not designed to manage commercial print farms. Rather it is designed for Hobbyists and Enthusiasts with multiple
 3D printers to easily keep control and track of their printers.
 
-## How to set up PolyPrint server
-1. Install `npm` on your system of choice. (A raspberry Pi works fine)
-2. Run `npm i serve` to install the static web server
-3. Download the latest release .zip from [here](https://github.com/jbyerline/PolyPrint/releases/)
-4. Unzip the file into your desired directory
-5. Run `serve -s -n build` where "build" is the folder you unzipped
+## How do I run PolyPrint?
+1. Ensure you have [Docker]("https://www.docker.com/") installed on your host machine
+2. Run `docker pull [image name]` with the latest tag to get the **[latest version]("https://github.com/jbyerline/PolyPrint/tags")**
+    - Ex. `docker pull registry.byerline.me/polyprint-react:1.0.2 `
+2. Run `docker run -d -p [desired host port]:80 --name polyprint [image name]` to start up on your desired port
+   - Ex. `docker run -d -p 1234:80 --name polyprint registry.byerline.me/polyprint:1.0.2` running on port 1234
+   - Alternatively, you can run this image using Docker Desktop or Portainer
+3. [OPTIONAL] Set up a reverse proxy on your host machine to access PolyPrint from a public facing domain
 
-This will start a static web server located at [http://localhost:3000](http://localhost:3000)
-
-## (OPTIONAL) How to make PolyPrint start on boot (Linux)
-1. Create a systemd unit file `sudo nano /etc/systemd/system/polyprint.service`.
-2. Paste the following code into the nano editor:
-    1. Change \<yourUser\> to be your actual linux username.
-    2. Change <path/to/build> to be the full path to the build directory. (You can use `pwd` for this)
-    3. Change <path/to/folderAboveBuild> to be the full path to the directory above build. (You can use `cd ..` then `pwd` for this)
-
- ```
-[Unit]
-Description=PolyPrint Dameon
- 
-[Service]
-User=<yourUser>
-ExecStart=node /usr/local/bin/serve -s -n <path/to/build>
-StandardOutput=file:<path/to/folderAboveBuild>/PolyPrint_info.log
-StandardError=file:<path/to/folderAboveBuild>/PolyPrint_error.log
-Type=simple
-TimeoutStopSec=10
-Restart=on-failure
-RestartSec=5
- 
-[Install]
-WantedBy=multi-user.target
- ```
-4. Run `sudo systemctl enable polyprint` to enable the service to run on boot.
-5. Run `sudo systemctl start polyprint` to start the service for the first time.
-
-
-**NOTE:** Run `sudo systemctl stop polyprint` if you ever want to stop the service.
-
-**NOTE:** Run `sudo systemctl status polyprint` to see if the service is currently running.
-
-**NOTE:** This dameon service assumes you have Node installed on your system and that is is located in `/usr/local/bin`
-
-Here is an example of a working .service file: 
-```
-[Unit]
-Description=PolyPrint Dameon
-
-[Service]
-User=jbyerline
-ExecStart=node /usr/local/bin/serve -s -n /home/jbyerline/PolyPrint/build
-StandardOutput=file:/home/jbyerline/PolyPrint/PolyPrint_info.log
-StandardError=file:/home/jbyerline/PolyPrint/PolyPrint_error.log
-Type=simple
-TimeoutStopSec=10
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
- 
- 
 ## How to configure PolyPrint
-Inside the folder you unzipped there is a file titled `PrinterConfig.json` you will need to modify this file to
+PolyPrint is based around a file titled `config.json` you will need to modify this file to
 set your username and password as well as enter the details for each of your OctoPrint printers. 
 
-The entry must be in valid JSON syntax. The order in which you enter your printers will determine the order of
-appearance on the dashboard
+### Steps:
+#### Step 1:
+When you first run the application, you will be prompted to enter your username and password. This will be `admin` for
+the username and `password` for the password by default.
 
+**Note:** You can change this in the `config.json` file. Please see the example file provided below. 
+#### Step 2:
+Simply make a new file called `config.json` and copy the contents of the example file below into it. 
+#### Step 3:
+Modify the JSON fields to match your printers information. See **Field Definitions** section below. 
+
+**Note:** The entry must be in valid JSON syntax. Check JSON syntax [here]("https://codebeautify.org/jsonviewer"). The order in which you enter your printers will determine the order of
+appearance on the dashboard
+#### Step 4:
+After logging in, you will be prompted to upload a config.json file, this will be the recently modified file.
+
+#### Step 5:
+You should now see your printers on the dashboard. 
+
+#### Troubleshooting:
+If you do not see your printers or the page crashes, your json may be wrong. To reset the config back to default go to `http://[yourPolyPrintIpOrDomain]/api/reset`, then re-upload and try again. 
+
+### Field Definitions:
 1. The `username` is whatever you want your username to be.
 2. The `password` is whatever you want your password to be.
 3. The `name` is whatever you wish to label the printer in this dashboard.
-4. The `URL` is the domain or the IP address of your printers octoprint instance.
-5. The `apiKey` is generated from OctoPrint inside settings -> API -> Global API Key
-6. [Optional] The `octoLight` field is for the OctoLight plugin for
+4. [Optional] The `publicUrl` is a fully qualified domain name that points to your OctoPrint instance.
+5. The `privateIp` is the local IP address of your printer.
+6. The `apiKey` is generated from OctoPrint inside settings -> API -> Global API Key
+7. [Optional] The `octoLight` field is for the OctoLight plugin for
       OctoPi and must be installed on your RPI for this functionality. It allows you
       to toggle a light attached to your Raspberry Pi's GPIO.
-7. [Optional] The `colorCode` field is for specifying the avatar color for a given printer. If none 
+8. [Optional] The `colorCode` field is for specifying the avatar color for a given printer. If none 
 is provided it will use the color chosen within the appearance settings in the OctoPrint UI. This was
 put into place to give more color options for each of your printers rather than having a set selection
 to choose from.
 
+#### Note: The `optional` fields should not be included in the `config.json` file if you do not wish to use them.
+
+### Example config.json:
 ```json
 {
   "credentials": {
@@ -108,14 +78,15 @@ to choose from.
   "printers": [
     {
       "name": "Demo Printer 1",
-      "URL": "https://my.octoprint.url",
+      "publicUrl": "https://my.octoprint.url",
+      "privateIp": "http://10.0.0.50:5000",
       "apiKey": "abc...xyz",
       "octoLight": true,
       "colorCode": "#FC6D09"
     },
     {
       "name": "Demo Printer 2",
-      "URL": "http://192.168.1.25",
+      "privateIp": "http://192.168.1.25",
       "apiKey": "abc...xyz"
     }
   ]
@@ -126,5 +97,34 @@ to choose from.
 ### **NOTE**: While inside OctoPrint settings -> API, Please enable CORS as it is required to run this site!
 
 ### You will NOT be able to continue into the dashboard until your config file is valid!
+
+## Run DEV environment
+Polyprint consists of 3 parts:
+- The React website
+- The Flask API
+- The NGINX Reverse Proxy
+
+### Follow these steps to run and test locally
+1. Clone the repo from [here](https://github.com/jbyerline/PolyPrint/)
+2. `cd` into the cloned repo
+3. `cd` into `polyprint-dev-nginx`
+4. Run `docker compose build`
+5. Run `docker run -d -p 80:80 --name polyprint-nginx registry.byerline.me/polyprint-nginx-dev:0.0.1`
+    - This will start the NGINX server on your local machine, port `80`
+    - This image can also be run inside of Docker Desktop
+6. Execute the Flask server. Be sure it is running on port `5050`
+    - I use Jetbrains PyCharm for this
+7. Execute the ReactJS server. Be sure it is running on port `3000`
+    - I use Jetbrains WebStorm for this
+8. Access your locally running PolyPrint server at [http://127.0.0.1:80](http://127.0.0.1:80)
+
+## How to build new version of PolyPrint
+1. Increment version number in `.env` & `package.json`
+2. Commit changes to git
+3. Run `docker compose build` from **ROOT** directory!
+4. [OPTIONAL] Once build is complete, copy image name from docker terminal output and run `docker push [image name]`
+    - Ex. `docker push registry.byerline.me/polyprint-react:0.0.1 `
+
+
 ![Setup](https://user-images.githubusercontent.com/47374239/150470063-744b93d6-9476-486a-b97a-ba32552a2552.png)
 ![PolyPrint](https://user-images.githubusercontent.com/47374239/150470009-9308ad61-0537-4a2e-8a86-7fadb1275683.png)

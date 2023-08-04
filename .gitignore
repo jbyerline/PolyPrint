@@ -1,7 +1,7 @@
 .idea/
 node_modules/
 .DS_Store
-build/
-/build/
-/public/PrinterConfigLocal.json
+polyprint-react/build/
+polyprint-flask/printerConfigLocal.json
 *.zip
+__pycache__/

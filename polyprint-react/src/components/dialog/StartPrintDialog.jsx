@@ -1,0 +1,222 @@
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { List, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import Divider from "@mui/material/Divider";
+import { useCallback } from "react";
+import { makeStyles } from "@mui/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+import theme from "../../themes/blueTheme";
+import TickerByLength from "../ticker/TickerByLength";
+
+import PrintConfirmationDialog from "./PrintConfirmationDialog";
+import UploadConfirmationDialog from "./UploadConfirmationDialog";
+
+const useStyles = makeStyles(() => ({
+  indexNumbers: {
+    marginRight: "10px",
+  },
+}));
+
+export default function StartPrintDialog(props) {
+  const classes = useStyles();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] =
+    React.useState(false);
+  const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState();
+  const [uploadedFile, setUploadedFile] = React.useState();
+
+  const handleClick = useCallback(
+    (file) => () => {
+      setSelectedFile({
+        name: file.name,
+        path: file.path,
+        origin: file.origin,
+      });
+      setIsConfirmationPromptOpen(true);
+    },
+    []
+  );
+
+  const handleFileUpload = ({ target }) => {
+    setUploadedFile(target.files[0]);
+    setIsUploadPromptOpen(true);
+  };
+
+  const handleJustUpload = () => {
+    setIsUploadPromptOpen(false);
+    props.closeDialog();
+    props.datastore.uploadFile(
+      props.octoprintUrl,
+      props.apiKey,
+      uploadedFile,
+      false
+    );
+    props.triggerRefresh();
+  };
+
+  const handleUploadAndPrint = () => {
+    setIsUploadPromptOpen(false);
+    props.closeDialog();
+    props.datastore.uploadFile(
+      props.octoprintUrl,
+      props.apiKey,
+      uploadedFile,
+      true
+    );
+    props.triggerRefresh();
+  };
+
+  const closeConfirmationPrompt = () => {
+    setIsConfirmationPromptOpen(false);
+  };
+
+  const closeUploadPrompt = () => {
+    setIsUploadPromptOpen(false);
+  };
+
+  const b2s = (t) => {
+    let e = (Math.log2(t) / 10) | 0;
+    return (t / 1024 ** (e = e <= 0 ? 0 : e)).toFixed(1) + "BKMGP"[e];
+  };
+
+  // Reverse Sort Files numerically first based on Date Uploaded, then alphabetically by display name
+  const fileArray = props.printerFiles()
+    ? props
+        .printerFiles()
+        .files.sort(function (a, b) {
+          if (a.date !== b.date) {
+            return a.date - b.date;
+          } else {
+            return a.date;
+          }
+        })
+        .sort(function (a, b) {
+          if (a.date === b.date) {
+            if (a.display >= b.display) {
+              return 1;
+            } else {
+              return -1;
+            }
+          } else {
+            return -1;
+          }
+        })
+    : "N/A";
+
+  const twoDigitNum = (number) => {
+    if (number < 10) {
+      return "0" + number.toString();
+    } else {
+      return number.toString();
+    }
+  };
+
+  return (
+    <Dialog
+      open={props.isOpen}
+      fullWidth={true}
+      maxWidth="sm"
+      fullScreen={fullScreen}
+    >
+      <DialogTitle variant="h5" align="center">
+        Select File Below to Start
+      </DialogTitle>
+      <DialogContent>
+        <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <nav>
+            <List>
+              {fileArray !== "N/A" ? (
+                fileArray.map((file, index) => (
+                  <div key={file.display}>
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={handleClick(file)}>
+                        <div className={classes.indexNumbers}>
+                          <Typography variant="body1">
+                            <strong>{twoDigitNum(index + 1)}.</strong>
+                          </Typography>
+                        </div>
+                        <div
+                          style={{
+                            color: file.prints
+                              ? file.prints.last.success === true
+                                ? theme.palette.success.main
+                                : theme.palette.error.main
+                              : null,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
+                          >
+                            <Typography style={{ paddingRight: "5px" }}>
+                              <strong>Name:</strong>
+                            </Typography>
+                            <TickerByLength
+                              text={file.display}
+                              maxLen={props.isMobile ? 30 : 45}
+                              speed={3}
+                              mode="await"
+                              divLen={props.isMobile ? 215 : 425}
+                            />
+                          </div>
+                          <Typography>
+                            <strong>Uploaded:</strong>{" "}
+                            {new Date(file.date * 1000).toLocaleDateString()}{" "}
+                            <strong>Size:</strong> {b2s(file.size)}
+                          </Typography>
+                        </div>
+                      </ListItemButton>
+                    </ListItem>
+                    <Divider />
+                  </div>
+                ))
+              ) : (
+                <p>N/A</p>
+              )}
+            </List>
+          </nav>
+        </Box>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={props.closeDialog}>Cancel</Button>
+        <Button component="label">
+          Upload
+          <input
+            onChange={handleFileUpload}
+            type="file"
+            accept=".stl, .gcode, .gco, .g"
+            hidden
+          />
+        </Button>
+      </DialogActions>
+      <PrintConfirmationDialog
+        open={isConfirmationPromptOpen}
+        close={closeConfirmationPrompt}
+        closeOther={props.closeDialog}
+        selectedFile={selectedFile}
+        octoprintUrl={props.octoprintUrl}
+        datastore={props.datastore}
+        apiKey={props.apiKey}
+      />
+      <UploadConfirmationDialog
+        open={isUploadPromptOpen}
+        close={closeUploadPrompt}
+        closeOther={props.closeDialog}
+        selectedFile={uploadedFile}
+        justUpload={handleJustUpload}
+        uploadAndPrint={handleUploadAndPrint}
+      />
+    </Dialog>
+  );
+}
