@@ -23,9 +23,13 @@ export default function Footer() {
             flexGrow: 1,
             justifyContent: "center",
             display: "flex",
-            my: 1,
+            mt: 1,
           }}
-        />
+        >
+          <Typography variant="caption" color="initial">
+            v{process.env.REACT_APP_VERSION}
+          </Typography>
+        </Box>
         <Box
           sx={{
             flexGrow: 1,

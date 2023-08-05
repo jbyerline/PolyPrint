@@ -1,6 +1,6 @@
 {
   "name": "polyprint",
-  "version": "0.0.13",
+  "version": "1.0.3",
   "private": true,
   "dependencies": {
     "@babel/code-frame": "^7.16.7",
@@ -22,6 +22,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "env-cmd": "^10.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-jest": "^24.3.6",
@@ -50,8 +51,9 @@
     "x-frame-bypass": "^1.0.2"
   },
   "scripts": {
+    "dev": "env-cmd --verbose -f ../.env react-scripts start HOST=0.0.0.0",
     "start": "HOST=0.0.0.0 react-scripts start --no-cache",
-    "build": "react-scripts build && rimraf build/PrinterConfigLocal.json",
+    "build": "env-cmd --verbose -f ../.env react-scripts build && rimraf build/PrinterConfigLocal.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/index.jsx \"src/**/*.{js,jsx}\"",

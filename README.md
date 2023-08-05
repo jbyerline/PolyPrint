@@ -19,7 +19,7 @@ This service is not designed to manage commercial print farms. Rather it is desi
 ## How do I run PolyPrint?
 1. Ensure you have [Docker]("https://www.docker.com/") installed on your host machine
 2. Run `docker pull [image name]` with the latest tag to get the **[latest version]("https://github.com/jbyerline/PolyPrint/tags")**
-    - Ex. `docker pull registry.byerline.me/polyprint-react:1.0.2 `
+    - Ex. `docker pull registry.byerline.me/polyprint:1.0.2 `
 2. Run `docker run -d -p [desired host port]:80 --name polyprint [image name]` to start up on your desired port
    - Ex. `docker run -d -p 1234:80 --name polyprint registry.byerline.me/polyprint:1.0.2` running on port 1234
    - Alternatively, you can run this image using Docker Desktop or Portainer
