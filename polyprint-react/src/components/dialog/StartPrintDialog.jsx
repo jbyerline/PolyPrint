@@ -4,7 +4,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { List, Typography } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  List,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -33,6 +39,7 @@ export default function StartPrintDialog(props) {
   const [isUploadPromptOpen, setIsUploadPromptOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState();
   const [uploadedFile, setUploadedFile] = React.useState();
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const handleClick = useCallback(
     (file) => () => {
@@ -51,28 +58,44 @@ export default function StartPrintDialog(props) {
     setIsUploadPromptOpen(true);
   };
 
-  const handleJustUpload = () => {
+  const handleJustUpload = async () => {
+    setIsUploading(true);
     setIsUploadPromptOpen(false);
-    props.closeDialog();
-    props.datastore.uploadFile(
-      props.octoprintUrl,
-      props.apiKey,
-      uploadedFile,
-      false
-    );
-    props.triggerRefresh();
+    try {
+      await props.datastore.uploadFile(
+        props.octoprintUrl,
+        props.apiKey,
+        uploadedFile,
+        false
+      );
+    } catch (error) {
+      console.error("Error uploading file", error);
+      props.closeDialog();
+    } finally {
+      props.closeDialog();
+      setIsUploading(false);
+      props.triggerRefresh();
+    }
   };
 
-  const handleUploadAndPrint = () => {
+  const handleUploadAndPrint = async () => {
+    setIsUploading(true);
     setIsUploadPromptOpen(false);
-    props.closeDialog();
-    props.datastore.uploadFile(
-      props.octoprintUrl,
-      props.apiKey,
-      uploadedFile,
-      true
-    );
-    props.triggerRefresh();
+    try {
+      await props.datastore.uploadFile(
+        props.octoprintUrl,
+        props.apiKey,
+        uploadedFile,
+        true
+      );
+    } catch (error) {
+      console.error("Error uploading file", error);
+      props.closeDialog();
+    } finally {
+      props.closeDialog();
+      setIsUploading(false);
+      props.triggerRefresh();
+    }
   };
 
   const closeConfirmationPrompt = () => {
@@ -217,6 +240,28 @@ export default function StartPrintDialog(props) {
         justUpload={handleJustUpload}
         uploadAndPrint={handleUploadAndPrint}
       />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isUploading}
+      >
+        <Paper
+          elevation={3}
+          style={{
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.8)", // semi-transparent white
+          }}
+        >
+          <CircularProgress style={{ color: "black" }} />
+          <div
+            style={{ marginTop: "20px", color: "black", fontSize: "1.25rem" }}
+          >
+            Uploading File...
+          </div>
+        </Paper>
+      </Backdrop>
     </Dialog>
   );
 }

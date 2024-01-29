@@ -217,12 +217,16 @@ class OctoprintDataStore {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("print", print);
-    api
+    return api
       .post(this.makeApiUrl(link, this.fileUploadPath), {
         body: formData,
+        timeout: false,
       })
       .json()
-      .catch((err) => console.log("Error uploading file", err));
+      .catch((err) => {
+        console.log("Error uploading file", err);
+        throw err; // rethrow to ensure the catch block in handleJustUpload and handleUploadAndPrint catches it.
+      });
   };
 
   startPrint = (link, apiKey, origin, path) => {
