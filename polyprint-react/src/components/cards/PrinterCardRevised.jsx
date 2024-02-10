@@ -253,6 +253,7 @@ const PrinterCardRevised = observer((props) => {
             fullDataRefresh={fullDataRefresh}
             setFullDataRefresh={setFullDataRefresh}
             isMobile={isMobile}
+            setAlertState={setAlertState}
           />
         </Card>
         <Backdrop

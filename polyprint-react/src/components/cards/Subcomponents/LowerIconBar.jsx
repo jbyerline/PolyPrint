@@ -38,6 +38,7 @@ export default function LowerIconBar(props) {
     setFullDataRefresh,
     fullDataRefresh,
     isMobile,
+    setAlertState,
   } = props;
 
   const [lightState, setLightState] = useState(false);
@@ -272,6 +273,7 @@ export default function LowerIconBar(props) {
         apiKey={apiKey}
         triggerRefresh={() => setFullDataRefresh(!fullDataRefresh)}
         isMobile={isMobile}
+        setAlertState={setAlertState}
       />
       <TimelapseDialog
         isOpen={timelapseDialogOpen}

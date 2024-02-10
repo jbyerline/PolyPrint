@@ -21,12 +21,14 @@ export default function TickerByLength(props) {
 
   if (text.length <= maxLen) {
     return (
-      <Typography
-        align="left"
-        style={{ fontSize: isCardView ? "0.875rem" : "1rem" }}
-      >
-        <nobr>{text}</nobr>
-      </Typography>
+      <div style={{ width: divLen }}>
+        <Typography
+          align="left"
+          style={{ fontSize: isCardView ? "0.875rem" : "1rem" }}
+        >
+          <nobr>{text}</nobr>
+        </Typography>
+      </div>
     );
   } else {
     return (

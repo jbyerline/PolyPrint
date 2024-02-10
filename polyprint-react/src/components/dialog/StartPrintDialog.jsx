@@ -18,6 +18,9 @@ import Divider from "@mui/material/Divider";
 import { useCallback } from "react";
 import { makeStyles } from "@mui/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DialogContentText from "@mui/material/DialogContentText";
 
 import theme from "../../themes/blueTheme";
 import TickerByLength from "../ticker/TickerByLength";
@@ -28,6 +31,7 @@ import UploadConfirmationDialog from "./UploadConfirmationDialog";
 const useStyles = makeStyles(() => ({
   indexNumbers: {
     marginRight: "10px",
+    marginLeft: "-30px",
   },
 }));
 
@@ -40,6 +44,8 @@ export default function StartPrintDialog(props) {
   const [selectedFile, setSelectedFile] = React.useState();
   const [uploadedFile, setUploadedFile] = React.useState();
   const [isUploading, setIsUploading] = React.useState(false);
+  const [isDeletePromptOpen, setIsDeletePromptOpen] = React.useState(false);
+  const [fileToDelete, setFileToDelete] = React.useState(null);
 
   const handleClick = useCallback(
     (file) => () => {
@@ -92,6 +98,29 @@ export default function StartPrintDialog(props) {
       console.error("Error uploading file", error);
       props.closeDialog();
     } finally {
+      props.closeDialog();
+      setIsUploading(false);
+      props.triggerRefresh();
+    }
+  };
+
+  const handleDeleteFile = async () => {
+    if (!fileToDelete) return;
+
+    setIsUploading(true);
+    setIsUploadPromptOpen(false);
+    try {
+      await props.datastore.deleteFile(
+        props.octoprintUrl,
+        props.apiKey,
+        fileToDelete
+      );
+    } catch (error) {
+      console.error("Error uploading file", error);
+      props.closeDialog();
+    } finally {
+      setIsDeletePromptOpen(false);
+      setFileToDelete(null);
       props.closeDialog();
       setIsUploading(false);
       props.triggerRefresh();
@@ -174,6 +203,7 @@ export default function StartPrintDialog(props) {
                                 ? theme.palette.success.main
                                 : theme.palette.error.main
                               : null,
+                            width: props.isMobile ? 245 : 425,
                           }}
                         >
                           <div
@@ -189,7 +219,7 @@ export default function StartPrintDialog(props) {
                               maxLen={props.isMobile ? 30 : 45}
                               speed={3}
                               mode="await"
-                              divLen={props.isMobile ? 215 : 425}
+                              divLen={props.isMobile ? 245 : 425}
                             />
                           </div>
                           <Typography>
@@ -198,6 +228,20 @@ export default function StartPrintDialog(props) {
                             <strong>Size:</strong> {b2s(file.size)}
                           </Typography>
                         </div>
+                        <Box sx={{ ml: 3 }}>
+                          <IconButton
+                            onClick={(e) => {
+                              console.log(file.name);
+                              e.stopPropagation();
+                              setFileToDelete(file.name);
+                              setIsDeletePromptOpen(true);
+                            }}
+                            edge="end"
+                            aria-label="delete"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
                       </ListItemButton>
                     </ListItem>
                     <Divider />
@@ -240,6 +284,34 @@ export default function StartPrintDialog(props) {
         justUpload={handleJustUpload}
         uploadAndPrint={handleUploadAndPrint}
       />
+      <Dialog
+        open={isDeletePromptOpen}
+        onClose={() => setIsDeletePromptOpen(false)}
+      >
+        <DialogTitle>Confirm File Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this file?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeletePromptOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() =>
+              handleDeleteFile().then(() => {
+                props.setAlertState({
+                  isOpen: true,
+                  level: "success",
+                  message: "File Deleted",
+                });
+              })
+            }
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isUploading}

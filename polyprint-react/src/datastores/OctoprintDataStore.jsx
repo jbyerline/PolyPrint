@@ -229,6 +229,19 @@ class OctoprintDataStore {
       });
   };
 
+  deleteFile = (link, apiKey, fileName) => {
+    const api = this.createApiInstance(apiKey);
+    return api
+      .delete(this.makeApiUrl(link, this.fileUploadPath) + "/" + fileName, {
+        timeout: false,
+      })
+      .json()
+      .catch((err) => {
+        console.log("Error deleting file", err);
+        throw err; // rethrow to ensure the catch block in handleJustUpload and handleUploadAndPrint catches it.
+      });
+  };
+
   startPrint = (link, apiKey, origin, path) => {
     const api = this.createApiInstance(apiKey);
     api
