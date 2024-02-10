@@ -4,8 +4,8 @@ import json
 import utils
 
 DEFAULT_CONFIG_PATH = "defaultConfig.json"
-USER_CONFIG_PATH = "printerConfig.json"
-# USER_CONFIG_PATH = "printerConfigLocal.json"
+# USER_CONFIG_PATH = "printerConfig.json"
+USER_CONFIG_PATH = "printerConfigLocal.json"
 
 app = Flask(__name__)
 CORS(app)

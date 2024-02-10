@@ -7,7 +7,7 @@ import { makeApiUrl } from "../../../../utils/utils";
 
 import Setting from "./Setting";
 
-export default function SystemSettings(props) {
+export default function SystemSettings() {
   const [uploadedFile, setUploadedFile] = React.useState("");
   const [triggerReset, setTriggerReset] = React.useState(false);
   const [triggerDownload, setTriggerDownload] = React.useState(false);

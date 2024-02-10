@@ -227,7 +227,7 @@ export default function LowerIconBar(props) {
           <FontAwesomeIcon icon={faOctopusDeploy} />
         </IconButton>
       </Tooltip>
-      {/* TODO: Enable Klipper support*/}
+      {/*TODO: Enable Klipper support*/}
       {/*<Tooltip title="Klipper">*/}
       {/*  <IconButton*/}
       {/*    aria-label="klipper"*/}

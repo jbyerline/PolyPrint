@@ -5,17 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { makeStyles } from "@mui/styles";
-import {
-  Typography,
-  List,
-  ListItem,
-  Alert,
-  Input,
-  Stack,
-  Link,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Typography, Stack, Link } from "@mui/material";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles(() => ({
   dialogPaper: {
@@ -36,7 +28,6 @@ export default function InitialSetupDialog(props) {
   const classes = useStyles();
 
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -101,7 +92,7 @@ export default function InitialSetupDialog(props) {
                   {...register("URL or IP", {
                     required: true,
                     pattern:
-                      /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?|^((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/i,
+                      /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?|^((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/i,
                   })}
                 />
               </div>

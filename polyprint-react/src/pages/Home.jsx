@@ -1,7 +1,13 @@
 import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Snackbar,
+  Stack,
+  Typography,
+} from "@mui/material";
 import ky from "ky";
 
 import InitialSetupDialog from "../components/dialog/InitialSetupDialog";
@@ -40,6 +46,11 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [render, setRender] = useState(false);
   const [dataStores, setDataStores] = useState([]);
+  const [alertState, setAlertState] = useState({
+    isOpen: false,
+    message: "",
+    level: "error", // Default to "error", adjust as needed
+  });
 
   const API_URL = makeApiUrl();
 
@@ -193,35 +204,51 @@ const Home = () => {
       );
     } else {
       return (
-        <div className={classes.cards}>
-          {printerArray ? (
-            printerArray.map((printer) => (
-              <PrinterCardRevised
-                configName={printer.name}
-                url={
-                  printer.idealUrl
-                    ? printer.idealUrl
-                    : printer.publicUrl
-                    ? printer.publicUrl
-                    : printer.privateIp
-                }
-                apiKey={printer.apiKey}
-                hasOctolight={printer.octoLight ? printer.octoLight : false}
-                configColor={printer.colorCode ? printer.colorCode : false}
-                isCnc={printer.isCNC ? printer.isCNC : false}
-                sendToFront={sendPrinterToFront}
-                key={printer.apiKey}
-                render={render}
-                datastore={
-                  dataStores.filter((store) => store.name === printer.name)[0]
-                }
-                config={printerConfig}
-              />
-            ))
-          ) : (
-            <p>N/A</p>
-          )}
-        </div>
+        <>
+          <div className={classes.cards}>
+            {printerArray ? (
+              printerArray.map((printer) => (
+                <PrinterCardRevised
+                  configName={printer.name}
+                  url={
+                    printer.idealUrl
+                      ? printer.idealUrl
+                      : printer.publicUrl
+                      ? printer.publicUrl
+                      : printer.privateIp
+                  }
+                  apiKey={printer.apiKey}
+                  hasOctolight={printer.octoLight ? printer.octoLight : false}
+                  configColor={printer.colorCode ? printer.colorCode : false}
+                  isCnc={printer.isCNC ? printer.isCNC : false}
+                  sendToFront={sendPrinterToFront}
+                  key={printer.apiKey}
+                  render={render}
+                  setAlertState={setAlertState}
+                  datastore={
+                    dataStores.filter((store) => store.name === printer.name)[0]
+                  }
+                  config={printerConfig}
+                />
+              ))
+            ) : (
+              <p>N/A</p>
+            )}
+          </div>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={alertState.isOpen}
+            autoHideDuration={6000}
+            onClose={() => setAlertState({ ...alertState, isOpen: false })}
+          >
+            <Alert
+              onClose={() => setAlertState({ ...alertState, isOpen: false })}
+              severity={alertState.level}
+            >
+              {alertState.message}
+            </Alert>
+          </Snackbar>
+        </>
       );
     }
   }

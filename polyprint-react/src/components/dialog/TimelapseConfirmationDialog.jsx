@@ -23,18 +23,6 @@ export default function TimelapseConfirmationDialog(props) {
     }
   }, [blobFile]);
 
-  const deleteFile = () => {
-    // props.datastore.startPrint(
-    //   props.octoprintUrl,
-    //   props.apiKey,
-    //   props.selectedFile.origin,
-    //   props.selectedFile.path
-    // );
-    // props.close();
-    // props.closeOther();
-    console.log("Deleting Timelapse File");
-  };
-
   const downloadFile = () => {
     const fileBlob = props.datastore.downloadTimelapse(
       props.octoprintUrl,
